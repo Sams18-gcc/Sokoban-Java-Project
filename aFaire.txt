@@ -1,0 +1,24 @@
+J’ai réorganisé le code de la branche modele en packages pour éviter de tout mélanger.
+
+J’ai aussi ajouté un .gitignore pour éviter de push des fichiers de configuration ou des
+fichiers inutiles (par exemple .iml, .class, .idea pour IntelliJ), afin d’éviter des problèmes
+lors des pull chez les autres membres.
+
+Si vous avez déjà ce type de fichiers dans vos branches, je vous invite à ajouter leurs noms ou
+extensions dans votre .gitignore. (Ecrasez pas son contenu!)
+
+Je vous conseille, si ce n’est pas la première fois que vous faites un pull, d’écraser vos branches
+locales main et modele avec le contenu du dépôt distant pour repartir sur une base propre.
+
+Voici les commandes à utiliser :
+git fetch origin
+
+git checkout main
+git reset --hard origin/modele
+
+git checkout modele
+git reset --hard origin/modele
+
+git clean -fd (pour supprimer les fichiers non suivis et non voulus)
+(Ces commandes suppriment les modifications locales et remet les fichiers suivis exactement
+ tels qu’ils sont dans la branche distante (au moment du fetch) )
