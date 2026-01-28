@@ -1,3 +1,5 @@
+package sokoban.core;
+
 public class Position {
   private int x;
   private int y;
@@ -7,6 +9,8 @@ public class Position {
     {
       this.x = x;
       this.y = y;
+        System.out.println("test");
+
     }
     
     public int getY()
@@ -19,4 +23,5 @@ public class Position {
    {
      return x;
    }
+
 }

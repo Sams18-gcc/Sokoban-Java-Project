@@ -1,10 +1,15 @@
-public class Joueur extends Position
+package sokoban.entity;
+
+import sokoban.core.Direction;
+
+public class Box
 {
-  
-  
-    public Joueur(int x, int y)
+     
+    boolean isInTarget;
+    public Box(int x, int y)
     {
      super();
+     isInTarget = false;
     }
     
     
@@ -22,6 +27,18 @@ public class Joueur extends Position
        case DOWN:
          this.y += 1; 
      }
+   }
+   
+   
+   public int getY()
+   {
+     return y;
+   }
+   
+   
+   public int getX()
+   {
+     return x;
    }
    
    
