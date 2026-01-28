@@ -9,8 +9,6 @@ public class Position {
     {
       this.x = x;
       this.y = y;
-        System.out.println("test");
-
     }
     
     public int getY()
@@ -22,6 +20,13 @@ public class Position {
    public int getX()
    {
      return x;
+   }
+
+   public void translate(Direction d)
+   {
+      if(d == null) throw new NullPointerException();
+      this.x += d.dx;
+      this.y += d.dy;
    }
 
 }
