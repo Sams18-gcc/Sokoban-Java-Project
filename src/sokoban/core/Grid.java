@@ -27,9 +27,11 @@ public class Grid {
             }
         }
         this.grid[1][width - 3] = '@';
-        this.grid[2][width - 2] = 'O';
+        this.grid[2][width - 3] = 'O';
         this.grid[3][2] = 'O';
         this.grid[length - 2][width - 5] = 'x';
+        this.grid[length - 4][width - 3] = 'x';
+
 
     }
 

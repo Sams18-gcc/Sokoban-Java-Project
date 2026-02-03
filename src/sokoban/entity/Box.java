@@ -32,6 +32,11 @@ public class Box {
         this.isInTarget = false;
     }
 
+    public boolean isInTarget()
+    {
+         return isInTarget;
+    }
+
     public boolean equals(Object o)
     {
          if(o == null || !(o instanceof Box)) return false;

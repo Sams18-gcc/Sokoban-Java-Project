@@ -64,7 +64,7 @@ public class World {
     }
 
     public Box getBoxatPosition(Position pos) {
-        if(pos == null )
+        if (pos == null)
             throw new NullPointerException();
         for (Box box : boxes) {
             if (box.getPosition().equals(pos))
@@ -86,41 +86,61 @@ public class World {
 
     }
 
-    public void movePlayer(Direction d) {
+    public boolean movePlayer(Direction d) {
         if (d == null) throw new NullPointerException();
+        boolean boxInTarget = false;
         Position actualPos = player.getPosition();
         Position nextPos = player.getPosition();
         nextPos.translate(d);
-        if (isBox(nextPos))
-        {
-            moveBox(d, nextPos);
+        if (isBox(nextPos)) {
+            boxInTarget = moveBox(d, nextPos);
         }
+
 
         updateCells(actualPos, nextPos);
         grid.updateGrid(actualPos, nextPos, cells[actualPos.getY()][actualPos.getX()].getCellType());
         player.move(d);
+        return boxInTarget;
     }
 
 
-    public void moveBox(Direction d, Position pos) {
+    public boolean moveBox(Direction d, Position pos) {
         if (d == null || pos == null) throw new NullPointerException();
         Position actualPos = new Position(pos.getY(), pos.getX());
         Position nextPos = new Position(pos.getY(), pos.getX());
         nextPos.translate(d);
         grid.updateGrid(actualPos, nextPos, cells[actualPos.getY()][actualPos.getX()].getCellType());
         Box box = getBoxatPosition(pos);
-        if(box == null)
-             throw new IllegalStateException();
+        if (box == null)
+            throw new IllegalStateException();
         else box.move(d);
         updateCells(actualPos, nextPos);
+        if (cells[nextPos.getY()][nextPos.getX()].getCellType() == CellType.TARGET) {
+            box.setInTarget();
+            return true;
+
+        } else {
+            box.setOutOfTarget();
+            return false;
+
+        }
+
     }
 
-    public void updateCells(Position actualPos, Position nextPos)
-    {
-         if(actualPos == null || nextPos == null)
-             throw new NullPointerException();
-         cells[actualPos.getY()][actualPos.getX()].setFree();
-         cells[nextPos.getY()][nextPos.getX()].setOccupied();
+    public void updateCells(Position actualPos, Position nextPos) {
+        if (actualPos == null || nextPos == null)
+            throw new NullPointerException();
+        cells[actualPos.getY()][actualPos.getX()].setFree();
+        cells[nextPos.getY()][nextPos.getX()].setOccupied();
+    }
+
+    public boolean allBoxesInTarget() {
+        for (Box box : boxes) {
+            if (!box.isInTarget())
+                return false;
+        }
+
+        return true;
     }
 
 

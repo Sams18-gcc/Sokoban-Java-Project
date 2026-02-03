@@ -11,33 +11,35 @@ public class Main {
         World world = new World(10, 10);
         world.loadWorld();
         world.displayWorld();
-        System.out.println("Choisir une Direction :");
         System.out.println("Left(q) | Right(d) | Up (z) | Down(s)");
         Scanner sc = new Scanner(System.in);
-        while(true)
-        {
+        while (true) {
 
-          String input = sc.nextLine();
+            String input = sc.nextLine();
+            Direction d = null;
+
             if (input.equals("z")) {
-                if(world.checkMove(Direction.UP))
-                    world.movePlayer(Direction.UP);
+                 d = Direction.UP;
+            } else if (input.equals("s")) {
+                 d = Direction.DOWN;
+            } else if (input.equals("q")) {
+                 d = Direction.LEFT;
+            } else if (input.equals("d")) {
+                 d = Direction.RIGHT;
             }
-            else if (input.equals("s")) {
-                if(world.checkMove(Direction.DOWN))
-                    world.movePlayer(Direction.DOWN);
-            }
-            else if (input.equals("q")) {
-                if(world.checkMove(Direction.LEFT))
-                    world.movePlayer(Direction.LEFT);
-            }
-            else if (input.equals("d")) {
-                if (world.checkMove(Direction.RIGHT))
-                    world.movePlayer(Direction.RIGHT);
-            }
+            if(d == null)
+                continue;
+            if (world.checkMove(d))
+               if(world.movePlayer(d))
+                   if(world.allBoxesInTarget())
+                   {
+                        break;
+                   }
             world.displayWorld();
+            System.out.println("Left(q) | Right(d) | Up (z) | Down(s)");
         }
-
-
+        world.displayWorld();
+        System.out.println("Vous avez gagner!!");
 
     }
 }
