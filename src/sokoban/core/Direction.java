@@ -1,15 +1,15 @@
 package sokoban.core;
 
 public enum Direction {
-    UP(0, -1),
-    DOWN(0, 1),
-    LEFT(-1, 0),
-    RIGHT(1, 0);
+    UP(-1, 0),
+    DOWN(1, 0),
+    LEFT(0, -1),
+    RIGHT(0, 1);
 
-    final int dx;
-    final int dy;
+     final int dx;
+     final int dy;
 
-    Direction(int dx, int dy) {
+    Direction(int dy, int dx) {
         this.dx = dx;
         this.dy = dy;
     }
