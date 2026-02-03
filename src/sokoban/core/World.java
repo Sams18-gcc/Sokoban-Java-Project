@@ -4,7 +4,6 @@ import sokoban.entity.Box;
 import sokoban.entity.Cell;
 import sokoban.entity.Player;
 
-import java.lang.reflect.AccessFlag;
 import java.util.ArrayList;
 
 public class World {
@@ -64,7 +63,7 @@ public class World {
         return grid.getElement(pos.getY(), pos.getX()) == 'O';
     }
 
-    public Box getBoxinPosition(Position pos) {
+    public Box getBoxatPosition(Position pos) {
         if(pos == null )
             throw new NullPointerException();
         for (Box box : boxes) {
@@ -109,7 +108,7 @@ public class World {
         Position nextPos = new Position(pos.getY(), pos.getX());
         nextPos.translate(d);
         grid.updateGrid(actualPos, nextPos, cells[actualPos.getY()][actualPos.getX()].getCellType());
-        Box box = getBoxinPosition(pos);
+        Box box = getBoxatPosition(pos);
         if(box == null)
              throw new IllegalStateException();
         else box.move(d);
