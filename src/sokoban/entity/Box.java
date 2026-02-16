@@ -45,6 +45,11 @@ public class Box {
          return getPosition().equals(box.getPosition());
     }
 
+    public int hashCode()
+    {
+         return getPosition().hashCode();
+    }
+
 
 
 }

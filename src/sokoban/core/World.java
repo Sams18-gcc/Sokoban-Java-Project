@@ -11,9 +11,10 @@ public class World {
     private final Cell[][] cells;
     private Player player;
     private ArrayList<Box> boxes;
+    private int worldRef;
 
-    public World(int length, int width) {
-        if (width < 5 || length < 5) throw new IllegalArgumentException();
+    public World(int length, int width, int worldRef) {
+        if (width < 5 || length < 5 || worldRef < 0) throw new IllegalArgumentException();
         grid = new Grid(length, width);
         cells = new Cell[length][width];
         player = null;
@@ -73,65 +74,13 @@ public class World {
         return null;
     }
 
-    public boolean checkMove(Direction d) {
-        if (d == null) throw new NullPointerException();
-        Position actualPos = player.getPosition();
-        actualPos.translate(d);
-        if (!cells[actualPos.getY()][actualPos.getX()].getCellStatus()) {
-            if (grid.getElement(actualPos.getY(), actualPos.getX()) == 'O')
-                actualPos.translate(d);
-
-        }
-        return cells[actualPos.getY()][actualPos.getX()].getCellStatus();
-
+    public Cell getCellatPosition(Position pos) {
+        if (pos == null) throw new NullPointerException();
+        return cells[pos.getY()][pos.getX()];
     }
 
-    public boolean movePlayer(Direction d) {
-        if (d == null) throw new NullPointerException();
-        boolean boxInTarget = false;
-        Position actualPos = player.getPosition();
-        Position nextPos = player.getPosition();
-        nextPos.translate(d);
-        if (isBox(nextPos)) {
-            boxInTarget = moveBox(d, nextPos);
-        }
-
-
-        updateCells(actualPos, nextPos);
-        grid.updateGrid(actualPos, nextPos, cells[actualPos.getY()][actualPos.getX()].getCellType());
-        player.move(d);
-        return boxInTarget;
-    }
-
-
-    public boolean moveBox(Direction d, Position pos) {
-        if (d == null || pos == null) throw new NullPointerException();
-        Position actualPos = new Position(pos.getY(), pos.getX());
-        Position nextPos = new Position(pos.getY(), pos.getX());
-        nextPos.translate(d);
-        grid.updateGrid(actualPos, nextPos, cells[actualPos.getY()][actualPos.getX()].getCellType());
-        Box box = getBoxatPosition(pos);
-        if (box == null)
-            throw new IllegalStateException();
-        else box.move(d);
-        updateCells(actualPos, nextPos);
-        if (cells[nextPos.getY()][nextPos.getX()].getCellType() == CellType.TARGET) {
-            box.setInTarget();
-            return true;
-
-        } else {
-            box.setOutOfTarget();
-            return false;
-
-        }
-
-    }
-
-    public void updateCells(Position actualPos, Position nextPos) {
-        if (actualPos == null || nextPos == null)
-            throw new NullPointerException();
-        cells[actualPos.getY()][actualPos.getX()].setFree();
-        cells[nextPos.getY()][nextPos.getX()].setOccupied();
+    public Position getPlayerPosition() {
+        return player.getPosition();
     }
 
     public boolean allBoxesInTarget() {
@@ -147,4 +96,36 @@ public class World {
     public void displayWorld() {
         grid.drawGrid();
     }
+
+    public boolean checkMove(Direction d) {
+        if (d == null) throw new NullPointerException();
+        Position actualPos = player.getPosition();
+        actualPos.translate(d);
+        if (!cells[actualPos.getY()][actualPos.getX()].getCellStatus()) {
+            if (grid.getElement(actualPos.getY(), actualPos.getX()) == 'O')
+                actualPos.translate(d);
+
+        }
+        return cells[actualPos.getY()][actualPos.getX()].getCellStatus();
+
+    }
+
+
+    public void updateCells(Position actualPos, Position nextPos) {
+        if (actualPos == null || nextPos == null)
+            throw new NullPointerException();
+        cells[actualPos.getY()][actualPos.getX()].setFree();
+        cells[nextPos.getY()][nextPos.getX()].setOccupied();
+    }
+
+    public void updateWorldData(Position elemPos, Position nextPos, CellType cell) {
+        if (elemPos == null || nextPos == null || cell == null) throw new NullPointerException();
+        grid.updateGrid(elemPos, nextPos, cell);
+    }
+
+    public void changePlayerPosition(Direction d) {
+        if (d == null) throw new NullPointerException();
+        player.move(d);
+    }
+
 }

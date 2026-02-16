@@ -34,4 +34,9 @@ public class Position {
 
     }
 
+    public int hashCode()
+    {
+         return x*31 + y + 7 ;
+    }
+
 }
