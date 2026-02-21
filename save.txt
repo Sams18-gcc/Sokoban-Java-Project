@@ -1,0 +1,3 @@
+PLAYER 5 7
+BOX 6 7
+BOX 3 2

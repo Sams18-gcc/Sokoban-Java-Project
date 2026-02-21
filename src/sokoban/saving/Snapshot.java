@@ -1,20 +1,23 @@
-package persistance;
+package sokoban.saving;
+
+import sokoban.entity.Box;
 import sokoban.core.Position;
-import sokoban.core.Box;
-import java.util.*;
 
-//litteraly in the title ,it's a snapshot of positions of both player and boxes
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Snapshot {
     public Position player;
-    public Set<Position> boxes;//set pour ne pas avoir des box dans une mm position 
+    public Set<Position> boxes;
 
     public Snapshot(Position p, ArrayList<Box> boxList) {
         player = new Position(p.getY(), p.getX());
         boxes = new HashSet<>();
         for (Box b : boxList) {
-            boxes.add(new Position(b.getPosition().getY(), b.getPosition().getX()));
+            Position bp = b.getPosition();
+            boxes.add(new Position(bp.getY(), bp.getX()));
         }
     }
 }
+

@@ -23,5 +23,4 @@ public class Player {
         pos.translate(d);
     }
 
-
 }

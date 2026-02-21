@@ -142,7 +142,13 @@ public class World {
 
         return true;
     }
-
+    
+    public Player getPlayer() {  
+        if (player == null) throw new IllegalStateException("Player not initialized yet");
+         return player; 
+     }                          //j'ai ajouté les getters pour acceder a player et boxes car avec private je peux pas 
+    public ArrayList<Box> getBoxes() { return boxes; }
+    public Grid getGrid() { return grid; }
 
     public void displayWorld() {
         grid.drawGrid();

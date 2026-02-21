@@ -45,6 +45,4 @@ public class Box {
          return getPosition().equals(box.getPosition());
     }
 
-
-
 }
