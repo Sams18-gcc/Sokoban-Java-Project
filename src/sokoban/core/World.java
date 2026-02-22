@@ -142,7 +142,7 @@ public class World {
   public Player getPlayer() {
      return player;
   }
-  
+
  public char[][] getGridArray() {
     char[][] copy = new char[grid.getLength()][grid.getWidth()];
     for (int i = 0; i < grid.getLength(); i++)

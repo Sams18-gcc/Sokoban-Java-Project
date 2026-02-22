@@ -40,7 +40,7 @@ public class Level {
             String input = sc.nextLine();
             // ------------------------------
 
-            if(input.equals("save")) { // save to file
+            if(input.equals("save")) { // save to file prot
                 try {
                     stateManager.saveToFile(world, "prot.sok");
                     System.out.println("Game saved");
