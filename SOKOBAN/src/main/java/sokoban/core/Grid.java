@@ -1,7 +1,5 @@
 package sokoban.core;
 
-import sokoban.entity.Box;
-
 public class Grid {
     private final char[][] grid;
     private final int width;

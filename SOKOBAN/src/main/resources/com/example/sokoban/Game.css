@@ -1,0 +1,23 @@
+/* ============================= */
+/*            SCENE              */
+/* ============================= */
+
+#SCENE {
+    /*-fx-background-color: linear-gradient(
+            to bottom,
+            #8a0000 0%,
+            #4a0000 40%,
+            #2e2e2e 100%
+    );*/
+    -fx-background-color: white;
+    -fx-padding: 10;
+}
+ImageView {
+    -fx-background-color: #d3d3d3; /* gris clair */
+    -fx-padding: 5px;               /* espace autour de l'image */
+    -fx-border-color: #a9a9a9;      /* bordure gris foncé */
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 2, 2); /* ombre légère */
+    -fx-background-radius: 5px;     /* coins arrondis si voulu */
+}
+

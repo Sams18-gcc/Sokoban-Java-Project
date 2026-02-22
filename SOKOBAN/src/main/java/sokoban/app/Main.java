@@ -1,12 +1,8 @@
 package sokoban.app;
 
-import sokoban.core.Direction;
 import sokoban.core.World;
-import sokoban.logic.GameLogic;
 
-import java.security.DigestException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {

@@ -19,7 +19,7 @@
          <children>
             <Pane fx:id="Background1" layoutX="31.0" layoutY="68.0" prefHeight="80.0" prefWidth="80.0">
                <children>
-                  <ImageView fx:id="LEVEL1" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="LEVEL1" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#CHOSENlevel" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
             <Pane fx:id="Background2" layoutX="171.0" layoutY="68.0" prefHeight="80.0" prefWidth="80.0">

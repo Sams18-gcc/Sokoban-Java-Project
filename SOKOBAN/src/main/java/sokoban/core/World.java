@@ -4,6 +4,7 @@ import sokoban.entity.Box;
 import sokoban.entity.Cell;
 import sokoban.entity.Player;
 
+
 import java.util.ArrayList;
 
 public class World {
@@ -126,6 +127,15 @@ public class World {
     public void changePlayerPosition(Direction d) {
         if (d == null) throw new NullPointerException();
         player.move(d);
+    }
+
+
+
+
+    /// C EST YANIS QUI A AJOUTER CA
+
+    public Grid getGrid() {
+        return this.grid;
     }
 
 }

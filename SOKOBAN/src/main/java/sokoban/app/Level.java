@@ -1,11 +1,11 @@
 package sokoban.app;
 
-import sokoban.core.Direction;
 import sokoban.core.World;
+import sokoban.core.Direction;
+
 import sokoban.logic.GameLogic;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Scanner;
 
 public class Level {
@@ -13,7 +13,7 @@ public class Level {
     private GameLogic logic;
     private int actWorld;
 
-    public Level(Collection<World> c)
+    public Level(ArrayList<World> c)
     {
          if(c == null || c.contains(null)) throw new NullPointerException();
          worlds = new ArrayList<World>(c);
