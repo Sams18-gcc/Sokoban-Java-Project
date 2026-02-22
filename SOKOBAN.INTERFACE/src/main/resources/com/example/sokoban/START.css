@@ -1,0 +1,225 @@
+/* ============================= */
+/*            TITRE              */
+/* ============================= */
+
+#TITRE2{
+    -fx-font-family: "Cinzel";
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+
+    -fx-text-fill: linear-gradient(
+            from 0% 0% to 0% 100%,
+            #ff5c5c,
+            #990000
+    );
+
+    -fx-effect: dropshadow(
+            gaussian,
+            rgba(0,0,0,0.7),
+            12, 0.4, 2, 2
+    );
+}
+
+#TITRE2:hover {
+    -fx-text-fill: linear-gradient(from 0% 0% to 0% 100%, #ff7777, #ff1a1a);
+    -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.6), 20, 0.6, 0, 0);
+}
+
+
+/* ============================= */
+/*            SCENE              */
+/* ============================= */
+
+#SCENE {
+
+    -fx-background-color:
+            linear-gradient(to bottom,
+            #8a0000 0%,
+            #4a0000 40%,
+            #2e2e2e 100%);
+
+    -fx-border-color: #ff3c00;
+    -fx-border-width: 5;
+
+    -fx-padding: 25;
+
+    -fx-effect:
+            innershadow(gaussian,
+            rgba(0,0,0,0.85),
+            10, 0.7, 0, 3);
+}
+
+
+/* ============================= */
+/*        FENETRE LEVELS         */
+/* ============================= */
+
+#LEVELS_fenetre {
+
+    -fx-background-color:
+            linear-gradient(to bottom,
+            #330000 0%,
+            #1a0000 60%,
+            #1a1a1a 100%
+            );
+
+    -fx-border-color: #cc0000;
+    -fx-border-width: 2;
+
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+
+    -fx-padding: 30;
+
+    -fx-effect:
+            dropshadow(
+                    gaussian,
+                    rgba(0,0,0,0.8),
+                    20, 0.5, 0, 5
+            );
+}
+
+
+/* ============================= */
+/*          BOUTON BACK          */
+/* ============================= */
+
+#BACKbutton {
+
+    -fx-background-color:
+            linear-gradient(to bottom,
+            #400000 0%,
+            #1a0000 100%);
+
+    -fx-text-fill: white;
+    -fx-font-family: "Impact";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+
+    -fx-border-color: #aa0000;
+    -fx-border-width: 2;
+
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+
+    -fx-padding: 10 30 10 30;
+
+    -fx-effect:
+            dropshadow(gaussian,
+            rgba(0,0,0,0.9),
+            12, 0.6, 0, 4);
+}
+
+#BACKbutton:hover {
+
+    -fx-background-color:
+            linear-gradient(to bottom,
+            #770000 0%,
+            #330000 100%);
+
+    -fx-text-fill: #ffdddd;
+}
+
+#BACKbutton:pressed {
+    -fx-background-color: #0d0000;
+    -fx-translate-y: 2;
+}
+
+
+/* ============================= */
+/*        CASES DES LEVELS       */
+/* ============================= */
+
+#LEVEL1, #LEVEL2, #LEVEL3, #LEVEL4,
+#LEVEL5, #LEVEL6, #LEVEL7, #LEVEL8 {
+
+    /* Taille fixe */
+    -fx-fit-width: 70;
+    -fx-fit-height: 70;
+
+    /* Fond gris moderne */
+    -fx-background-color:
+            linear-gradient(to bottom,
+            #d9d9d9 0%,
+            #a6a6a6 100%);
+
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+
+    -fx-border-color: #808080;
+    -fx-border-width: 3;
+
+    -fx-padding: 15;
+
+    /* Image légèrement grisée */
+    -fx-opacity: 0.9;
+
+    -fx-effect:
+            dropshadow(
+                    gaussian,
+                    rgba(0,0,0,0.25),
+                    10, 0.4, 0, 4
+            );
+}
+
+
+/* ============================= */
+/*            HOVER              */
+/* ============================= */
+
+#LEVEL1:hover, #LEVEL2:hover, #LEVEL3:hover, #LEVEL4:hover,
+#LEVEL5:hover, #LEVEL6:hover, #LEVEL7:hover, #LEVEL8:hover { /* Bordure dorée arcade */
+    -fx-border-color: #ffcc33;
+
+    -fx-opacity: 1;
+
+    /* Glow plus petit et plus propre */
+    -fx-effect: dropshadow(
+            gaussian,
+            rgba(255, 200, 50, 0.6),
+            12, 0.4, 0, 0
+    );
+
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+
+    -fx-background-color:
+            linear-gradient(to bottom,
+            #d9d9d9 0%,
+            #bfbfbf 40%,
+            #8c8c8c 100%);
+
+}
+
+
+
+#Background1,#Background2,#Background3,#Background4,
+#Background5,#Background6,#Background7,#Background8
+{
+    -fx-pref-width: 80px;
+    -fx-pref-height: 80px;
+
+    /* Métal rouge foncé style arcade */
+    -fx-background-color:
+            linear-gradient(to bottom,
+            #5c0000 0%,
+            #2b0000 60%,
+            #1a1a1a 100%);
+
+    -fx-border-color: #ff3c00;
+    -fx-border-width: 3;
+
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+
+    -fx-effect:
+            dropshadow(gaussian,
+            rgba(0,0,0,0.8),
+            10, 0.6, 0, 3);
+}
+
+
+
+
+
+

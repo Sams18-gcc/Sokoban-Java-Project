@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&display=swap');
+
+.button {
+    -fx-font-family: "Cinzel";
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+
+    -fx-text-fill: #e0e0e0; /* Gris clair pour texte */
+
+    -fx-padding: 8 20 8 20;
+
+
+    /* Fond sombre */
+    -fx-background-color: linear-gradient(
+            to bottom right,
+            #111111,
+            #1a1a1a
+    );
+
+    /* Bordure sombre et subtile */
+    -fx-border-color: #333333;
+    -fx-border-width: 2;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+
+    -fx-cursor: hand;
+
+    /* Ombre subtile */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 6, 0.4, 0, 2);
+}
+.button:hover {
+    -fx-text-fill: #ffffff; /* Texte devient blanc pur */
+    -fx-border-color: #555555; /* Bordure légèrement claire */
+
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.3), 15, 0.6, 0, 0);
+}
+.button:pressed {
+    -fx-background-color: linear-gradient(
+            to bottom right,
+            #0a0a0a,
+            #111111
+    );
+
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+
+#TITRE {
+    -fx-font-family: "Cinzel";
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+
+    /* Gradient rouge */
+    -fx-text-fill: linear-gradient(
+            from 0% 0% to 0% 100%,
+            #ff4c4c,  /* rouge clair */
+            #7f0000   /* rouge sombre */
+    );
+
+    /* Ombre sombre/glow */
+    -fx-effect: dropshadow(
+            gaussian,
+            rgba(0,0,0,0.7),
+            12, 0.4, 2, 2
+    );
+}
+#TITRE:hover {
+    -fx-text-fill: linear-gradient(from 0% 0% to 0% 100%, #ff6666, #ff0000);
+    -fx-effect: dropshadow(gaussian, rgba(255,0,0,0.6), 20, 0.6, 0, 0);
+}
+
+

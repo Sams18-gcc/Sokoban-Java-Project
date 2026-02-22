@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="SCENE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="690.0" prefWidth="660.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sokoban.InterfaceController">
+   <children>
+      <MediaView fx:id="BackgorundVideo" fitHeight="690.0" fitWidth="660.0" />
+      <Button fx:id="buttonSTART" alignment="CENTER" layoutX="198.0" layoutY="91.0" mnemonicParsing="false" onAction="#START" onMouseEntered="#AFFICHESKULL" onMouseExited="#CAHCERSKULL" prefHeight="25.0" prefWidth="264.0" text="START" />
+      <Button fx:id="buttonSETTINGS" alignment="CENTER" layoutX="199.0" layoutY="138.0" mnemonicParsing="false" onAction="#SETTINGS" onMouseEntered="#AFFICHESKULL" onMouseExited="#CAHCERSKULL" prefHeight="25.0" prefWidth="264.0" text="SETTINGS" />
+      <Button fx:id="buttonRULES" layoutX="198.0" layoutY="184.0" mnemonicParsing="false" onAction="#RULES" onMouseEntered="#AFFICHESKULL" onMouseExited="#CAHCERSKULL" prefHeight="25.0" prefWidth="264.0" text="RULES" />
+      <Button fx:id="buttonEXIT" layoutX="198.0" layoutY="235.0" mnemonicParsing="false" onAction="#EXIT" onMouseEntered="#AFFICHESKULL" onMouseExited="#CAHCERSKULL" prefHeight="25.0" prefWidth="264.0" text="EXIT" />
+      <Label fx:id="TITRE" alignment="CENTER" contentDisplay="CENTER" layoutX="172.0" layoutY="14.0" prefHeight="46.0" prefWidth="319.0" text="SOKOBAN">
+         <font>
+            <Font name="Bell MT" size="45.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="skull1" fitHeight="17.0" fitWidth="26.0" layoutX="421.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="skull2" fitHeight="17.0" fitWidth="26.0" layoutX="421.0" layoutY="147.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="skull3" fitHeight="17.0" fitWidth="26.0" layoutX="421.0" layoutY="192.0" onMouseEntered="#AFFICHESKULL" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="skull4" fitHeight="17.0" fitWidth="26.0" layoutX="421.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</AnchorPane>
