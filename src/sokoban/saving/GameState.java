@@ -22,7 +22,7 @@ public class GameState implements Serializable {
             boxPositions.add(new int[]{b.getPosition().getY(), b.getPosition().getX()});
         }
 
-        // Deep copy of grid
+        //je copie la grid aussi 
         this.gridSnapshot = new char[grid.length][grid[0].length];
         for (int i = 0; i < grid.length; i++) {
             System.arraycopy(grid[i], 0, gridSnapshot[i], 0, grid[i].length);

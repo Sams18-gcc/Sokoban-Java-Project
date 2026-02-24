@@ -73,10 +73,6 @@ public class Grid {
         return grid[y][x];
     }
 
-    public char[] getElementRow(int y) {
-      return grid[y];
-   }
-
  public void setElement(int y, int x, char c) {
      grid[y][x] = c;
  }

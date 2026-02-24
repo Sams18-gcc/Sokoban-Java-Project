@@ -129,32 +129,30 @@ public class World {
     }
     
  //---------------------------------------
- 
+    public char[][] getGridArray() {
+        char[][] copy = new char[grid.getLength()][grid.getWidth()];
+        for (int i = 0; i < grid.getLength(); i++) {
+            for (int j = 0; j < grid.getWidth(); j++) {
+                copy[i][j] = grid.getElement(i, j);  
+            }
+        }
+        return copy;
+    }
+
+    public void setGridArray(char[][] newGrid) {
+        for (int i = 0; i < grid.getLength(); i++) {
+            for (int j = 0; j < grid.getWidth(); j++) {
+                grid.setElement(i, j, newGrid[i][j]); 
+            }
+        }
+    }
     public void setPlayerAt(int y, int x) {
       this.player = new Player(y, x);
     }
 
-   public void setBoxAt(int index, Position pos) {
-      if(pos == null || index < 0 || index >= boxes.size()) throw new NullPointerException();
-      boxes.set(index, new Box(pos.getY(), pos.getX())); 
-    } 
-
-  public Player getPlayer() {
-     return player;
-  }
-
- public char[][] getGridArray() {
-    char[][] copy = new char[grid.getLength()][grid.getWidth()];
-    for (int i = 0; i < grid.getLength(); i++)
-        System.arraycopy(grid.getElementRow(i), 0, copy[i], 0, grid.getWidth());
-    return copy;
- }
-
- public void setGridArray(char[][] snapshot) {
-    for (int i = 0; i < grid.getLength(); i++)
-        for (int j = 0; j < grid.getWidth(); j++)
-            grid.setElement(i, j, snapshot[i][j]);
-  }
+  public Grid getGrid() {
+     return grid;
+  } 
 
  public ArrayList<Box> getBoxes() {
      return boxes;
