@@ -2,7 +2,7 @@ package sokoban.core;
 
 import sokoban.entity.Box;
 
-public class Grid {
+public class Grid implements Cloneable {
     private final char[][] grid;
     private final int width;
     private final int length;
@@ -71,6 +71,18 @@ public class Grid {
 
     public char getElement(int y, int x) {
         return grid[y][x];
+    }
+
+    @Override
+    public Grid clone() {
+
+        Grid copy = new Grid(this.length, this.width);
+
+        for (int i = 0; i < this.length; i++) {
+            copy.grid[i] = this.grid[i].clone();
+        }
+
+        return copy;
     }
 
 }

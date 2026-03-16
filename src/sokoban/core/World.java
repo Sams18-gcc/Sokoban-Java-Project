@@ -101,12 +101,12 @@ public class World {
         if (d == null) throw new NullPointerException();
         Position actualPos = player.getPosition();
         actualPos.translate(d);
-        if (!cells[actualPos.getY()][actualPos.getX()].getCellStatus()) {
+        if (!cells[actualPos.getY()][actualPos.getX()].isFree()) {
             if (grid.getElement(actualPos.getY(), actualPos.getX()) == 'O')
                 actualPos.translate(d);
 
         }
-        return cells[actualPos.getY()][actualPos.getX()].getCellStatus();
+        return cells[actualPos.getY()][actualPos.getX()].isFree();
 
     }
 
@@ -126,6 +126,11 @@ public class World {
     public void changePlayerPosition(Direction d) {
         if (d == null) throw new NullPointerException();
         player.move(d);
+    }
+
+    public Grid getGrid()
+    {
+        return grid.clone();
     }
 
 }

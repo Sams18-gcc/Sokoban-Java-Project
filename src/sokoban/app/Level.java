@@ -1,69 +1,131 @@
 package sokoban.app;
 
 import sokoban.core.Direction;
+import sokoban.core.Position;
 import sokoban.core.World;
+import sokoban.logic.Action;
 import sokoban.logic.GameLogic;
+import sokoban.logic.LogicKey;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Scanner;
+import java.util.List;
 
 public class Level {
-    private ArrayList<World> worlds;
-    private GameLogic logic;
+    private final ArrayList<World> worlds;
+    private final GameLogic logic;
     private int actWorld;
+    private LevelState state;
 
-    public Level(Collection<World> c)
-    {
-         if(c == null || c.contains(null)) throw new NullPointerException();
-         worlds = new ArrayList<World>(c);
-         logic = new GameLogic();
-         actWorld = 0;
-    }
-
-    public void init()
-    {
-        World world = worlds.get(actWorld);
-        world.loadWorld();
-        world.displayWorld();
-
-    }
-
-    public void run()
-    {
-        World world = worlds.get(actWorld);
-        System.out.println("Left(q) | Right(d) | Up (z) | Down(s)");
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-
-            String input = sc.nextLine();
-            Direction d = null;
-
-            if (input.equals("z")) {
-                d = Direction.UP;
-            } else if (input.equals("s")) {
-                d = Direction.DOWN;
-            } else if (input.equals("q")) {
-                d = Direction.LEFT;
-            } else if (input.equals("d")) {
-                d = Direction.RIGHT;
-            }
-            if(d == null)
-                continue;
-            if (world.checkMove(d))
-                if(logic.movePlayer(d, world))
-                    if(world.allBoxesInTarget())
-                    {
-                        break;
-                    }
-            world.displayWorld();
-            System.out.println("Left(q) | Right(d) | Up (z) | Down(s)");
+    public Level(Collection<World> c) {
+        if (c == null || c.contains(null)) {
+            throw new NullPointerException();
         }
-        world.displayWorld();
-        System.out.println("Vous avez gagner!!");
 
-
+        worlds = new ArrayList<>(c);
+        logic = GameLogic.logic;
+        actWorld = 0;
+        state = LevelState.RUNNING;
     }
 
+    public void init() {
+        getCurrentWorld().loadWorld();
+    }
 
+    public World getCurrentWorld() {
+        return worlds.get(actWorld);
+    }
+
+    public void changeActWorld(int ref) {
+        if (ref < 0 || ref >= worlds.size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        actWorld = ref;
+    }
+
+    public int getActWorldRef() {
+        return actWorld;
+    }
+
+    public LevelState getState() {
+        return state;
+    }
+
+    public boolean isRunning() {
+        return state == LevelState.RUNNING;
+    }
+
+    public void pause() {
+        state = LevelState.PAUSED;
+    }
+
+    public void resume() {
+        state = LevelState.RUNNING;
+    }
+
+    public void stop() {
+        state = LevelState.STOPPED;
+    }
+
+    public void victory()
+    {
+        state = LevelState.WON;
+    }
+
+    public boolean checkVictory() {
+        for (World w : worlds) {
+            if (!w.allBoxesInTarget()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Action executeUserAction(LogicKey key) {
+        if (key == null) {
+            throw new NullPointerException();
+        }
+
+        if (state != LevelState.RUNNING) {
+            return Action.NOTHING;
+        }
+
+        Action result = logic.executeUserAction(key, getCurrentWorld());
+
+        if (result == Action.PAUSE) {
+            pause();
+            return result;
+        }
+
+        if (checkVictory()) {
+            victory();
+        }
+
+        return result;
+    }
+
+    public List<Direction> executePathFinding(Position dest) {
+        if (dest == null) {
+            throw new NullPointerException();
+        }
+
+        if (state != LevelState.RUNNING) {
+            return null;
+        }
+
+        return logic.executePathFinding(
+                getCurrentWorld(),
+                getCurrentWorld().getPlayerPosition(),
+                dest
+        );
+    }
+
+    public Action executeMove(Direction d)
+    {
+       Action result = logic.movePlayer(d, worlds.get(actWorld));
+       if(result == Action.BOX_IN_TARGET)
+           if(checkVictory())
+               victory();
+       return result;
+    }
 }

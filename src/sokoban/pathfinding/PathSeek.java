@@ -1,4 +1,4 @@
-package sokoban.logic;
+package sokoban.pathfinding;
 
 import sokoban.core.CellType;
 import sokoban.core.Direction;
@@ -24,8 +24,8 @@ public class PathSeek{
         }
     }
 
-    public static List<Direction> findShortestPath(World world, Position start, Position but) {
-        if (start.equals(but)) 
+    public static List<Direction> findShortestPath(World world, Position start, Position dest) {
+        if (start.equals(dest))
         {
             return new ArrayList<>(); // si déjà sur la case
         }
@@ -42,7 +42,7 @@ public class PathSeek{
             PathNode current = queue.poll();
 
             // si on a atteint la cible, on remonte l'arbre pour extraire les directions
-            if (current.pos.equals(but)) {
+            if (current.pos.equals(dest)) {
                 return reconstructPath(current);
             }
 

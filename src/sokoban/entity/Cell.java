@@ -27,7 +27,7 @@ public class Cell {
          this.isFree = true;
     }
 
-    public boolean getCellStatus()
+    public boolean isFree()
     {
          return this.isFree;
     }
