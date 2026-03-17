@@ -34,7 +34,7 @@ public class Position {
         return (getX() == pos.getX()) && (getY() == pos.getY());
     }
 
-    // utile surtout pour les hashset / hashmap
+    // utile surtout pour les hashset
     public int hashCode()
     {
         return x * 31 + y + 7;
