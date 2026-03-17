@@ -7,10 +7,19 @@ import sokoban.entity.Player;
 import java.util.ArrayList;
 
 public class World {
+    // grille du monde pour l'affichage
     private final Grid grid;
+
+    // tableau des cellules logiques
     private final Cell[][] cells;
+
+    // joueur du monde
     private Player player;
+
+    // liste des boites presentes
     private ArrayList<Box> boxes;
+
+    // ref du monde dans le niveau
     private int worldRef;
 
     public World(int length, int width, int worldRef) {
@@ -19,13 +28,16 @@ public class World {
         cells = new Cell[length][width];
         player = null;
         boxes = new ArrayList<Box>();
+        this.worldRef = worldRef;
     }
 
-
+    // initialise le monde a partir de la grille
     public void loadWorld() {
         grid.initGrid();
+
         for (int i = 0; i < grid.getLength(); i++) {
             for (int j = 0; j < grid.getWidth(); j++) {
+
                 if (grid.getElement(i, j) == CellType.EXIT.getSymbole())
                     cells[i][j] = new Cell(i, j, CellType.EXIT, true);
 
@@ -35,89 +47,88 @@ public class World {
                 else if (grid.getElement(i, j) == CellType.TARGET.getSymbole())
                     cells[i][j] = new Cell(i, j, CellType.TARGET, true);
 
-
                 else if (grid.getElement(i, j) == '@') {
                     cells[i][j] = new Cell(i, j, CellType.FLOOR, false);
                     player = new Player(i, j);
+
                 } else if (grid.getElement(i, j) == 'O') {
                     cells[i][j] = new Cell(i, j, CellType.FLOOR, false);
                     Box box = new Box(i, j);
                     boxes.add(box);
-                } else
+
+                } else {
                     cells[i][j] = new Cell(i, j, CellType.FLOOR, true);
-
-
+                }
             }
         }
-
-
     }
-
-    public void displayBoxes() {
-        for (Box b : boxes) {
-            System.out.println(b.getPosition().getY() + " " + b.getPosition().getX());
-        }
-    }
-
+    // retourne vrai si c'est une box a la position pos
     public boolean isBox(Position pos) {
         if (pos == null) throw new NullPointerException();
         return grid.getElement(pos.getY(), pos.getX()) == 'O';
     }
 
+    // renvoie la boite a une position donnee si elle existe
     public Box getBoxatPosition(Position pos) {
         if (pos == null)
             throw new NullPointerException();
+
         for (Box box : boxes) {
             if (box.getPosition().equals(pos))
                 return box;
         }
         return null;
     }
-
+    // renvoie le type de cellule a la position donnee
     public Cell getCellatPosition(Position pos) {
         if (pos == null) throw new NullPointerException();
         return cells[pos.getY()][pos.getX()];
     }
 
+    // position actuelle du joueur
     public Position getPlayerPosition() {
         return player.getPosition();
     }
 
+    // verifie si toutes les boites sont sur une target
     public boolean allBoxesInTarget() {
         for (Box box : boxes) {
             if (!box.isInTarget())
                 return false;
         }
-
         return true;
     }
-
 
     public void displayWorld() {
         grid.drawGrid();
     }
 
+    // verifie si le joueur peut avancer dans cette direction
+    // si y a une boite on regarde aussi la case d'apres
     public boolean checkMove(Direction d) {
         if (d == null) throw new NullPointerException();
+
         Position actualPos = player.getPosition();
         actualPos.translate(d);
+
         if (!cells[actualPos.getY()][actualPos.getX()].isFree()) {
-            if (grid.getElement(actualPos.getY(), actualPos.getX()) == 'O')
-                actualPos.translate(d);
-
+            if (grid.getElement(actualPos.getY()][actualPos.getX()) == 'O')
+            actualPos.translate(d);
         }
-        return cells[actualPos.getY()][actualPos.getX()].isFree();
 
+        return cells[actualPos.getY()][actualPos.getX()].isFree();
     }
 
-
+    // met a jour les cellules apres un deplacement
     public void updateCells(Position actualPos, Position nextPos) {
         if (actualPos == null || nextPos == null)
             throw new NullPointerException();
+
         cells[actualPos.getY()][actualPos.getX()].setFree();
         cells[nextPos.getY()][nextPos.getX()].setOccupied();
     }
 
+    // met a jour la grille apres le deplacement d'un element
     public void updateWorldData(Position elemPos, Position nextPos, CellType cell) {
         if (elemPos == null || nextPos == null || cell == null) throw new NullPointerException();
         grid.updateGrid(elemPos, nextPos, cell);
@@ -128,9 +139,8 @@ public class World {
         player.move(d);
     }
 
-    public Grid getGrid()
-    {
+    // on renvoie un clone pour eviter de modifier la vraie grille depuis l'exterieur
+    public Grid getGrid() {
         return grid.clone();
     }
-
 }

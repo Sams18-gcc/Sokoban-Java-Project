@@ -12,9 +12,16 @@ import java.util.Collection;
 import java.util.List;
 
 public class Level {
+    // liste des mondes du niveau
     private final ArrayList<World> worlds;
+
+    // logique principale du jeu
     private final GameLogic logic;
+
+    // indice du monde actuellement joue
     private int actWorld;
+
+    // etat actuel de la partie
     private LevelState state;
 
     public Level(Collection<World> c) {
@@ -28,14 +35,17 @@ public class Level {
         state = LevelState.RUNNING;
     }
 
+    // initialise le monde courant
     public void init() {
         getCurrentWorld().loadWorld();
     }
 
+    // renvoie le monde actuellement actif
     public World getCurrentWorld() {
         return worlds.get(actWorld);
     }
 
+    // change le monde courant
     public void changeActWorld(int ref) {
         if (ref < 0 || ref >= worlds.size()) {
             throw new IndexOutOfBoundsException();
@@ -54,24 +64,24 @@ public class Level {
     public boolean isRunning() {
         return state == LevelState.RUNNING;
     }
-
+    // mettre le jeu en pause
     public void pause() {
         state = LevelState.PAUSED;
     }
-
+    // continuer le jeu
     public void resume() {
         state = LevelState.RUNNING;
     }
-
+    // arret du jeu
     public void stop() {
         state = LevelState.STOPPED;
     }
-
-    public void victory()
-    {
+    // victoire
+    public void victory() {
         state = LevelState.WON;
     }
 
+    // verifie si toutes les boites de tous les mondes sont bien placees
     public boolean checkVictory() {
         for (World w : worlds) {
             if (!w.allBoxesInTarget()) {
@@ -81,15 +91,16 @@ public class Level {
         return true;
     }
 
+    // execute une action utilisateur simple (deplacement, pause...)
     public Action executeUserAction(LogicKey key) {
         if (key == null) {
             throw new NullPointerException();
         }
-
+        // si la partie n'est pas en cours, on fait rien
         if (state != LevelState.RUNNING) {
             return Action.NOTHING;
         }
-
+        // recuperer l'action qui vient d'etre executee
         Action result = logic.executeUserAction(key, getCurrentWorld());
 
         if (result == Action.PAUSE) {
@@ -104,11 +115,12 @@ public class Level {
         return result;
     }
 
+    // calcule un chemin vers une destination donnee
     public List<Direction> executePathFinding(Position dest) {
         if (dest == null) {
             throw new NullPointerException();
         }
-
+        // si la partie n'est pas en cours, on fait rien
         if (state != LevelState.RUNNING) {
             return null;
         }
@@ -120,12 +132,16 @@ public class Level {
         );
     }
 
-    public Action executeMove(Direction d)
-    {
-       Action result = logic.movePlayer(d, worlds.get(actWorld));
-       if(result == Action.BOX_IN_TARGET)
-           if(checkVictory())
-               victory();
-       return result;
+    // execute directement un mouvement dans une direction
+    public Action executeMove(Direction d) {
+        Action result = logic.movePlayer(d, worlds.get(actWorld));
+        // si une box atteint un but, on verifie les autres
+        if (result == Action.BOX_IN_TARGET) {
+            if (checkVictory()) {
+                victory();
+            }
+        }
+
+        return result;
     }
 }
