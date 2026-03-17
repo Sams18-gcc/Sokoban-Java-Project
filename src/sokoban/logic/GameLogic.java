@@ -6,6 +6,7 @@ import sokoban.core.Position;
 import sokoban.core.World;
 import sokoban.entity.Box;
 import sokoban.pathfinding.PathSeek;
+import sokoban.saving.StateManager;
 
 import java.util.List;
 
@@ -119,5 +120,11 @@ public class GameLogic {
             throw new NullPointerException();
 
         return PathSeek.findShortestPath(world, start, dest);
+    }
+    // a appeler a chaque fois que le joueur bouge
+    public void executeSaveUndoSnapshot(World world, Action result, StateManager stateManager)
+    {
+        if(result == Action.MOVED || result == Action.BOX_IN_TARGET)
+
     }
 }
