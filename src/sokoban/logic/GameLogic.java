@@ -113,6 +113,7 @@ public class GameLogic {
         return movePlayer(d, world);
     }
 
+
     // calcule un chemin entre 2 positions
     public List<Direction> executePathFinding(World world, Position start, Position dest) {
         if(world == null || start == null || dest == null)
