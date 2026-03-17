@@ -33,8 +33,8 @@ public class World {
     }
 
     // initialise le monde a partir de la grille
-    public void loadWorld() {
-        grid.initGrid();
+    public void loadWorld(char[][] g) {
+        grid.initGrid(g);
 
         for (int i = 0; i < grid.getLength(); i++) {
             for (int j = 0; j < grid.getWidth(); j++) {

@@ -122,9 +122,5 @@ public class GameLogic {
         return PathSeek.findShortestPath(world, start, dest);
     }
     // a appeler a chaque fois que le joueur bouge
-    public void executeSaveUndoSnapshot(World world, Action result, StateManager stateManager)
-    {
-        if(result == Action.MOVED || result == Action.BOX_IN_TARGET)
 
-    }
 }

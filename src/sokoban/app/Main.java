@@ -15,7 +15,7 @@ public class Main {
         ArrayList<World> worlds = new ArrayList<>();
         worlds.add(world);
 
-        Level level = new Level(worlds);
+        Level level = new Level( 1);
         level.init();
         TerminalUi t = TerminalUi.game;
         t.play(level);

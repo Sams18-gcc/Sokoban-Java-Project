@@ -7,13 +7,13 @@ import java.util.*;
 
 public class StateManager {
 
-    private final String saveFolder = "levels";
+    private final String levelsFolder = "levels";
     private final String saveFile = null;
     private final Stack<GameState> undoStack = new Stack<>();
 
 
     public void save(World world) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(saveFolder))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(levelsFolder))) {
 
             Position p = world.getPlayerPosition();
             writer.println(p.getY() + " " + p.getX());
@@ -40,7 +40,7 @@ public class StateManager {
     }
 
     public void load(World world) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(saveFolder))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(levelsFolder))) {
 
             String[] playerPos = reader.readLine().split(" ");
             world.setPlayerAt(Integer.parseInt(playerPos[0]), Integer.parseInt(playerPos[1]));
