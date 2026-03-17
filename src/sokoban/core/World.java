@@ -143,4 +143,31 @@ public class World {
     public Grid getGrid() {
         return grid.clone();
     }
+
+
+    public ArrayList<Box> getBoxes() {
+        return new ArrayList<>(boxes);
+    }
+
+    public char[][] getGridArray() {
+        char[][] copy = new char[grid.getLength()][grid.getWidth()];
+        for (int i = 0; i < grid.getLength(); i++) {
+            for (int j = 0; j < grid.getWidth(); j++) {
+                copy[i][j] = grid.getElement(i, j);
+            }
+        }
+        return copy;
+    }
+
+    public void setPlayerAt(int y, int x) {
+        this.player = new Player(y, x);
+    }
+
+    public void setGridArray(char[][] newGrid) {
+        for (int i = 0; i < grid.getLength(); i++) {
+            for (int j = 0; j < grid.getWidth(); j++) {
+                grid.setElement(i, j, newGrid[i][j]);
+            }
+        }
+    }
 }

@@ -85,4 +85,8 @@ public class Grid implements Cloneable {
 
         return copy;
     }
+
+    public void setElement(int y, int x, char c) {
+        grid[y][x] = c;
+    }
 }
