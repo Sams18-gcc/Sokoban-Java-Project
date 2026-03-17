@@ -5,6 +5,7 @@ import sokoban.entity.Cell;
 import sokoban.entity.Player;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class World {
     // grille du monde pour l'affichage
@@ -112,7 +113,7 @@ public class World {
         actualPos.translate(d);
 
         if (!cells[actualPos.getY()][actualPos.getX()].isFree()) {
-            if (grid.getElement(actualPos.getY()][actualPos.getX()) == 'O')
+            if (grid.getElement(actualPos.getY() ,actualPos.getX()) == 'O')
             actualPos.translate(d);
         }
 
@@ -168,6 +169,15 @@ public class World {
             for (int j = 0; j < grid.getWidth(); j++) {
                 grid.setElement(i, j, newGrid[i][j]);
             }
+        }
+    }
+
+    public void setBoxesFromPositions(List<int[]> positions) {
+        if (positions == null) throw new NullPointerException();
+
+        boxes = new ArrayList<>();
+        for (int[] pos : positions) {
+            boxes.add(new Box(pos[0], pos[1]));
         }
     }
 }
