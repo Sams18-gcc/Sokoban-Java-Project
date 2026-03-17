@@ -112,7 +112,7 @@ public class World {
         actualPos.translate(d);
 
         if (!cells[actualPos.getY()][actualPos.getX()].isFree()) {
-            if (grid.getElement(actualPos.getY()][actualPos.getX()) == 'O')
+            if (grid.getElement(actualPos.getY() , actualPos.getX()) == 'O')
             actualPos.translate(d);
         }
 
