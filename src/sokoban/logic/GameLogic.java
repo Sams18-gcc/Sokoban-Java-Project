@@ -7,6 +7,7 @@ import sokoban.core.World;
 import sokoban.entity.Box;
 import sokoban.pathfinding.PathSeek;
 
+
 import java.util.List;
 
 /*
@@ -120,4 +121,6 @@ public class GameLogic {
 
         return PathSeek.findShortestPath(world, start, dest);
     }
+    // a appeler a chaque fois que le joueur bouge
+
 }

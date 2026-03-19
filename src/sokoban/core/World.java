@@ -5,6 +5,7 @@ import sokoban.entity.Cell;
 import sokoban.entity.Player;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class World {
     // grille du monde pour l'affichage
@@ -32,8 +33,8 @@ public class World {
     }
 
     // initialise le monde a partir de la grille
-    public void loadWorld() {
-        grid.initGrid();
+    public void loadWorld(char[][] g) {
+        grid.initGrid(g);
 
         for (int i = 0; i < grid.getLength(); i++) {
             for (int j = 0; j < grid.getWidth(); j++) {
@@ -112,7 +113,7 @@ public class World {
         actualPos.translate(d);
 
         if (!cells[actualPos.getY()][actualPos.getX()].isFree()) {
-            if (grid.getElement(actualPos.getY() , actualPos.getX()) == 'O')
+            if (grid.getElement(actualPos.getY() ,actualPos.getX()) == 'O')
             actualPos.translate(d);
         }
 
@@ -143,4 +144,46 @@ public class World {
     public Grid getGrid() {
         return grid.clone();
     }
+
+
+    public ArrayList<Box> getBoxes() {
+        return new ArrayList<>(boxes);
+    }
+
+    public char[][] getGridArray() {
+        char[][] copy = new char[grid.getLength()][grid.getWidth()];
+        for (int i = 0; i < grid.getLength(); i++) {
+            for (int j = 0; j < grid.getWidth(); j++) {
+                copy[i][j] = grid.getElement(i, j);
+            }
+        }
+        return copy;
+    }
+
+    public void setPlayerAt(int y, int x) {
+        this.player = new Player(y, x);
+    }
+
+    public void setGridArray(char[][] newGrid) {
+        for (int i = 0; i < grid.getLength(); i++) {
+            for (int j = 0; j < grid.getWidth(); j++) {
+                grid.setElement(i, j, newGrid[i][j]);
+            }
+        }
+    }
+
+    public void setBoxesFromPositions(List<int[]> positions) {
+        if (positions == null) throw new NullPointerException();
+
+        boxes = new ArrayList<>();
+        for (int[] pos : positions) {
+            boxes.add(new Box(pos[0], pos[1]));
+        }
+    }
+    
+    public int getWorldRef() {
+      return worldRef;
+    }
+    
+    
 }
