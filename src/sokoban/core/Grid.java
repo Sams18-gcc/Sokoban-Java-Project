@@ -15,22 +15,13 @@ public class Grid implements Cloneable {
     }
 
     // initialise la grille de base avec les murs et quelques elements de test
-    public void initGrid() {
+    public void initGrid(char[][] g) {
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < width; j++) {
-                if (i == 0 || j == 0 || i == length - 1 || j == width - 1) {
-                    grid[i][j] = '#';
-                } else {
-                    this.grid[i][j] = ' ';
-                }
+               grid[i][j] = g[i][j];
             }
         }
 
-        this.grid[1][width - 3] = '@';
-        this.grid[2][width - 3] = 'O';
-        this.grid[3][2] = 'O';
-        this.grid[length - 2][width - 5] = 'x';
-        this.grid[length - 4][width - 3] = 'x';
     }
 
     // affiche la grille dans le terminal
@@ -84,5 +75,9 @@ public class Grid implements Cloneable {
         }
 
         return copy;
+    }
+
+    public void setElement(int y, int x, char c) {
+        grid[y][x] = c;
     }
 }

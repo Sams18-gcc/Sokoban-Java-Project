@@ -111,6 +111,7 @@ public class TerminalUi {
      * - puis on affiche le resultat si besoin
      */
     public void play(Level level) {
+
         while (level.getState() == LevelState.RUNNING) {
             // on reaffiche le monde avant chaque nouvelle action
             displayWorldTerminal(level.getCurrentWorld());
@@ -166,6 +167,7 @@ public class TerminalUi {
 
                     // si l'utilisateur demande une pause, on stoppe la boucle terminale
                 } else if (result == Action.PAUSE) {
+
                     level.stop();
                 }
             }
