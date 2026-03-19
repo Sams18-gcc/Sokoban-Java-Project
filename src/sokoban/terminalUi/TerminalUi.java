@@ -7,7 +7,7 @@ import sokoban.core.Position;
 import sokoban.core.World;
 import sokoban.logic.Action;
 import sokoban.logic.LogicKey;
-
+import sokoban.saving.StateManager;
 import java.util.List;
 import java.util.Scanner;
 
@@ -48,7 +48,15 @@ public class TerminalUi {
             return LogicKey.PATHFINDING;
         } else if (input.equals("esc")) {
             return LogicKey.ESCAPE;
-        } else {
+        } else if (input.equals("u")) { //j'ai ajouté les keys de undo,save,load,reload
+            return LogicKey.UNDO;
+        }else if (input.equals("sv")){
+             return LogicKey.SAVE;
+        }else if (input.equals("ld")) {
+             return LogicKey.LOAD;
+        } else if (input.equals("r")){
+             return LogicKey.RELOAD;
+        }else {
             return null;
         }
     }
@@ -63,7 +71,7 @@ public class TerminalUi {
 
     // affiche les commandes disponibles
     public void showOptionsTerminal() {
-        System.out.println("Left(q) | Right(d) | Up (z) | Down(s) | Auto (p)");
+          System.out.println("Left(q) | Right(d) | Up(z) | Down(s) | Auto(p) | Undo(u) | Save(sv) | Load(ld) | Reload(r)");
     }
 
     /*
@@ -110,8 +118,8 @@ public class TerminalUi {
      * - on appelle Level pour executer cette action
      * - puis on affiche le resultat si besoin
      */
-    public void play(Level level) {
-
+    public void play(Level level, StateManager sm) {// des push a la undostack avant chaque movement important (meme pathfind)
+    
         while (level.getState() == LevelState.RUNNING) {
             // on reaffiche le monde avant chaque nouvelle action
             displayWorldTerminal(level.getCurrentWorld());
@@ -123,6 +131,30 @@ public class TerminalUi {
             // si l'entree n'est pas reconnue, on recommence simplement
             if (lk == null)
                 continue;
+
+            // gestion de undo 
+            if (lk == LogicKey.UNDO) {
+                sm.undo(level.getCurrentWorld());
+                continue;
+            }
+
+            // sauvegarde de la partie en cours dans un fichier
+            if (lk == LogicKey.SAVE) {
+                sm.save(level);
+                continue;
+            }
+
+            // chargement de la derniere sauvegarde depuis le fichier
+            if (lk == LogicKey.LOAD) {
+                sm.load(level);
+                continue;
+            }
+
+            // rechargement du niveau si on veut recommencer
+            if (lk == LogicKey.RELOAD) {
+                sm.loadFresh(level);
+                continue;
+            }
 
             // cas special : le pathfinding demande d'abord une destination,
             // puis execute le chemin trouve et reaffiche le monde a chaque etape
@@ -140,6 +172,8 @@ public class TerminalUi {
                 // on joue le chemin et on affiche le deplacement progressivement
                 for (Direction d : path) {
                     countDisplay++;
+                    // on sauvegarde l'etat avant chaque deplacement du pathfinding pour pouvoir l'annuler
+                    sm.saveUndoSnapshot(level.getCurrentWorld());
                     level.executeMove(d);
 
                     // on reaffiche entre les deplacements pour voir le parcours
@@ -155,6 +189,9 @@ public class TerminalUi {
 
             } else {
                 // pour les autres actions, on passe directement par Level
+                
+                // on sauvegarde l'etat du monde courant avant chaque action pour permettre l'undo
+                sm.saveUndoSnapshot(level.getCurrentWorld());
                 Action result = level.executeUserAction(lk);
 
                 // si une boite vient d'entrer dans une target,

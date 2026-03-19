@@ -1,104 +1,157 @@
 package sokoban.saving;
 
-import sokoban.core.*;
-import sokoban.entity.*;
 import java.io.*;
 import java.util.*;
+import sokoban.core.*;
+import sokoban.entity.*;
+import sokoban.saving.*;
+import sokoban.app.*;
 
 public class StateManager {
 
-    private final String levelsFolder = "levels";
-    private final String saveFile = null;
-    private final Stack<GameState> undoStack = new Stack<>();
+    private final String savesFolder = "saves";
+    private String saveFileName = "save.txt";
+    //comme on aura besoin dundostack pour chaque monde dans un level alors je fais une map ,chaque stack a sa reference monde
+    private final Map<Integer, Stack<GameState>> undoStacks = new HashMap<>();
 
+  
+    public void save(Level level) {
+        saveFileName = "save_level" + level.getNumLevel() + ".txt";//chauqe level aura le droit de sauvegarde 
+        File folder = new File(savesFolder);
+        if (!folder.exists()) folder.mkdirs();
 
-    public void save(World world) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(levelsFolder))) {
+        File file = new File(folder, saveFileName);
 
-            Position p = world.getPlayerPosition();
-            writer.println(p.getY() + " " + p.getX());
+        try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
 
-            List<Box> boxes = world.getBoxes();
-            writer.println(boxes.size());
-            for (Box b : boxes) {
-                writer.println(b.getPosition().getY() + " " + b.getPosition().getX());
-            }
+            ArrayList<World> worlds = level.getWorlds();
 
-            Grid grid = world.getGrid();
-            for (int i = 0; i < grid.getLength(); i++) {
-                for (int j = 0; j < grid.getWidth(); j++) {
-                    writer.print(grid.getElement(i, j));
+            
+            writer.println(level.getNumLevel() + " " + level.getActWorldRef());
+
+            
+            writer.println(worlds.size());
+
+            for (World w : worlds) {
+
+                writer.println(w.getWorldRef());
+
+               
+                Position p = w.getPlayerPosition();
+                writer.println(p.getY() + " " + p.getX());
+
+                List<Box> boxes = w.getBoxes();
+                writer.println(boxes.size());
+
+                
+                for (Box b : boxes) {
+                    writer.println(b.getPosition().getY() + " " + b.getPosition().getX());
                 }
-                writer.println();
-            }
 
-            System.out.println("Game saved.");
-
-        } catch (IOException e) {
-            System.out.println("Failed to save: " + e.getMessage());
-        }
-    }
-
-    public void load(World world) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(levelsFolder))) {
-
-            String[] playerPos = reader.readLine().split(" ");
-            world.setPlayerAt(Integer.parseInt(playerPos[0]), Integer.parseInt(playerPos[1]));
-
-            int boxCount = Integer.parseInt(reader.readLine());
-            for (int i = 0; i < boxCount; i++) {
-                String[] boxPos = reader.readLine().split(" ");
-                world.getBoxes().set(i, new Box(
-                        Integer.parseInt(boxPos[0]),
-                        Integer.parseInt(boxPos[1])
-                ));
-            }
-
-            Grid grid = world.getGrid();
-            for (int i = 0; i < grid.getLength(); i++) {
-                String line = reader.readLine();
-                for (int j = 0; j < grid.getWidth(); j++) {
-                    grid.setElement(i, j, line.charAt(j));
+                char[][] grid = w.getGridArray();
+                writer.println(grid.length + " " + grid[0].length);
+                for (char[] row : grid) {
+                    writer.println(new String(row));
                 }
             }
 
-            world.displayWorld();
-            System.out.println("Game loaded.");
-
         } catch (IOException e) {
-            System.out.println("Failed to load: " + e.getMessage());
         }
     }
 
+    public boolean load(Level level) {
+        saveFileName = "save_level" + level.getNumLevel() + ".txt";
+        File file = new File(savesFolder, saveFileName);
+        if (!file.exists()) {
+            return false;
+        }
 
-    public void saveUndoSnapshot(World world) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
+            // line 1 numLevel et actWorld
+            String[] header = reader.readLine().split(" ");
+            int savedNumLevel = Integer.parseInt(header[0]);
+            int savedActWorld = Integer.parseInt(header[1]);
+
+            if (savedNumLevel != level.getNumLevel()) {
+                return false;
+            }
+
+            int nbWorlds = Integer.parseInt(reader.readLine());//on restore level
+
+            ArrayList<World> worlds = level.getWorlds();
+
+            for (int i = 0; i < nbWorlds; i++) {//on restore les worlds un par un 
+
+                int worldRef = Integer.parseInt(reader.readLine());
+                reader.readLine(); 
+
+                
+                int boxCount = Integer.parseInt(reader.readLine());
+                for (int b = 0; b < boxCount; b++) {
+                    reader.readLine(); 
+                }
+
+                // grid
+                String[] dims = reader.readLine().split(" ");
+                int rows = Integer.parseInt(dims[0]);
+                int cols = Integer.parseInt(dims[1]);
+                char[][] grid = new char[rows][cols];
+                for (int r = 0; r < rows; r++) {
+                    String line = reader.readLine();
+                    for (int c = 0; c < cols; c++) {
+                        grid[r][c] = line.charAt(c);
+                    }
+                }
+
+                World w = worlds.get(worldRef);
+                w.loadWorld(grid);
+            }
+
+            level.changeActWorld(savedActWorld);
+            undoStacks.clear();//c'est une partie sauvbegardé donc si on jouait avant je vide la stack pour maintenant 
+            return true;       //save les nouveaux mouvements 
+
+        } catch (IOException | NumberFormatException e) {
+            return false;
+        }
+    }
+
+   
+    public void saveUndoSnapshot(World w) {
+        int ref = w.getWorldRef();
+        undoStacks.computeIfAbsent(ref, k -> new Stack<>());//si le monde existe dans la map
+
         GameState snapshot = new GameState(
-                world.getPlayerPosition().getY(),
-                world.getPlayerPosition().getX(),
-                world.getBoxes(),
-                world.getGridArray()
+                w.getPlayerPosition().getY(),
+                w.getPlayerPosition().getX(),
+                w.getBoxes(),
+                w.getGridArray()
         );
-        undoStack.push(snapshot);
+        undoStacks.get(ref).push(snapshot);
     }
 
+    public void undo(World w) {
+        int ref = w.getWorldRef();
+        Stack<GameState> stack = undoStacks.get(ref);//chercher quelle stack a depiler
 
-    public void undo(World world) {
-        if (undoStack.isEmpty()) {
-            System.out.println("Nothing to undo.");
+        if (stack == null || stack.isEmpty()) {
             return;
         }
-        GameState snapshot = undoStack.pop();
 
-        world.setGridArray(snapshot.getGridSnapshot());
-        world.setPlayerAt(snapshot.getPlayerY(), snapshot.getPlayerX());
-
-        List<Box> boxes = world.getBoxes();
-        List<int[]> pos = snapshot.getBoxPositions();
-        for (int i = 0; i < boxes.size(); i++) {
-            boxes.set(i, new Box(pos.get(i)[0], pos.get(i)[1]));
-        }
-
-        world.displayWorld();
-
+        GameState snapshot = stack.pop();
+        w.loadWorld(snapshot.getGridSnapshot());
+        w.displayWorld();
     }
+
+    public void clearUndoStack(int worldRef) {
+        undoStacks.remove(worldRef);
+    }
+
+   public void loadFresh(Level level) {
+        level.getWorlds().clear();  
+        level.init();              
+        undoStacks.clear();        
+    }
+
 }

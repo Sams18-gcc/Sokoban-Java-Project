@@ -14,5 +14,6 @@ public enum LogicKey {
     PATHFINDING,
     LOAD,
     SAVE,
-    UNDO
+    UNDO,
+    RELOAD//si on veut restart le jeu mid playing
 }

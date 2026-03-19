@@ -6,7 +6,7 @@ import sokoban.core.Position;
 import sokoban.core.World;
 import sokoban.entity.Box;
 import sokoban.pathfinding.PathSeek;
-import sokoban.saving.StateManager;
+
 
 import java.util.List;
 

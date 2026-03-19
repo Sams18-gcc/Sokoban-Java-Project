@@ -166,5 +166,12 @@ public class Level {
 
         return result;
     }
-}
+ //------------------------------------j'ai ajouté deux getters 
+    public int getNumLevel() {
+       return numLevel;
+   }
 
+  public ArrayList<World> getWorlds() {
+      return worlds;
+    }
+}

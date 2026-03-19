@@ -35,7 +35,10 @@ public class World {
     // initialise le monde a partir de la grille
     public void loadWorld(char[][] g) {
         grid.initGrid(g);
-
+       //quand je load une saved partie le add ajoute a la liste existante deja donc ça crée des doublouns
+        //donc vaut mieux initializer a vide a chque load
+        player=null;
+        boxes.clear();
         for (int i = 0; i < grid.getLength(); i++) {
             for (int j = 0; j < grid.getWidth(); j++) {
 
@@ -180,4 +183,10 @@ public class World {
             boxes.add(new Box(pos[0], pos[1]));
         }
     }
+    
+    public int getWorldRef() {
+      return worldRef;
+    }
+    
+    
 }
