@@ -7,6 +7,7 @@ import sokoban.core.World;
 import sokoban.entity.Box;
 import sokoban.pathfinding.PathSeek;
 
+
 import java.util.List;
 
 /*
@@ -49,6 +50,7 @@ public class GameLogic {
         world.updateCells(actualPos, nextPos);
         world.updateWorldData(actualPos, nextPos, world.getCellatPosition(actualPos).getCellType());
         world.changePlayerPosition(d);
+
 
         if (boxInTarget) {
             return Action.BOX_IN_TARGET;
@@ -121,4 +123,6 @@ public class GameLogic {
 
         return PathSeek.findShortestPath(world, start, dest);
     }
+    // a appeler a chaque fois que le joueur bouge
+
 }

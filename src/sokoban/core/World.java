@@ -5,6 +5,7 @@ import sokoban.entity.Cell;
 import sokoban.entity.Player;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class World {
     // grille du monde pour l'affichage
@@ -32,9 +33,12 @@ public class World {
     }
 
     // initialise le monde a partir de la grille
-    public void loadWorld() {
-        grid.initGrid();
-
+    public void loadWorld(char[][] g) {
+        grid.initGrid(g);
+        //quand je load une saved partie le add ajoute a la liste existante deja donc ça crée des doublouns
+        //donc vaut mieux initializer a vide a chque load
+        player = null;
+        boxes.clear();
         for (int i = 0; i < grid.getLength(); i++) {
             for (int j = 0; j < grid.getWidth(); j++) {
 
@@ -46,6 +50,7 @@ public class World {
 
                 else if (grid.getElement(i, j) == CellType.TARGET.getSymbole())
                     cells[i][j] = new Cell(i, j, CellType.TARGET, true);
+
 
                 else if (grid.getElement(i, j) == '@') {
                     cells[i][j] = new Cell(i, j, CellType.FLOOR, false);
@@ -62,6 +67,7 @@ public class World {
             }
         }
     }
+
     // retourne vrai si c'est une box a la position pos
     public boolean isBox(Position pos) {
         if (pos == null) throw new NullPointerException();
@@ -79,6 +85,7 @@ public class World {
         }
         return null;
     }
+
     // renvoie le type de cellule a la position donnee
     public Cell getCellatPosition(Position pos) {
         if (pos == null) throw new NullPointerException();
@@ -112,8 +119,8 @@ public class World {
         actualPos.translate(d);
 
         if (!cells[actualPos.getY()][actualPos.getX()].isFree()) {
-            if (grid.getElement(actualPos.getY() , actualPos.getX()) == 'O')
-            actualPos.translate(d);
+            if (grid.getElement(actualPos.getY(), actualPos.getX()) == 'O')
+                actualPos.translate(d);
         }
 
         return cells[actualPos.getY()][actualPos.getX()].isFree();
@@ -143,4 +150,50 @@ public class World {
     public Grid getGrid() {
         return grid.clone();
     }
+
+
+    public ArrayList<Box> getBoxes() {
+        return new ArrayList<>(boxes);
+    }
+
+    public char[][] getGridArray() {
+        char[][] copy = new char[grid.getLength()][grid.getWidth()];
+        for (int i = 0; i < grid.getLength(); i++) {
+            for (int j = 0; j < grid.getWidth(); j++) {
+                copy[i][j] = grid.getElement(i, j);
+            }
+        }
+        return copy;
+    }
+
+    public void setPlayerAt(Position pos) {
+        this.player = new Player(pos.getY(), pos.getX());
+    }
+
+    public void setGridArray(char[][] newGrid) {
+        for (int i = 0; i < grid.getLength(); i++) {
+            for (int j = 0; j < grid.getWidth(); j++) {
+                grid.setElement(i, j, newGrid[i][j]);
+            }
+        }
+    }
+
+    public void setBoxesFromPositions(List<Position> positions) {
+        if (positions == null) throw new NullPointerException();
+
+        boxes = new ArrayList<>();
+        for (Position pos : positions) {
+            Box box = new Box(pos.getY(), pos.getX());
+            if (getCellatPosition(pos).getCellType() == CellType.TARGET)
+                box.setInTarget();
+            boxes.add(box);
+        }
+    }
+
+
+    public int getWorldRef() {
+        return worldRef;
+    }
+
+
 }
