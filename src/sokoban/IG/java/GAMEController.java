@@ -1,4 +1,4 @@
-package sokoban.IG.java;
+/*package sokoban.IG.java;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
@@ -208,4 +208,4 @@ public class GAMEController {
 
 
     }
-}
+}*/
