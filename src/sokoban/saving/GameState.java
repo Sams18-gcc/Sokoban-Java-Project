@@ -3,6 +3,7 @@ package sokoban.saving;
 import sokoban.core.*;
 import sokoban.entity.*;
 
+import javax.management.loading.ClassLoaderRepository;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class GameState implements Serializable {
     private final int playerY, playerX;
-    private final List<int[]> boxPositions;
+    private final List<Position> boxPositions;
     private final char[][] gridSnapshot;
 
     public GameState(int playerY, int playerX, List<Box> boxes, char[][] grid) {
@@ -19,7 +20,7 @@ public class GameState implements Serializable {
 
         this.boxPositions = new ArrayList<>();
         for (Box b : boxes) {
-            boxPositions.add(new int[]{b.getPosition().getY(), b.getPosition().getX()});
+            boxPositions.add(new Position(b.getPosition().getY(), b.getPosition().getX()));
         }
 
         //je copie la grid aussi
@@ -31,6 +32,6 @@ public class GameState implements Serializable {
 
     public int getPlayerY() { return playerY; }
     public int getPlayerX() { return playerX; }
-    public List<int[]> getBoxPositions() { return boxPositions; }
+    public List<Position> getBoxPositions() { return boxPositions; }
     public char[][] getGridSnapshot() { return gridSnapshot; }
 }

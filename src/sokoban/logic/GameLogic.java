@@ -51,6 +51,7 @@ public class GameLogic {
         world.updateWorldData(actualPos, nextPos, world.getCellatPosition(actualPos).getCellType());
         world.changePlayerPosition(d);
 
+
         if (boxInTarget) {
             return Action.BOX_IN_TARGET;
         }

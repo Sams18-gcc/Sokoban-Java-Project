@@ -7,10 +7,13 @@ import sokoban.logic.Action;
 import sokoban.logic.GameLogic;
 import sokoban.logic.LogicKey;
 import sokoban.saving.LoadGame;
+import sokoban.saving.StateManager;
 
+import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Stack;
 
 public class Level {
     // liste des mondes du niveau
@@ -22,6 +25,8 @@ public class Level {
     // permet de charger le jeu
     private final LoadGame loader;
 
+    private final StateManager sm;
+
     // indice du monde actuellement joue
     private int actWorld;
 
@@ -31,12 +36,13 @@ public class Level {
     // etat actuel de la partie
     private LevelState state;
 
-    public Level(int numLevel) {
+    public Level(int numLevel, StateManager sm) {
 
 
         worlds = new ArrayList<World>();
         logic = GameLogic.logic;
         loader = LoadGame.gameLoader;
+        this.sm = sm;
         this.numLevel = numLevel;
         actWorld = 0;
         state = LevelState.RUNNING;
@@ -44,17 +50,17 @@ public class Level {
 
     // initialise le monde courant
     public void init() {
+
         int index = 0;
-        if(!loader.loadGrids(numLevel))
-                return;
+        if (!loader.loadGrids(numLevel))
+            return;
 
         ArrayList<char[][]> grids = loader.getGrids();
-        for(char[][] g : grids)
-        {
+        for (char[][] g : grids) {
             World w = new World(g.length, g[0].length, index);
             w.loadWorld(g);
             worlds.add(w);
-            index ++;
+            index++;
         }
     }
 
@@ -123,6 +129,7 @@ public class Level {
             return Action.NOTHING;
         }
         // recuperer l'action qui vient d'etre executee
+
         Action result = logic.executeUserAction(key, getCurrentWorld());
 
         if (result == Action.PAUSE) {
@@ -156,7 +163,9 @@ public class Level {
 
     // execute directement un mouvement dans une direction
     public Action executeMove(Direction d) {
-        Action result = logic.movePlayer(d, worlds.get(actWorld));
+
+        Action result = logic.movePlayer(d, getCurrentWorld());
+
         // si une box atteint un but, on verifie les autres
         if (result == Action.BOX_IN_TARGET) {
             if (checkVictory()) {
@@ -166,12 +175,38 @@ public class Level {
 
         return result;
     }
- //------------------------------------j'ai ajouté deux getters 
-    public int getNumLevel() {
-       return numLevel;
-   }
 
-  public ArrayList<World> getWorlds() {
-      return worlds;
+    //------------------------------------j'ai ajouté deux getters
+    public int getNumLevel() {
+        return numLevel;
+    }
+
+    /* cette methode permet de mettre a jour le monde dans lequel
+    on effectue des changements.
+     Au lieu de passer sa reference a d'autres
+    classes pour qu'elles le modifient, on donne une copie avec
+    getActWorld, on la modifie, ensuite on la passe a cette methode,
+    et remplace la ref actuelle par la nouvelle
+     */
+
+    public ArrayList<World> getWorlds() {
+        return worlds;
+    }
+
+    public void replaceWorld(int ref, World world)
+    {
+
+        worlds.set(ref, world);
+
+    }
+
+    public void saveMove()
+    {
+        sm.saveUndoSnapshot(getCurrentWorld());
+    }
+
+    public void undo()
+    {
+        sm.undo(getCurrentWorld());
     }
 }

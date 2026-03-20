@@ -191,8 +191,11 @@ public class TerminalUi {
                 // pour les autres actions, on passe directement par Level
                 
                 // on sauvegarde l'etat du monde courant avant chaque action pour permettre l'undo
-                sm.saveUndoSnapshot(level.getCurrentWorld());
+
+                level.saveMove();
                 Action result = level.executeUserAction(lk);
+                if(result != Action.MOVED && result != Action.BOX_IN_TARGET)
+                    level.undo();
 
                 // si une boite vient d'entrer dans une target,
                 // on verifie si ca a termine le niveau

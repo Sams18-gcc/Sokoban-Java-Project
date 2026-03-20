@@ -35,9 +35,9 @@ public class World {
     // initialise le monde a partir de la grille
     public void loadWorld(char[][] g) {
         grid.initGrid(g);
-       //quand je load une saved partie le add ajoute a la liste existante deja donc ça crée des doublouns
+        //quand je load une saved partie le add ajoute a la liste existante deja donc ça crée des doublouns
         //donc vaut mieux initializer a vide a chque load
-        player=null;
+        player = null;
         boxes.clear();
         for (int i = 0; i < grid.getLength(); i++) {
             for (int j = 0; j < grid.getWidth(); j++) {
@@ -50,6 +50,7 @@ public class World {
 
                 else if (grid.getElement(i, j) == CellType.TARGET.getSymbole())
                     cells[i][j] = new Cell(i, j, CellType.TARGET, true);
+
 
                 else if (grid.getElement(i, j) == '@') {
                     cells[i][j] = new Cell(i, j, CellType.FLOOR, false);
@@ -66,6 +67,7 @@ public class World {
             }
         }
     }
+
     // retourne vrai si c'est une box a la position pos
     public boolean isBox(Position pos) {
         if (pos == null) throw new NullPointerException();
@@ -83,6 +85,7 @@ public class World {
         }
         return null;
     }
+
     // renvoie le type de cellule a la position donnee
     public Cell getCellatPosition(Position pos) {
         if (pos == null) throw new NullPointerException();
@@ -116,8 +119,8 @@ public class World {
         actualPos.translate(d);
 
         if (!cells[actualPos.getY()][actualPos.getX()].isFree()) {
-            if (grid.getElement(actualPos.getY() ,actualPos.getX()) == 'O')
-            actualPos.translate(d);
+            if (grid.getElement(actualPos.getY(), actualPos.getX()) == 'O')
+                actualPos.translate(d);
         }
 
         return cells[actualPos.getY()][actualPos.getX()].isFree();
@@ -163,8 +166,8 @@ public class World {
         return copy;
     }
 
-    public void setPlayerAt(int y, int x) {
-        this.player = new Player(y, x);
+    public void setPlayerAt(Position pos) {
+        this.player = new Player(pos.getY(), pos.getX());
     }
 
     public void setGridArray(char[][] newGrid) {
@@ -175,18 +178,22 @@ public class World {
         }
     }
 
-    public void setBoxesFromPositions(List<int[]> positions) {
+    public void setBoxesFromPositions(List<Position> positions) {
         if (positions == null) throw new NullPointerException();
 
         boxes = new ArrayList<>();
-        for (int[] pos : positions) {
-            boxes.add(new Box(pos[0], pos[1]));
+        for (Position pos : positions) {
+            Box box = new Box(pos.getY(), pos.getX());
+            if (getCellatPosition(pos).getCellType() == CellType.TARGET)
+                box.setInTarget();
+            boxes.add(box);
         }
     }
-    
+
+
     public int getWorldRef() {
-      return worldRef;
+        return worldRef;
     }
-    
-    
+
+
 }
