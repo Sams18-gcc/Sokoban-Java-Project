@@ -1,4 +1,4 @@
-/*package sokoban.IG.java;
+package sokoban.IG.java;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
@@ -17,6 +17,7 @@ import sokoban.core.World;
 import sokoban.entity.Player;
 import sokoban.logic.GameLogic;
 import sokoban.logic.LogicKey;
+import sokoban.saving.LoadGame;
 
 import java.util.Objects;
 
@@ -56,14 +57,38 @@ public class GAMEController {
     private Player pion;
 
 
-
+    char [][] g;
 
 
     public void initialize() {
 
+           Boolean succeseed=LoadGame.gameLoader.loadGrids(1);
 
-        world = new World(10, 10, 1);
-        world.loadWorld();
+
+
+        if (succeseed) {
+
+
+
+            g=LoadGame.gameLoader.getGrids().get(0);
+            int hauteur = g.length;    // nombre de lignes
+            int largeur = g[0].length; // nombre de colonnes
+            
+            world = new World(hauteur, largeur, 1);
+
+
+            world.loadWorld(g);
+             mygrille=world.getGrid();
+
+
+        } else {
+            System.out.println("levels introuvable ");
+            return;
+        }
+
+
+
+
 
         mygrille = world.getGrid();
 
@@ -208,4 +233,4 @@ public class GAMEController {
 
 
     }
-}*/
+}
