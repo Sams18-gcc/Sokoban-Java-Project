@@ -43,7 +43,7 @@ public class GAMEController {
     private Grid mygrille;
 
     private final Image Pion = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/essaypion.gif")));
-    private final Image Mur = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/mur.png")));
+    private final Image Mur = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/stone.jpgg")));
     private final Image Target = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/target.png")));
 
     private final Image Box = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/vrai_box.png")));
