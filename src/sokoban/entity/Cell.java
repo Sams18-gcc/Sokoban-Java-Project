@@ -4,10 +4,14 @@ import sokoban.core.CellType;
 import sokoban.core.Position;
 
 public class Cell {
+    // type de la case (wall, floor, target...)
     private final CellType cell;
-    private final Position pos;
-    private boolean isFree;
 
+    // position de la case dans la grille
+    private final Position pos;
+
+    // indique si la case est libre ou occupee
+    private boolean isFree;
 
     public Cell(int x, int y, CellType cell, boolean free)
     {
@@ -18,22 +22,21 @@ public class Cell {
 
     public void setOccupied()
     {
-         this.isFree = false;
+        this.isFree = false;
     }
-
 
     public void setFree()
     {
-         this.isFree = true;
+        this.isFree = true;
     }
 
-    public boolean getCellStatus()
+    public boolean isFree()
     {
-         return this.isFree;
+        return this.isFree;
     }
 
     public CellType getCellType()
     {
-         return this.cell;
+        return this.cell;
     }
 }
