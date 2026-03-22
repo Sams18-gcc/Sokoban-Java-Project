@@ -1,6 +1,7 @@
 package sokoban.IG.java;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,20 +10,33 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import sokoban.core.Direction;
 import sokoban.core.Grid;
+import sokoban.core.Position;
 import sokoban.core.World;
 import sokoban.entity.Player;
 import sokoban.logic.GameLogic;
 import sokoban.logic.LogicKey;
+import sokoban.pathfinding.PathSeek;
 import sokoban.saving.LoadGame;
+import sokoban.pathfinding.PathSeek;
 
+import java.util.List;
 import java.util.Objects;
 
 
+
+
 public class GAMEController {
+    int taille_case = 60;
+
+
+    List<Direction> LEPATH;
+
 
 
     private double player_X;
@@ -32,7 +46,7 @@ public class GAMEController {
     private final double smooth = 0.25;
 
 
-    private GameLogic logic;
+
 
     private World world;
     @FXML
@@ -43,7 +57,7 @@ public class GAMEController {
     private Grid mygrille;
 
     private final Image Pion = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/essaypion.gif")));
-    private final Image Mur = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/stone.jpgg")));
+    private final Image Mur = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/stone.jpg")));
     private final Image Target = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/target.png")));
 
     private final Image Box = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/vrai_box.png")));
@@ -54,7 +68,7 @@ public class GAMEController {
     private GraphicsContext GD;
 
 
-    private Player pion;
+
 
 
     char [][] g;
@@ -101,7 +115,7 @@ public class GAMEController {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                // On place le visuel immédiatement sur la case de départ du joueur
+
                 double targetX = world.getPlayerPosition().getX() * 60;
                 double targetY = world.getPlayerPosition().getY() * 60;// On réduit l espace entre la postion actuelle et la prochaine
                 player_X += (targetX - player_X) * smooth;
@@ -131,12 +145,18 @@ public class GAMEController {
 
     public void dessinerworld() {
         GD.clearRect(0, 0, canva.getWidth(), canva.getHeight());
+
+
+
+
         for (int i = 0; i < mygrille.getLength(); i++) {
             for (int j = 0; j < mygrille.getWidth(); j++) {
                 char typecell = mygrille.getElement(i, j);
                 int taille_case = 60;
                 double x = j * taille_case;
                 double y = i * taille_case;
+
+
 
 
                 GD.drawImage(Ground, x, y, taille_case, taille_case);
@@ -154,6 +174,8 @@ public class GAMEController {
 
 
         }
+
+
         GD.drawImage(Pion, player_X - 18, player_Y - 18, 95, 95);
 
 
@@ -162,52 +184,45 @@ public class GAMEController {
 
 
     private boolean fin_partie=false;
-    @FXML
+
     public void MOVE(KeyEvent event) {
 
        if(fin_partie)
         {
             return;
         }
-
-
         LogicKey k = null;
-
-        KeyCode code = event.getCode();
-
-
-        if (code == KeyCode.W || code == KeyCode.UP) {
-            k = LogicKey.MOVE_UP;
-        } else if (code == KeyCode.S || code == KeyCode.DOWN) {
-            k = LogicKey.MOVE_DOWN;
-        } else if (code == KeyCode.A || code == KeyCode.LEFT) {
-            k = LogicKey.MOVE_LEFT;
-        } else if (code == KeyCode.D || code == KeyCode.RIGHT) {
-            k = LogicKey.MOVE_RIGHT;
-        }
-
-        if (k != null) {
-            //logic.movePlayer(d, world);
-
-            GameLogic.logic.executeUserAction(k,world);
-            mygrille = world.getGrid();
+            KeyCode code = event.getCode();
 
 
-            dessinerworld();
-            if (world.allBoxesInTarget()) {
-
-                Gagner();
-
-                System.out.println("gagner");
-                fin_partie=true;
-
-
-
+            if (code == KeyCode.W || code == KeyCode.UP) {
+                k = LogicKey.MOVE_UP;
+            } else if (code == KeyCode.S || code == KeyCode.DOWN) {
+                k = LogicKey.MOVE_DOWN;
+            } else if (code == KeyCode.A || code == KeyCode.LEFT) {
+                k = LogicKey.MOVE_LEFT;
+            } else if (code == KeyCode.D || code == KeyCode.RIGHT) {
+                k = LogicKey.MOVE_RIGHT;
             }
 
 
-        }
 
+
+
+        GameLogic.logic.executeUserAction(k, world);
+        mygrille = world.getGrid();
+
+
+        dessinerworld();
+        if (world.allBoxesInTarget()) {
+
+            Gagner();
+
+            System.out.println("gagner");
+            fin_partie = true;
+
+
+        }
     }
 
 
@@ -233,4 +248,103 @@ public class GAMEController {
 
 
     }
+    public void PATH(MouseEvent event)
+    {
+
+            //parceque j ai utiliser canvas qui a ces coordonnee comme des doubles
+            //donc je dois divisier sur la taille d une seule case
+        int colonne = (int) (event.getX()/ taille_case);
+        int row = (int) (event.getY() / taille_case);
+
+        Position pos_actuelle=world.getPlayerPosition();
+
+        Position pos_target=new Position(row,colonne);
+
+
+       LEPATH =PathSeek.findShortestPath(world,pos_actuelle,pos_target);
+        if (LEPATH != null && !LEPATH.isEmpty()) {
+            MOVE_AVEC_PATH(LEPATH);
+        } else {
+            System.out.println("destination impossible");
+        }
+
+
+
+
+
+
+
+    }
+
+    public void MOVE_AVEC_PATH(List<Direction> LEPATH)
+    {
+        if (fin_partie || LEPATH == null || LEPATH.isEmpty()) {
+            return;
+        }
+        LogicKey k = null;
+
+
+            Direction d = LEPATH.remove(0);
+            switch (d) {
+                case UP:
+                    k = LogicKey.MOVE_UP;
+                    break;
+                case RIGHT:
+                    k = LogicKey.MOVE_RIGHT;
+                    break;
+                case LEFT:
+                    k = LogicKey.MOVE_LEFT;
+                    break;
+                case DOWN:
+                    k = LogicKey.MOVE_DOWN;
+                    break;
+
+                default:
+                    k=null;
+
+
+            }
+
+            if(k!=null) {
+                GameLogic.logic.executeUserAction(k, world);
+
+                mygrille = world.getGrid();
+                dessinerworld();
+
+
+
+                dessinerworld();
+                if (world.allBoxesInTarget()) {
+
+                    Gagner();
+
+
+                    LEPATH.clear();
+                    fin_partie = true;
+
+
+
+                }
+
+                // pour le delais
+                PauseTransition pause = new PauseTransition(Duration.millis(400));
+                pause.setOnFinished(event -> {
+                    // on rappelle la methode pour faire le pas suivant
+                    MOVE_AVEC_PATH(LEPATH);
+                });
+
+                pause.play();
+            }
+        }
+
+
+
+
+
+
+
+
+
 }
+
+
