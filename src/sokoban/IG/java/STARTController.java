@@ -60,7 +60,7 @@ public class STARTController {
 
     public void CHOSENlevel(MouseEvent mouseEvent) throws IOException {
 
-        FXMLLoader GAME = new FXMLLoader(Interface.class.getResource("/sokoban/IG/resources/designe/GAME.fxml"));
+        FXMLLoader GAME = new FXMLLoader(getClass().getResource("/sokoban/IG/resources/designe/GAME.fxml"));
         Scene sceneSTART=new Scene(GAME.load(),660, 660);
         stage = (Stage) ((Node)mouseEvent.getSource()).getScene().getWindow();
 

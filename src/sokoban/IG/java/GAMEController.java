@@ -2,9 +2,15 @@ package sokoban.IG.java;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,6 +19,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import sokoban.core.Direction;
 import sokoban.core.Grid;
@@ -25,6 +32,7 @@ import sokoban.pathfinding.PathSeek;
 import sokoban.saving.LoadGame;
 import sokoban.pathfinding.PathSeek;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +44,10 @@ public class GAMEController {
 
 
     List<Direction> LEPATH;
+
+
+
+    Stage stage;
 
 
 
@@ -146,6 +158,15 @@ public class GAMEController {
     public void dessinerworld() {
         GD.clearRect(0, 0, canva.getWidth(), canva.getHeight());
 
+        // calculer la taille total de la grille
+        double gridWidth = mygrille.getWidth() * taille_case;
+        double gridHeight = mygrille.getLength() * taille_case;
+
+
+        //pour centrer le dessin
+        double startX = (canva.getWidth() - gridWidth) / 2;
+        double startY = (canva.getHeight() - gridHeight) / 2;
+
 
 
 
@@ -153,8 +174,8 @@ public class GAMEController {
             for (int j = 0; j < mygrille.getWidth(); j++) {
                 char typecell = mygrille.getElement(i, j);
                 int taille_case = 60;
-                double x = j * taille_case;
-                double y = i * taille_case;
+                double x = startX +(j* taille_case);
+                double y = startY +(i* taille_case);
 
 
 
@@ -175,8 +196,10 @@ public class GAMEController {
 
         }
 
+        double p_pixelX = startX + player_X;
+        double p_pixelY = startY + player_Y ;
 
-        GD.drawImage(Pion, player_X - 18, player_Y - 18, 95, 95);
+        GD.drawImage(Pion, p_pixelX - 18, p_pixelY - 18, 95, 95);
 
 
     }
@@ -236,6 +259,8 @@ public class GAMEController {
     private ImageView Winner_image;
     @FXML
     private Text Winner_text;
+    @FXML
+    private Button Winner_next;
 
 
     @FXML
@@ -245,6 +270,8 @@ public class GAMEController {
         Winner_image.setVisible(true);
         Winner_text.setVisible(true);
         Winner_label.setVisible(true);
+        Winner_next.setVisible(true);
+
 
 
     }
@@ -337,6 +364,46 @@ public class GAMEController {
             }
         }
 
+@FXML
+    public void NEXT(ActionEvent event) throws IOException {
+
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sokoban/IG/resources/designe/START.fxml"));
+        Parent root = loader.load();
+
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+
+        Scene newScene = new Scene(root, 660, 660);
+
+
+        newScene.getStylesheets().add(getClass().getResource("/sokoban/IG/resources/designe/START.css").toExternalForm());
+
+        stage.setScene(newScene);
+        stage.show();
+
+
+    }
+    @FXML
+    private Button BACK_BUTTON;
+    @FXML
+    private Button SAVE_BUTTON;
+    @FXML
+    private Button RELOAD_BUTTON;
+
+    public void RELOAD()
+    {
+
+    }
+    public void SAVE()
+    {
+
+    }
+    public void BACK()
+    {
+
+    }
 
 
 
