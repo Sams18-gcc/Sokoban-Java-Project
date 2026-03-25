@@ -92,17 +92,6 @@ public class GAMEController {
     Level lvl;
 
 
-
-
-
-
-
-<<<<<<< HEAD
-=======
-           Boolean succeseed=LoadGame.gameLoader.loadGrids(2);
->>>>>>> origin/INTERFACE
-
-
     public void initialize(int level_number) {
 
 
