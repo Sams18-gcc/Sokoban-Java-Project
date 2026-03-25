@@ -46,6 +46,8 @@ import java.util.Objects;
 /// - passer par Level pour rester coherent avec l'architecture actuelle
 /// - separer plus clairement l'affichage JavaFX et le deroulement du jeu
 /// - reprendre une logique proche de TerminalUi pour les actions utilisateur
+/// SAMY : je travaille actuellement sur le code de cette branche dans
+/// une autre branche nommée interface-copy, veuillez ne pas y toucher svp.
 public class GAMEController {
     int taille_case = 60;
 
