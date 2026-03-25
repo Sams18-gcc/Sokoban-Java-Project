@@ -30,7 +30,7 @@ public class SETTINGSController {
     private Label MusicVolume,EffectVolume,TITRE,LabelMusic,LabelEffect;
     @FXML
     private Slider SliderEFFECT,SliderMUSIC;
-
+    ///  VERIFIER CE QUI N'EST PAS UTILISE DANS LE CODE
 
 
     public void initialize() {
@@ -47,7 +47,7 @@ public class SETTINGSController {
                 EffectVolume.setText((int)SliderEFFECT.getValue() +" %");
             }
         });
-
+        /// ON PEUT REGROUPER LES METHODES 2 PAR 2
 
         SliderMUSIC.valueProperty().addListener(new ChangeListener<Number>() {
             @Override

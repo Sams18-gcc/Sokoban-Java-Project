@@ -38,7 +38,11 @@ import java.util.Objects;
 
 
 
-
+///  PLUSIEURS CHOSES A CHANGER ICI:
+/// PROBLEME: TRAVAILLER DIRECTEMENT AVEC WORLD ET GAMELOGIC
+/// ON VA UTILISER LEVEL A LA PLACE
+/// SEPARER LES METHODES D'AFFICHAGE ET LA BOUCLE DU JEU
+/// S'INSPIRER ENTIEREMENT DE TerminalUI
 public class GAMEController {
     int taille_case = 60;
 
@@ -88,7 +92,7 @@ public class GAMEController {
 
     public void initialize() {
 
-           Boolean succeseed=LoadGame.gameLoader.loadGrids(1);
+           Boolean succeseed=LoadGame.gameLoader.loadGrids(2);
 
 
 

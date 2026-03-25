@@ -79,7 +79,7 @@ public void initialize() {
     skull3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/skull.png"))));
     skull4.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/skull.png"))));
 
-
+    /// REPETITION?
     skull1.setVisible(false);
     skull2.setVisible(false);
     skull3.setVisible(false);
@@ -94,7 +94,7 @@ public void initialize() {
  {
 
      Button temp=(Button)event.getSource();
-
+    /// REPETITION??
     if(temp==buttonSTART)
     {
         Interface.menuSELECTION.play();
@@ -120,7 +120,7 @@ public void initialize() {
     {
 
         Button temp=(Button)event.getSource();
-
+        /// REPETITION?
         if(temp==buttonSTART)
         {
             skull1.setVisible(false);
@@ -142,13 +142,14 @@ public void initialize() {
 
 
 
+
     public void START(ActionEvent event) throws IOException {
         FXMLLoader START = new FXMLLoader(Interface.class.getResource("/sokoban/IG/resources/designe/START.fxml"));
         Scene sceneSTART=new Scene(START.load(),660, 660);
         stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 
 
-        stage.setTitle("RULES");
+        stage.setTitle("RULES"); /// CORRIGER ICI (ERREUR DE COPIER COLLER)
         sceneSTART.getStylesheets().add(getClass().getResource("/sokoban/IG/resources/designe/START.css").toExternalForm());
         stage.setScene(sceneSTART);
         stage.setResizable(false);
@@ -202,7 +203,7 @@ public void initialize() {
     {
 
         Button temp=(Button)event.getSource();
-
+        ///  POURQUOI PLUSIEURS IF ?? MEME SON
         if(temp==buttonSTART)
         {
             Interface.menuSELECTION.play();
