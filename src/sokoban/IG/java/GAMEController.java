@@ -38,11 +38,11 @@ import java.util.Objects;
 
 
 
-///  PLUSIEURS CHOSES A CHANGER ICI:
-/// PROBLEME: TRAVAILLER DIRECTEMENT AVEC WORLD ET GAMELOGIC
-/// ON VA UTILISER LEVEL A LA PLACE
-/// SEPARER LES METHODES D'AFFICHAGE ET LA BOUCLE DU JEU
-/// S'INSPIRER ENTIEREMENT DE TerminalUI
+/// A revoir:
+/// - ne pas piloter le jeu directement avec World + GameLogic
+/// - passer par Level pour rester coherent avec l'architecture actuelle
+/// - separer plus clairement l'affichage JavaFX et le deroulement du jeu
+/// - reprendre une logique proche de TerminalUi pour les actions utilisateur
 public class GAMEController {
     int taille_case = 60;
 
