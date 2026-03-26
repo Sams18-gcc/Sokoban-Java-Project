@@ -20,15 +20,17 @@
             <Insets top="10.0" />
          </opaqueInsets>
       </Label>
-      <Text fx:id="Winner_text" layoutX="263.0" layoutY="331.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LEVEL 1 COMPLETED" visible="false" wrappingWidth="255.396484375">
+      <Text fx:id="Winner_text" layoutX="276.0" layoutY="309.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LEVEL 1 COMPLETED" visible="false" wrappingWidth="255.396484375">
          <font>
             <Font name="Arial Rounded MT Bold" size="23.0" />
          </font>
       </Text>
       <ImageView fx:id="Winner_image" fitHeight="71.0" fitWidth="104.0" layoutX="128.0" layoutY="287.0" pickOnBounds="true" preserveRatio="true" visible="false" />
-      <Button fx:id="Winner_next" layoutX="300.0" layoutY="342.0" mnemonicParsing="false" onAction="#NEXT" prefHeight="25.0" prefWidth="79.0" text="NEXT" visible="false" />
-      <Button fx:id="BACK_BUTTON" layoutX="35.0" layoutY="41.0" mnemonicParsing="false" onAction="#BACK" prefHeight="41.0" prefWidth="117.0" text="BACK" />
-      <Button fx:id="SAVE_BUTTON" layoutX="166.0" layoutY="41.0" mnemonicParsing="false" onAction="#SAVE" prefHeight="41.0" prefWidth="117.0" text="SAVE" />
-      <Button fx:id="RELOAD_BUTTON" layoutX="300.0" layoutY="41.0" mnemonicParsing="false" onAction="#RELOAD" prefHeight="41.0" prefWidth="117.0" text="RELOAD" />
+      <Button fx:id="Winner_next" layoutX="364.0" layoutY="325.0" mnemonicParsing="false" onAction="#NEXT" prefHeight="27.0" prefWidth="104.0" text="NEXT" visible="false" />
+      <Button fx:id="BACK_BUTTON" layoutX="20.0" layoutY="41.0" mnemonicParsing="false" onAction="#BACK" prefHeight="41.0" prefWidth="104.0" text="BACK" />
+      <Button fx:id="SAVE_BUTTON" layoutX="128.0" layoutY="41.0" mnemonicParsing="false" onAction="#SAVE" prefHeight="41.0" prefWidth="104.0" text="SAVE" />
+      <Button fx:id="RELOAD_BUTTON" layoutX="253.0" layoutY="41.0" mnemonicParsing="false" onAction="#RELOAD" prefHeight="41.0" prefWidth="111.0" text="RELOAD" />
+      <Button fx:id="UNDO_BUTTON" layoutX="379.0" layoutY="41.0" mnemonicParsing="false" onAction="#UNDO" prefHeight="41.0" prefWidth="104.0" text="UNDO" />
+      <Button fx:id="PAUSE_BUTTON" layoutX="503.0" layoutY="41.0" mnemonicParsing="false" onAction="#PAUSE" prefHeight="41.0" prefWidth="104.0" text="PAUSE" />
    </children>
 </AnchorPane>

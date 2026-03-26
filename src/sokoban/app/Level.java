@@ -47,6 +47,10 @@ public class Level {
         actWorld = 0;
         state = LevelState.RUNNING;
     }
+//YANIS
+    public LoadGame getLoader() {
+        return loader;
+    }
 
     // initialise le monde courant
     public void init() {

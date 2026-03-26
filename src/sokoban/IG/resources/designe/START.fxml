@@ -24,37 +24,37 @@
             </Pane>
             <Pane fx:id="Background2" layoutX="171.0" layoutY="68.0" prefHeight="80.0" prefWidth="80.0">
                <children>
-                  <ImageView fx:id="LEVEL2" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="LEVEL2" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#CHOSENlevel" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
             <Pane fx:id="Background3" layoutX="354.0" layoutY="68.0" prefHeight="80.0" prefWidth="80.0">
                <children>
-                  <ImageView fx:id="LEVEL3" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="LEVEL3" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#CHOSENlevel" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
             <Pane fx:id="Background4" layoutX="493.0" layoutY="68.0" prefHeight="80.0" prefWidth="80.0">
                <children>
-                  <ImageView fx:id="LEVEL4" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="LEVEL4" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#CHOSENlevel" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
             <Pane fx:id="Background5" layoutX="31.0" layoutY="256.0" prefHeight="80.0" prefWidth="80.0">
                <children>
-                  <ImageView fx:id="LEVEL5" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="LEVEL5" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#CHOSENlevel" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
             <Pane fx:id="Background6" layoutX="171.0" layoutY="256.0" prefHeight="80.0" prefWidth="80.0">
                <children>
-                  <ImageView fx:id="LEVEL6" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="LEVEL6" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#CHOSENlevel" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
             <Pane fx:id="Background7" layoutX="354.0" layoutY="256.0" prefHeight="80.0" prefWidth="80.0">
                <children>
-                  <ImageView fx:id="LEVEL7" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="LEVEL7" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#CHOSENlevel" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
             <Pane fx:id="Background8" layoutX="493.0" layoutY="256.0" prefHeight="80.0" prefWidth="80.0">
                <children>
-                  <ImageView fx:id="LEVEL8" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="LEVEL8" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#CHOSENlevel" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
          </children>

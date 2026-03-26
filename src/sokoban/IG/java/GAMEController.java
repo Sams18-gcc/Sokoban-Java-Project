@@ -3,6 +3,7 @@ package sokoban.IG.java;
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -21,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import sokoban.app.Level;
 import sokoban.core.Direction;
 import sokoban.core.Grid;
 import sokoban.core.Position;
@@ -31,6 +33,7 @@ import sokoban.logic.LogicKey;
 import sokoban.pathfinding.PathSeek;
 import sokoban.saving.LoadGame;
 import sokoban.pathfinding.PathSeek;
+import sokoban.saving.StateManager;
 
 import java.io.IOException;
 import java.util.List;
@@ -55,14 +58,12 @@ public class GAMEController {
     private double player_Y;
 
 
-    private final double smooth = 0.25;
+    private final double smooth = 0.33;
 
 
 
 
     private World world;
-    @FXML
-    private AnchorPane SCENE;
     @FXML
     private Canvas canva;
 
@@ -79,44 +80,49 @@ public class GAMEController {
 
     private GraphicsContext GD;
 
+    AnimationTimer timer;
+
+
+    StateManager stat=new StateManager();
+
+    Level lvl;
 
 
 
 
-    char [][] g;
 
 
-    public void initialize() {
 
-           Boolean succeseed=LoadGame.gameLoader.loadGrids(1);
 
+
+    public void initialize(int level_number) {
+
+
+        lvl=new Level(level_number,stat);
+        lvl.init();
+
+           Boolean succeseed=lvl.getLoader().loadGrids(level_number);
+
+        RELOAD_BUTTON.setFocusTraversable(false);
+        BACK_BUTTON.setFocusTraversable(false);
+        SAVE_BUTTON.setFocusTraversable(false);
+        PAUSE_BUTTON.setFocusTraversable(false);
+        UNDO_BUTTON.setFocusTraversable(false);
 
 
         if (succeseed) {
 
 
 
-            g=LoadGame.gameLoader.getGrids().get(0);
-            int hauteur = g.length;    // nombre de lignes
-            int largeur = g[0].length; // nombre de colonnes
-            
-            world = new World(hauteur, largeur, 1);
-
-
-            world.loadWorld(g);
+            world = lvl.getCurrentWorld();
              mygrille=world.getGrid();
 
 
         } else {
-            System.out.println("levels introuvable ");
+            System.out.println("levels " + level_number+" introuvable ");
             return;
         }
 
-
-
-
-
-        mygrille = world.getGrid();
 
 
         GD = canva.getGraphicsContext2D();
@@ -124,7 +130,9 @@ public class GAMEController {
         dessinerworld();
 
 
-        AnimationTimer timer = new AnimationTimer() {
+
+
+         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
 
@@ -140,15 +148,13 @@ public class GAMEController {
         };
         timer.start();
 
+       // canva.setFocusTraversable(true);
+        //canva.requestFocus();
 
 
 
 
-
-
-
-
-        // Lancer la boucle pour refraicher
+        // lancer la boucle pour refraicher
 
     }
 
@@ -158,10 +164,10 @@ public class GAMEController {
     public void dessinerworld() {
         GD.clearRect(0, 0, canva.getWidth(), canva.getHeight());
 
+
         // calculer la taille total de la grille
         double gridWidth = mygrille.getWidth() * taille_case;
         double gridHeight = mygrille.getLength() * taille_case;
-
 
         //pour centrer le dessin
         double startX = (canva.getWidth() - gridWidth) / 2;
@@ -169,11 +175,12 @@ public class GAMEController {
 
 
 
-
         for (int i = 0; i < mygrille.getLength(); i++) {
             for (int j = 0; j < mygrille.getWidth(); j++) {
                 char typecell = mygrille.getElement(i, j);
                 int taille_case = 60;
+
+
                 double x = startX +(j* taille_case);
                 double y = startY +(i* taille_case);
 
@@ -230,18 +237,14 @@ public class GAMEController {
 
 
 
-
-
-        GameLogic.logic.executeUserAction(k, world);
+        lvl.executeUserAction(k);
+            lvl.saveMove();
         mygrille = world.getGrid();
 
 
         dessinerworld();
         if (world.allBoxesInTarget()) {
-
             Gagner();
-
-            System.out.println("gagner");
             fin_partie = true;
 
 
@@ -273,29 +276,34 @@ public class GAMEController {
         Winner_next.setVisible(true);
 
 
-
     }
     public void PATH(MouseEvent event)
     {
 
+        // calculer la taille total de la grille
+        double gridWidth = mygrille.getWidth() * taille_case;
+        double gridHeight = mygrille.getLength() * taille_case;
+
+        //pour centrer le dessin
+        double startX = (canva.getWidth() - gridWidth) / 2;
+        double startY = (canva.getHeight() - gridHeight) / 2;
+
+
             //parceque j ai utiliser canvas qui a ces coordonnee comme des doubles
             //donc je dois divisier sur la taille d une seule case
-        int colonne = (int) (event.getX()/ taille_case);
-        int row = (int) (event.getY() / taille_case);
+        int colonne = (int) ((event.getX()-startX)/ taille_case);
+        int row = (int) ((event.getY() -startY)/ taille_case);
 
-        Position pos_actuelle=world.getPlayerPosition();
 
         Position pos_target=new Position(row,colonne);
 
 
-       LEPATH =PathSeek.findShortestPath(world,pos_actuelle,pos_target);
+       LEPATH =lvl.executePathFinding(pos_target);
         if (LEPATH != null && !LEPATH.isEmpty()) {
             MOVE_AVEC_PATH(LEPATH);
         } else {
             System.out.println("destination impossible");
         }
-
-
 
 
 
@@ -333,14 +341,11 @@ public class GAMEController {
             }
 
             if(k!=null) {
-                GameLogic.logic.executeUserAction(k, world);
-
+                lvl.executeUserAction(k);
+                lvl.saveMove();
                 mygrille = world.getGrid();
                 dessinerworld();
-
-
-
-                dessinerworld();
+                // je peux pas utilsier celle de Level pasceque t as parcourir toutes les worlds
                 if (world.allBoxesInTarget()) {
 
                     Gagner();
@@ -391,17 +396,72 @@ public class GAMEController {
     private Button SAVE_BUTTON;
     @FXML
     private Button RELOAD_BUTTON;
+    @FXML
+    private Button PAUSE_BUTTON;
+    @FXML
+    private Button UNDO_BUTTON;
 
-    public void RELOAD()
+    @FXML
+    public void PAUSE()
     {
+        // pas encore fini
+
 
     }
+    public void RELOAD()
+    {
+        // pas encore fini
+
+
+        if (timer != null) {
+            timer.stop();
+        }
+       // stat.loadFresh(lvl);
+        initialize(lvl.getNumLevel());
+
+
+
+
+    }
+    @FXML
+    public void UNDO()
+    {
+
+
+
+        lvl.undo();
+        world=lvl.getCurrentWorld();
+        mygrille=world.getGrid();
+
+
+
+
+        canva.requestFocus();
+
+
+
+    }
+
     public void SAVE()
     {
 
+
+        // pas encore fini
+    stat.save(lvl);
     }
-    public void BACK()
-    {
+    public void BACK(ActionEvent event) throws IOException {
+
+        FXMLLoader GAME = new FXMLLoader(getClass().getResource("/sokoban/IG/resources/designe/START.fxml"));
+        Scene sceneSTART=new Scene(GAME.load(),660, 660);
+        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+
+
+        stage.setTitle("LEVEL1");
+        sceneSTART.getStylesheets().add(getClass().getResource("/sokoban/IG/resources/designe/START.css").toExternalForm());
+        stage.setScene(sceneSTART);
+        stage.setResizable(false);
+
+        stage.show();
 
     }
 

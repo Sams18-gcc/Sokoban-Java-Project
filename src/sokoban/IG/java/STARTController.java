@@ -60,12 +60,25 @@ public class STARTController {
 
     public void CHOSENlevel(MouseEvent mouseEvent) throws IOException {
 
+        Node lock_clicked =(Node) mouseEvent.getSource();
+
+        String level_id =lock_clicked.getId();
+        String level_number = level_id.replaceAll("[^0-9]", "");
+
+        System.out.println(level_number);
+
         FXMLLoader GAME = new FXMLLoader(getClass().getResource("/sokoban/IG/resources/designe/GAME.fxml"));
         Scene sceneSTART=new Scene(GAME.load(),660, 660);
         stage = (Stage) ((Node)mouseEvent.getSource()).getScene().getWindow();
 
 
-        stage.setTitle("LEVEL1");
+        GAMEController controller = GAME.getController();
+
+
+        controller.initialize(Integer.parseInt(level_number));
+
+
+        stage.setTitle("LEVEL"+level_number);
         sceneSTART.getStylesheets().add(getClass().getResource("/sokoban/IG/resources/designe/GAME.css").toExternalForm());
         stage.setScene(sceneSTART);
         stage.setResizable(false);
