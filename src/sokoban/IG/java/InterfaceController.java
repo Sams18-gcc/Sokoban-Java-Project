@@ -82,17 +82,38 @@ public class InterfaceController {
         skull4.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/skull.png"))));
         skull5.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/skull.png"))));
 
+<<<<<<< HEAD
 
         skull1.setVisible(false);
         skull2.setVisible(false);
         skull3.setVisible(false);
         skull4.setVisible(false);
         skull5.setVisible(false);
+=======
+    /// REPETITION?
+    skull1.setVisible(false);
+    skull2.setVisible(false);
+    skull3.setVisible(false);
+    skull4.setVisible(false);
+>>>>>>> origin/INTERFACE
 
 
 
         Interface.menuSELECTION=new AudioClip(getClass().getResource("/sokoban/IG/resources/photo/menu-selection.mp3").toExternalForm());
 
+<<<<<<< HEAD
+=======
+}
+ public void AFFICHESKULL(Event event)
+ {
+
+     Button temp=(Button)event.getSource();
+    /// REPETITION??
+    if(temp==buttonSTART)
+    {
+        Interface.menuSELECTION.play();
+        skull1.setVisible(true);
+>>>>>>> origin/INTERFACE
     }
     public void AFFICHESKULL(Event event)
     {
@@ -129,7 +150,7 @@ public class InterfaceController {
     {
 
         Button temp=(Button)event.getSource();
-
+        /// REPETITION?
         if(temp==buttonSTART)
         {
             skull1.setVisible(false);
@@ -155,13 +176,14 @@ public class InterfaceController {
 
 
 
+
     public void START(ActionEvent event) throws IOException {
         FXMLLoader START = new FXMLLoader(Interface.class.getResource("/sokoban/IG/resources/designe/START.fxml"));
         Scene sceneSTART=new Scene(START.load(),660, 660);
         stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 
 
-        stage.setTitle("RULES");
+        stage.setTitle("RULES"); /// CORRIGER ICI (ERREUR DE COPIER COLLER)
         sceneSTART.getStylesheets().add(getClass().getResource("/sokoban/IG/resources/designe/START.css").toExternalForm());
         stage.setScene(sceneSTART);
         stage.setResizable(false);
@@ -230,7 +252,7 @@ public class InterfaceController {
     {
 
         Button temp=(Button)event.getSource();
-
+        ///  POURQUOI PLUSIEURS IF ?? MEME SON
         if(temp==buttonSTART)
         {
             Interface.menuSELECTION.play();

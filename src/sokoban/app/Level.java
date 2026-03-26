@@ -185,13 +185,7 @@ public class Level {
         return numLevel;
     }
 
-    /* cette methode permet de mettre a jour le monde dans lequel
-    on effectue des changements.
-     Au lieu de passer sa reference a d'autres
-    classes pour qu'elles le modifient, on donne une copie avec
-    getActWorld, on la modifie, ensuite on la passe a cette methode,
-    et remplace la ref actuelle par la nouvelle
-     */
+
 
     public ArrayList<World> getWorlds() {
         return worlds;

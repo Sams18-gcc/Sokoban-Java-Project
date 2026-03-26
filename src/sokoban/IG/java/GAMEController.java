@@ -41,7 +41,11 @@ import java.util.Objects;
 
 
 
-
+/// A revoir:
+/// - ne pas piloter le jeu directement avec World + GameLogic
+/// - passer par Level pour rester coherent avec l'architecture actuelle
+/// - separer plus clairement l'affichage JavaFX et le deroulement du jeu
+/// - reprendre une logique proche de TerminalUi pour les actions utilisateur
 public class GAMEController {
     int taille_case = 60;
 
@@ -93,6 +97,10 @@ public class GAMEController {
 
 
 
+<<<<<<< HEAD
+=======
+           Boolean succeseed=LoadGame.gameLoader.loadGrids(2);
+>>>>>>> origin/INTERFACE
 
 
     public void initialize(int level_number) {
