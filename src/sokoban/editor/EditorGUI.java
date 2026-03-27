@@ -22,10 +22,9 @@ import java.util.ArrayList;
 public class EditorGUI extends Application {
 
     private static final int CELL_SIZE = 48;
-
     private LevelEditor editor;
     private Canvas canvas;
-    private char currentTool = '#'; // outil par defaut = mur
+    private char currentTool = '#';
     private Label statusLabel;
     private ToggleGroup toolGroup;
 
@@ -36,15 +35,12 @@ public class EditorGUI extends Application {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #2b2b2b;");
 
-        // barre en haut
         HBox topBar = createTopBar(primaryStage);
         root.setTop(topBar);
 
-        // palette outils a gauche
         VBox toolPalette = createToolPalette();
         root.setLeft(toolPalette);
 
-        // canvas au centre
         canvas = new Canvas(editor.getCols() * CELL_SIZE, editor.getRows() * CELL_SIZE);
         StackPane canvasContainer = new StackPane(canvas);
         canvasContainer.setStyle("-fx-background-color: #1e1e1e;");
@@ -56,8 +52,7 @@ public class EditorGUI extends Application {
         scrollPane.setStyle("-fx-background: #1e1e1e; -fx-background-color: #1e1e1e;");
         root.setCenter(scrollPane);
 
-        // barre de statut en bas
-        statusLabel = new Label("Prêt. Choisissez un outil et cliquez.");
+        statusLabel = new Label("Pret.");
         statusLabel.setFont(Font.font("Monospaced", 13));
         statusLabel.setTextFill(Color.LIGHTGRAY);
         statusLabel.setPadding(new Insets(8));
@@ -65,7 +60,6 @@ public class EditorGUI extends Application {
         statusBar.setStyle("-fx-background-color: #333333;");
         root.setBottom(statusBar);
 
-        // events souris
         canvas.setOnMousePressed(e -> onMouseClick(e.getX(), e.getY(), e.getButton()));
         canvas.setOnMouseDragged(e -> onMouseClick(e.getX(), e.getY(), e.getButton()));
 
@@ -74,13 +68,11 @@ public class EditorGUI extends Application {
         Scene scene = new Scene(root, 900, 650);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, e -> onKeyPress(e));
 
-        primaryStage.setTitle("Éditeur de Plateau Sokoban");
+        primaryStage.setTitle("Editeur de Plateau Sokoban");
         primaryStage.setScene(scene);
         primaryStage.show();
         canvas.requestFocus();
     }
-
-    // === barre du haut ===
 
     private HBox createTopBar(Stage stage) {
         HBox bar = new HBox(8);
@@ -97,9 +89,6 @@ public class EditorGUI extends Application {
         Button btnLoad = makeButton("Charger");
         btnLoad.setOnAction(e -> dialogLoad());
 
-        Button btnExport = makeButton("Exporter (.txt)");
-        btnExport.setOnAction(e -> exporterFichier(stage));
-
         Button btnImport = makeButton("Importer (.txt)");
         btnImport.setOnAction(e -> importerFichier(stage));
 
@@ -115,12 +104,10 @@ public class EditorGUI extends Application {
         });
 
         bar.getChildren().addAll(btnNew, btnSave, btnLoad,
-                new Separator(), btnExport, btnImport,
+                new Separator(), btnImport,
                 new Separator(), btnValid, btnBordure);
         return bar;
     }
-
-    // === palette outils ===
 
     private VBox createToolPalette() {
         VBox palette = new VBox(6);
@@ -137,7 +124,7 @@ public class EditorGUI extends Application {
 
         ToggleButton btnMur    = creerBoutonOutil("# Mur",    '#', Color.SADDLEBROWN);
         ToggleButton btnJoueur = creerBoutonOutil("@ Joueur", '@', Color.DODGERBLUE);
-        ToggleButton btnBoite  = creerBoutonOutil("O Boîte",  'O', Color.ORANGE);
+        ToggleButton btnBoite  = creerBoutonOutil("O Boite",  'O', Color.ORANGE);
         ToggleButton btnCible  = creerBoutonOutil("x Cible",  'x', Color.LIMEGREEN);
         ToggleButton btnSortie = creerBoutonOutil("e Sortie", 'e', Color.MEDIUMPURPLE);
         ToggleButton btnGomme  = creerBoutonOutil("  Gomme",  ' ', Color.GRAY);
@@ -148,7 +135,7 @@ public class EditorGUI extends Application {
                 btnMur, btnJoueur, btnBoite, btnCible, btnSortie, btnGomme,
                 new Separator());
 
-        Label info = new Label("Clic gauche : placer\nClic droit : effacer\nWASD/fleches : curseur");
+        Label info = new Label("Clic gauche : placer\nClic droit : effacer\nWASD : curseur");
         info.setTextFill(Color.LIGHTGRAY);
         info.setFont(Font.font("Monospaced", 10));
         info.setWrapText(true);
@@ -175,7 +162,6 @@ public class EditorGUI extends Application {
         return btn;
     }
 
-    // gestion clic souris sur le canvas
     private void onMouseClick(double mx, double my, MouseButton button) {
         int col = (int) (mx / CELL_SIZE);
         int row = (int) (my / CELL_SIZE);
@@ -183,7 +169,7 @@ public class EditorGUI extends Application {
             return;
 
         if (button == MouseButton.SECONDARY)
-            editor.setCell(row, col, ' '); // clic droit = effacer
+            editor.setCell(row, col, ' ');
         else
             editor.setCell(row, col, currentTool);
 
@@ -192,7 +178,6 @@ public class EditorGUI extends Application {
         statusLabel.setText("(" + row + ", " + col + ") -> '" + editor.getCell(row, col) + "'");
     }
 
-    // gestion clavier
     private void onKeyPress(KeyEvent e) {
         int dr = 0, dc = 0;
         switch (e.getCode()) {
@@ -221,7 +206,6 @@ public class EditorGUI extends Application {
         e.consume();
     }
 
-    // dessine toute la grille
     private void redrawGrid() {
         int rows = editor.getRows();
         int cols = editor.getCols();
@@ -238,11 +222,9 @@ public class EditorGUI extends Application {
                 double y = i * CELL_SIZE;
                 char cell = editor.getCell(i, j);
 
-                // couleur de fond
                 gc.setFill(couleurCase(cell));
                 gc.fillRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
 
-                // symbole
                 if (cell != ' ') {
                     gc.setFill(Color.WHITE);
                     gc.setFont(Font.font("Monospaced", FontWeight.BOLD, 20));
@@ -257,14 +239,12 @@ public class EditorGUI extends Application {
                     gc.fillText(sym, x + CELL_SIZE / 2.0 - 6, y + CELL_SIZE / 2.0 + 7);
                 }
 
-                // lignes de la grille
                 gc.setStroke(Color.rgb(60, 60, 60));
                 gc.setLineWidth(0.5);
                 gc.strokeRect(x, y, CELL_SIZE, CELL_SIZE);
             }
         }
 
-        // curseur jaune
         int cr = editor.getCursorRow();
         int cc = editor.getCursorCol();
         gc.setStroke(Color.YELLOW);
@@ -283,12 +263,10 @@ public class EditorGUI extends Application {
         }
     }
 
-    // === dialogues ===
-
     private void dialogNouveau() {
         Dialog<int[]> dialog = new Dialog<>();
         dialog.setTitle("Nouvelle grille");
-        dialog.setHeaderText("Créer une grille vide");
+        dialog.setHeaderText("Creer une grille vide");
 
         TextField rowsF = new TextField("10");
         TextField colsF = new TextField("10");
@@ -317,27 +295,47 @@ public class EditorGUI extends Application {
             try {
                 editor.resize(res[0], res[1], (char) res[2]);
                 redrawGrid();
-                statusLabel.setText("Grille " + res[0] + "x" + res[1] + " créée.");
+                statusLabel.setText("Grille " + res[0] + "x" + res[1] + " creee.");
             } catch (IllegalArgumentException ex) {
                 erreur("Taille minimale : 5x5");
             }
         });
     }
 
+    // verifie validation + bordures avant d'ouvrir le dialogue
     private void dialogSave() {
+        ArrayList<String> warnings = editor.validate();
+        if (!warnings.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (String w : warnings) sb.append("- ").append(w).append("\n");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Sauvegarde impossible");
+            alert.setHeaderText("Niveau pas valide");
+            alert.setContentText(sb.toString() + "\nCorrigez avant de sauvegarder.");
+            alert.showAndWait();
+            return;
+        }
+
+        if (!editor.borduresIntactes()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Sauvegarde impossible");
+            alert.setHeaderText("Bordures cassees");
+            alert.setContentText("Utilisez 'Murs bordure' pour corriger.");
+            alert.showAndWait();
+            return;
+        }
+
         Dialog<int[]> dialog = new Dialog<>();
         dialog.setTitle("Sauvegarder");
-        dialog.setHeaderText("Sauvegarder dans levels/levelN/worldN.txt");
+        dialog.setHeaderText("Sauvegarder dans levels/levelN/worldN.txt\n(nbWorlds.txt calcule auto)");
 
         TextField lvlF = new TextField("1");
         TextField wF = new TextField("0");
-        TextField totF = new TextField("1");
 
         GridPane gp = new GridPane();
         gp.setHgap(10); gp.setVgap(10);
         gp.add(new Label("N° level :"), 0, 0); gp.add(lvlF, 1, 0);
         gp.add(new Label("Index monde :"), 0, 1); gp.add(wF, 1, 1);
-        gp.add(new Label("Total mondes :"), 0, 2); gp.add(totF, 1, 2);
         dialog.getDialogPane().setContent(gp);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
@@ -346,8 +344,7 @@ public class EditorGUI extends Application {
                 try {
                     return new int[]{
                             Integer.parseInt(lvlF.getText().trim()),
-                            Integer.parseInt(wF.getText().trim()),
-                            Integer.parseInt(totF.getText().trim())
+                            Integer.parseInt(wF.getText().trim())
                     };
                 } catch (Exception ex) { return null; }
             }
@@ -355,8 +352,10 @@ public class EditorGUI extends Application {
         });
 
         dialog.showAndWait().ifPresent(res -> {
-            editor.saveToProjectFile(res[0], res[1], res[2]);
-            statusLabel.setText("Sauvé dans levels/level" + res[0] + "/world" + res[1] + ".txt");
+            if (editor.saveToProjectFile(res[0], res[1], 0))
+                statusLabel.setText("Sauvé : levels/level" + res[0] + "/world" + res[1] + ".txt");
+            else
+                erreur("Sauvegarde echouee.");
         });
     }
 
@@ -397,22 +396,6 @@ public class EditorGUI extends Application {
         });
     }
 
-    private void exporterFichier(Stage stage) {
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Exporter");
-        fc.setInitialFileName("world.txt");
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Texte", "*.txt"));
-        File file = fc.showSaveDialog(stage);
-        if (file != null) {
-            try (PrintWriter pw = new PrintWriter(new FileWriter(file))) {
-                pw.print(editor.exportProjectFormat());
-                statusLabel.setText("Exporté : " + file.getName());
-            } catch (IOException ex) {
-                erreur("Export impossible : " + ex.getMessage());
-            }
-        }
-    }
-
     private void importerFichier(Stage stage) {
         FileChooser fc = new FileChooser();
         fc.setTitle("Importer");
@@ -426,7 +409,7 @@ public class EditorGUI extends Application {
 
                 String content = sb.toString();
                 String firstLine = content.split("\\r?\\n")[0].trim();
-                // detecter si cest le format standard (avec header lettre + taille) ou pas
+                // detecte format standard (header lettre+taille) ou projet (brut)
                 if (firstLine.matches("[A-Za-z]\\s+\\d+"))
                     editor.importLevel(content);
                 else
@@ -447,11 +430,11 @@ public class EditorGUI extends Application {
             alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Validation");
             alert.setHeaderText("Niveau valide !");
-            alert.setContentText("Joueur present, boîtes et cibles en nombre egal.");
+            alert.setContentText("Joueur, boites et cibles OK.");
         } else {
             alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Validation");
-            alert.setHeaderText("Problèmes trouvés");
+            alert.setHeaderText("Problemes");
             StringBuilder sb = new StringBuilder();
             for (String w : warnings) sb.append("- ").append(w).append("\n");
             alert.setContentText(sb.toString());
@@ -459,12 +442,10 @@ public class EditorGUI extends Application {
         alert.showAndWait();
     }
 
-    // utils
-
     private void remplirBordures() {
         for (int i = 0; i < editor.getRows(); i++)
             for (int j = 0; j < editor.getCols(); j++)
-                if (i == 0 || j == 0 || i == editor.getRows() - 1 || j == editor.getCols() - 1)
+                if (i == 0 || j == 0 || i == editor.getRows()-1 || j == editor.getCols()-1)
                     editor.setCell(i, j, '#');
     }
 
