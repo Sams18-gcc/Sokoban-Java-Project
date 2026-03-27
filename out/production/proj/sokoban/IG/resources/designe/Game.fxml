@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="SCENE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#MOVE" onKeyTyped="#MOVE" prefHeight="690.0" prefWidth="660.0" stylesheets="@Game.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sokoban.IG.java.GAMEController">
+   <children>
+      <Canvas fx:id="canva" focusTraversable="true" height="600.0" layoutX="20.0" layoutY="54.0" width="600.0" />
+      <Label fx:id="Winner_label" alignment="BASELINE_CENTER" contentDisplay="RIGHT" layoutX="108.0" layoutY="268.0" prefHeight="110.0" prefWidth="463.0" visible="false">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="27.0" />
+         </font>
+         <opaqueInsets>
+            <Insets top="10.0" />
+         </opaqueInsets>
+      </Label>
+      <Text fx:id="Winner_text" layoutX="263.0" layoutY="331.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LEVEL 1 COMPLETED" visible="false" wrappingWidth="255.396484375">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="23.0" />
+         </font>
+      </Text>
+      <ImageView fx:id="Winner_image" fitHeight="71.0" fitWidth="104.0" layoutX="128.0" layoutY="287.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+   </children>
+</AnchorPane>

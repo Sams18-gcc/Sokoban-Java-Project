@@ -1,0 +1,83 @@
+package sokoban.core;
+
+import sokoban.entity.Box;
+
+public class Grid implements Cloneable {
+    private final char[][] grid;
+    private final int width;
+    private final int length;
+
+    public Grid(int length, int width) {
+        if (width < 5 || length < 5) throw new IllegalArgumentException();
+        this.length = length;
+        this.width = width;
+        grid = new char[length][width];
+    }
+
+    // initialise la grille de base avec les murs et quelques elements de test
+    public void initGrid(char[][] g) {
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < width; j++) {
+               grid[i][j] = g[i][j];
+            }
+        }
+
+    }
+
+    // affiche la grille dans le terminal
+    public void drawGrid() {
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < width; j++) {
+                System.out.printf("%c ", grid[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    // echange le contenu de 2 positions
+    public void permutePositions(Position p1, Position p2) {
+        if (p1 == null || p2 == null) throw new NullPointerException();
+
+        char temp;
+        temp = grid[p1.getY()][p1.getX()];
+        grid[p1.getY()][p1.getX()] = grid[p2.getY()][p2.getX()];
+        grid[p2.getY()][p2.getX()] = temp;
+    }
+
+    // met a jour la grille apres le deplacement d'un element
+    public void updateGrid(Position elemPos, Position nextPos, CellType cell) {
+        if (elemPos == null || nextPos == null || cell == null)
+            throw new NullPointerException();
+
+        grid[nextPos.getY()][nextPos.getX()] = grid[elemPos.getY()][elemPos.getX()];
+        grid[elemPos.getY()][elemPos.getX()] = cell.getSymbole();
+    }
+
+    public char getElement(int y, int x) {
+        return grid[y][x];
+    }
+
+    // renvoie une vraie copie de la grille
+    @Override
+    public Grid clone() {
+        Grid copy = new Grid(this.length, this.width);
+
+        for (int i = 0; i < this.length; i++) {
+            copy.grid[i] = this.grid[i].clone();
+        }
+
+        return copy;
+    }
+
+    public void setElement(int y, int x, char c) {
+        grid[y][x] = c;
+    }
+}
