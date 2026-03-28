@@ -15,8 +15,8 @@ import java.util.Scanner;
 
 /*
  * Interface terminale du jeu.
- * modifiee pour la recursivite :
- *   - TRAVERSE ne declenche pas le undo
+ * modifiée pour la récursivité :
+ *   - TRAVERSE ne déclenche pas le undo
  *   - ajout du menu principal
  *   - ajout du choix de mode de victoire
  */
@@ -25,19 +25,16 @@ public class TerminalUi {
     /*--------------------------------------------------
                         SINGLETON
     --------------------------------------------------*/
-
     public static final TerminalUi game = new TerminalUi();
 
     /*--------------------------------------------------
                         ATTRIBUTS
     --------------------------------------------------*/
-
     private final Scanner sc = new Scanner(System.in);
 
     /*--------------------------------------------------
                         CONSTRUCTEUR
     --------------------------------------------------*/
-
     private TerminalUi() {}
 
     /*--------------------------------------------------
@@ -67,9 +64,10 @@ public class TerminalUi {
     // choix du niveau
     private int chooseLevel() {
         System.out.println("======================");
-        System.out.println("Choisissez un niveau  :");
+        System.out.println("Choisissez un niveau (1-8) :");
         System.out.print("Niveau : ");
-        return Integer.parseInt(sc.nextLine());
+        int level = Integer.parseInt(sc.nextLine());
+        return level;
     }
 
     // choix du mode de victoire
@@ -85,14 +83,10 @@ public class TerminalUi {
         int choix = Integer.parseInt(sc.nextLine());
 
         switch (choix) {
-            case 1:
-                return VictoryCondition.ALL_WORLDS;
-            case 2:
-                return VictoryCondition.LEAVES_ONLY;
-            case 3:
-                return VictoryCondition.BFS_ALL;
-            case 4:
-                return VictoryCondition.ROOT_ONLY;
+            case 1:  return VictoryCondition.ALL_WORLDS;
+            case 2:  return VictoryCondition.LEAVES_ONLY;
+            case 3:  return VictoryCondition.BFS_ALL;
+            case 4:  return VictoryCondition.ROOT_ONLY;
             default:
                 System.out.println("Choix invalide, mode DFS par defaut.");
                 return VictoryCondition.ALL_WORLDS;
@@ -115,7 +109,7 @@ public class TerminalUi {
             return;
         }
 
-        System.out.println("Niveau " + numLevel + " charge — "
+        System.out.println("Niveau " + numLevel + " chargé — "
                 + level.getWorlds().size() + " monde(s).");
         System.out.println("Mode de victoire : " + vc);
 
@@ -190,9 +184,9 @@ public class TerminalUi {
 
     /*
      * Boucle principale de la version terminale.
-     * modifiee pour la recursivite :
+     * modifiée pour la récursivité :
      *   - TRAVERSE est un mouvement valide, pas de undo
-     *   - affiche le monde courant apres une traversee
+     *   - affiche le monde courant apres une traversée
      */
     public void play(Level level, StateManager sm) {
 
@@ -252,14 +246,14 @@ public class TerminalUi {
                 level.saveMove();
                 Action result = level.executeUserAction(lk);
 
-                // AJOUT rec : TRAVERSE est valide -> pas de undo, affichage du nouveau monde
+                // TRAVERSE est valide → pas de undo, affichage du nouveau monde
                 if (result == Action.TRAVERSE) {
                     System.out.println("--- Monde "
                             + level.getCurrentWorld().getWorldRef() + " ---");
                     continue;
                 }
 
-                // mouvement invalide -> on annule
+                // mouvement invalide → on annule
                 if (result != Action.MOVED && result != Action.BOX_IN_TARGET)
                     level.undo();
 

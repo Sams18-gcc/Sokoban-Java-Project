@@ -9,11 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class World {
-
-    /*--------------------------------------------------
-                        ATTRIBUTS
-    --------------------------------------------------*/
-
     // grille du monde pour l'affichage
     private final Grid grid;
 
@@ -29,10 +24,6 @@ public class World {
     // ref du monde dans le niveau
     private int worldRef;
 
-    /*--------------------------------------------------
-                        CONSTRUCTEUR
-    --------------------------------------------------*/
-
     public World(int length, int width, int worldRef) {
         if (width < 5 || length < 5 || worldRef < 0) throw new IllegalArgumentException();
         grid = new Grid(length, width);
@@ -42,16 +33,12 @@ public class World {
         this.worldRef = worldRef;
     }
 
-    /*--------------------------------------------------
-                        INIT
-    --------------------------------------------------*/
-
     // initialise le monde a partir de la grille
-    // MODIFIE rec : ajout du cas 'P' pour creer une PortalBox
     public void loadWorld(char[][] g) {
+
         grid.initGrid(g);
-        // quand je load une saved partie le add ajoute a la liste existante deja donc ca cree des doublons
-        // donc vaut mieux initializer a vide a chaque load
+        //quand je load une saved partie le add ajoute a la liste existante deja donc ça crée des doublouns
+        //donc vaut mieux initializer a vide a chque load
         player = null;
         boxes.clear();
         for (int i = 0; i < grid.getLength(); i++) {
@@ -66,6 +53,7 @@ public class World {
                 else if (grid.getElement(i, j) == CellType.TARGET.getSymbole())
                     cells[i][j] = new Cell(i, j, CellType.TARGET, true);
 
+
                 else if (grid.getElement(i, j) == '@') {
                     cells[i][j] = new Cell(i, j, CellType.FLOOR, false);
                     player = new Player(i, j);
@@ -74,11 +62,10 @@ public class World {
                     cells[i][j] = new Cell(i, j, CellType.FLOOR, false);
                     Box box = new Box(i, j);
                     boxes.add(box);
-
-                    // AJOUT rec : PortalBox representee par 'P'
-                } else if (grid.getElement(i, j) == 'P') {
-                    cells[i][j] = new Cell(i, j, CellType.FLOOR, false);
-                    boxes.add(new PortalBox(i, j));
+                }
+                    else if (grid.getElement(i, j) == 'P') {
+                        cells[i][j] = new Cell(i, j, CellType.FLOOR, false);
+                        boxes.add(new PortalBox(i, j));
 
                 } else {
                     cells[i][j] = new Cell(i, j, CellType.FLOOR, true);
@@ -87,66 +74,14 @@ public class World {
         }
     }
 
-    /*--------------------------------------------------
-                        LOGIQUE DE DEPLACEMENT
-    --------------------------------------------------*/
-
     // retourne vrai si c'est une box a la position pos
-    // MODIFIE rec : verifie aussi 'P' pour les PortalBox
     public boolean isBox(Position pos) {
         if (pos == null) throw new NullPointerException();
         char c = grid.getElement(pos.getY(), pos.getX());
         return c == 'O' || c == 'P';
     }
 
-    // verifie si le joueur peut avancer dans cette direction
-    // si y a une boite on regarde aussi la case d'apres
-    // MODIFIE rec : PortalBox ouverte = traversable directement
-    public boolean checkMove(Direction d) {
-        if (d == null) throw new NullPointerException();
-
-        Position actualPos = player.getPosition();
-        actualPos.translate(d);
-
-        if (!cells[actualPos.getY()][actualPos.getX()].isFree()) {
-
-            // AJOUT rec : PortalBox ouverte -> le joueur peut avancer dessus
-            Box box = getBoxatPosition(actualPos);
-            if (box instanceof PortalBox && ((PortalBox) box).isOpen()) {
-                return true;
-            }
-
-            // boite normale -> on regarde la case d'apres
-            if (grid.getElement(actualPos.getY(), actualPos.getX()) == 'O') {
-                actualPos.translate(d);
-            }
-        }
-
-        return cells[actualPos.getY()][actualPos.getX()].isFree();
-    }
-
-    public void updateCells(Position actualPos, Position nextPos) {
-        if (actualPos == null || nextPos == null)
-            throw new NullPointerException();
-
-        cells[actualPos.getY()][actualPos.getX()].setFree();
-        cells[nextPos.getY()][nextPos.getX()].setOccupied();
-    }
-
-    public void updateWorldData(Position elemPos, Position nextPos, CellType cell) {
-        if (elemPos == null || nextPos == null || cell == null) throw new NullPointerException();
-        grid.updateGrid(elemPos, nextPos, cell);
-    }
-
-    public void changePlayerPosition(Direction d) {
-        if (d == null) throw new NullPointerException();
-        player.move(d);
-    }
-
-    /*--------------------------------------------------
-                        GETTERS
-    --------------------------------------------------*/
-
+    // renvoie la boite a une position donnee si elle existe
     public Box getBoxatPosition(Position pos) {
         if (pos == null)
             throw new NullPointerException();
@@ -158,15 +93,18 @@ public class World {
         return null;
     }
 
+    // renvoie le type de cellule a la position donnee
     public Cell getCellatPosition(Position pos) {
         if (pos == null) throw new NullPointerException();
         return cells[pos.getY()][pos.getX()];
     }
 
+    // position actuelle du joueur
     public Position getPlayerPosition() {
         return player.getPosition();
     }
 
+    // verifie si toutes les boites sont sur une target
     public boolean allBoxesInTarget() {
         for (Box box : boxes) {
             if (!box.isInTarget())
@@ -175,17 +113,65 @@ public class World {
         return true;
     }
 
+    public void displayWorld() {
+        grid.drawGrid();
+    }
+
+    // verifie si le joueur peut avancer dans cette direction
+    // si y a une boite on regarde aussi la case d'apres
+   //ajout rec
+    public boolean checkMove(Direction d) {
+        if (d == null) throw new NullPointerException();
+
+        Position actualPos = player.getPosition();
+        actualPos.translate(d);
+
+        // si la case devant est occupée
+        if (!cells[actualPos.getY()][actualPos.getX()].isFree()) {
+
+            // si c'est une PortalBox ouverte → on laisse passer (traverse)
+            Box box = getBoxatPosition(actualPos);
+            if (box instanceof PortalBox && ((PortalBox) box).isOpen()) {
+                return true;
+            }
+
+            // si c'est une boîte normale → on regarde la case d'après
+            if ((grid.getElement(actualPos.getY(), actualPos.getX()) == 'O')||(grid.getElement(actualPos.getY(), actualPos.getX()) =='P')) {
+                actualPos.translate(d);
+            }
+        }
+
+        return cells[actualPos.getY()][actualPos.getX()].isFree();
+    }
+
+    // met a jour les cellules apres un deplacement
+    public void updateCells(Position actualPos, Position nextPos) {
+        if (actualPos == null || nextPos == null)
+            throw new NullPointerException();
+
+        cells[actualPos.getY()][actualPos.getX()].setFree();
+        cells[nextPos.getY()][nextPos.getX()].setOccupied();
+    }
+
+    // met a jour la grille apres le deplacement d'un element
+    public void updateWorldData(Position elemPos, Position nextPos, CellType cell) {
+        if (elemPos == null || nextPos == null || cell == null) throw new NullPointerException();
+        grid.updateGrid(elemPos, nextPos, cell);
+    }
+
+    public void changePlayerPosition(Direction d) {
+        if (d == null) throw new NullPointerException();
+        player.move(d);
+    }
+
     // on renvoie un clone pour eviter de modifier la vraie grille depuis l'exterieur
     public Grid getGrid() {
         return grid.clone();
     }
 
+
     public ArrayList<Box> getBoxes() {
         return new ArrayList<>(boxes);
-    }
-
-    public int getWorldRef() {
-        return worldRef;
     }
 
     public char[][] getGridArray() {
@@ -197,10 +183,6 @@ public class World {
         }
         return copy;
     }
-
-    /*--------------------------------------------------
-                        SETTERS
-    --------------------------------------------------*/
 
     public void setPlayerAt(Position pos) {
         this.player = new Player(pos.getY(), pos.getX());
@@ -226,11 +208,10 @@ public class World {
         }
     }
 
-    /*--------------------------------------------------
-                        AFFICHAGE
-    --------------------------------------------------*/
 
-    public void displayWorld() {
-        grid.drawGrid();
+    public int getWorldRef() {
+        return worldRef;
     }
+
+
 }
