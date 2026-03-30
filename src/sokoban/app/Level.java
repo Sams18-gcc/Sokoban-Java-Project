@@ -3,7 +3,8 @@ package sokoban.app;
 import sokoban.core.Direction;
 import sokoban.core.Position;
 import sokoban.core.World;
-import sokoban.logic.Action;
+import sokoban.logic.ActionCategory;
+import sokoban.logic.ResultOfAction;
 import sokoban.logic.GameLogic;
 import sokoban.logic.LogicKey;
 import sokoban.saving.LoadGame;
@@ -44,9 +45,40 @@ public class Level {
         actWorld = 0;
         state = LevelState.RUNNING;
     }
-//YANIS
+
+    //YANIS
     public LoadGame getLoader() {
         return loader;
+    }
+
+    // renvoie le numero du level
+    public int getNumLevel() {
+
+        return numLevel;
+    }
+
+    // renvoie la liste des mondes du niveau
+    public ArrayList<World> getWorlds() {
+
+        return worlds;
+    }
+
+    // renvoie la reference du monde actuellement actif
+    public int getActWorldRef() {
+
+        return actWorld;
+    }
+
+    // renvoie l'etat actuel du niveau
+    public LevelState getState() {
+
+        return state;
+    }
+
+    // verifie si le niveau est en cours d'execution
+    public boolean isRunning() {
+
+        return state == LevelState.RUNNING;
     }
 
     // initialise le monde courant
@@ -79,18 +111,11 @@ public class Level {
         actWorld = ref;
     }
 
+    // remplace un monde a une position donnee
+    public void replaceWorld(int ref, World world) {
 
+        worlds.set(ref, world);
 
-    public int getActWorldRef() {
-        return actWorld;
-    }
-
-    public LevelState getState() {
-        return state;
-    }
-
-    public boolean isRunning() {
-        return state == LevelState.RUNNING;
     }
 
     // mettre le jeu en pause
@@ -124,41 +149,137 @@ public class Level {
     }
 
     // execute une action utilisateur simple (deplacement, pause...)
-    public Action executeUserAction(LogicKey key) {
-        if (key == null) {
+    public ResultOfAction handleUserAction(LogicKey k) {
+        if (k == null) {
             throw new NullPointerException();
         }
-        // si la partie n'est pas en cours, on fait rien
+
         if (state != LevelState.RUNNING) {
-            return Action.NOTHING;
-        }
-        // recuperer l'action qui vient d'etre executee
-
-        Action result = logic.executeUserAction(key, getCurrentWorld());
-
-        if (result == Action.PAUSE) {
-            pause();
-            return result;
+            return ResultOfAction.NOTHING;
         }
 
-        if (checkVictory()) {
-            victory();
+        ActionCategory actionCategory = classifyAction(k);
+
+        switch(actionCategory) {
+            case MOVE:
+                return handleMoveAction(k);
+
+            case PATH_FINDING:
+                return ResultOfAction.PATH_FINDING_REQUESTED;
+
+            case INTERFACE:
+                return handleInterfaceAction(k);
+
+            case STATE:
+                return handleStateAction(k);
+
+            default:
+                return ResultOfAction.NOTHING;
         }
 
-        return result;
     }
 
-    public boolean simulateMove(LogicKey k)
-    {
+    public ActionCategory classifyAction(LogicKey k) {
+        switch (k) {
+            case MOVE_DOWN:
+            case MOVE_LEFT:
+            case MOVE_RIGHT:
+            case MOVE_UP:
+                return ActionCategory.MOVE;
+
+            case LOAD:
+            case SAVE:
+            case RELOAD:
+            case UNDO:
+                return ActionCategory.STATE;
+
+
+            case ESCAPE:
+                return ActionCategory.INTERFACE;
+
+            case FIND_PATH:
+                return ActionCategory.PATH_FINDING;
+
+            default:
+                return ActionCategory.UNHANDLED;
+
+        }
+    }
+
+    // retourne vrai si le move est possible en le simulant
+    public boolean simulateMove(LogicKey k) {
         int worldLength = getCurrentWorld().getGrid().getLength();
         int worldWidth = getCurrentWorld().getGrid().getWidth();
+
         World copy = new World(worldLength, worldWidth, 0);
         copy.loadWorld(getCurrentWorld().getGridArray());
-        Action resultSimulation = logic.executeUserAction(k,copy);
-        if(resultSimulation == Action.MOVED || resultSimulation == Action.BOX_IN_TARGET)
-            return true;
-        return false;
+
+        ResultOfAction resultSimulation = logic.handleMoveKey(k, copy);
+
+        return resultSimulation == ResultOfAction.MOVED
+                || resultSimulation == ResultOfAction.BOX_IN_TARGET;
     }
+
+
+    public ResultOfAction handleMoveAction(LogicKey k) {
+        if (!simulateMove(k)) {
+            return ResultOfAction.BLOCKED;
+        }
+
+        saveState();
+
+        ResultOfAction resultOfAction = logic.handleMoveKey(k, getCurrentWorld());
+
+        if (checkVictory()) {
+            return ResultOfAction.WON;
+        }
+
+        return resultOfAction;
+    }
+
+    public ResultOfAction handleInterfaceAction(LogicKey k) {
+        switch (k) {
+            case ESCAPE:
+                pause();
+                return ResultOfAction.PAUSED;
+
+            default:
+                return ResultOfAction.NOTHING;
+        }
+
+        /* J'ai fait un switch dans le cas ou on voudrait
+        ajouter d'autres fonctionnalités */
+    }
+
+    public ResultOfAction handleStateAction(LogicKey k) {
+
+        switch (k) {
+            case SAVE:
+                saveGame();
+                return ResultOfAction.SAVED;
+
+
+            case LOAD:
+                loadGame();
+                return ResultOfAction.LOADED;
+
+
+            case RELOAD:
+                reloadGame();
+                return ResultOfAction.RELOADED;
+
+
+            case UNDO:
+                undo();
+                return ResultOfAction.UNDONE;
+
+
+            default:
+                return ResultOfAction.NOTHING;
+
+        }
+    }
+
 
     // calcule un chemin vers une destination donnee
     public List<Direction> executePathFinding(Position dest) {
@@ -178,12 +299,12 @@ public class Level {
     }
 
     // execute directement un mouvement dans une direction
-    public Action executeMove(Direction d) {
+    public ResultOfAction executeMove(Direction d) {
 
-        Action result = logic.movePlayer(d, getCurrentWorld());
+        ResultOfAction result = logic.movePlayer(d, getCurrentWorld());
 
         // si une box atteint un but, on verifie les autres
-        if (result == Action.BOX_IN_TARGET) {
+        if (result == ResultOfAction.BOX_IN_TARGET) {
             if (checkVictory()) {
                 victory();
             }
@@ -192,31 +313,30 @@ public class Level {
         return result;
     }
 
-    //------------------------------------j'ai ajouté deux getters
-    public int getNumLevel() {
-        return numLevel;
-    }
+    // sauvegarde l'etat courant pour un futur undo
+    public void saveState() {
 
-
-
-    public ArrayList<World> getWorlds() {
-        return worlds;
-    }
-
-    public void replaceWorld(int ref, World world)
-    {
-
-        worlds.set(ref, world);
-
-    }
-
-    public void saveState()
-    {
         sm.saveUndoSnapshot(getCurrentWorld());
     }
 
-    public void undo()
-    {
+    // sauvegarde la partie complete
+    public void saveGame() {
+        sm.save(this);
+    }
+
+    // charge une partie sauvegardee
+    public void loadGame() {
+        sm.load(this);
+
+    }
+
+    // recharge une partie fraiche depuis le debut
+    public void reloadGame() {
+        sm.loadFresh(this);
+    }
+
+    // annule la derniere action
+    public void undo() {
         sm.undo(getCurrentWorld());
     }
 }

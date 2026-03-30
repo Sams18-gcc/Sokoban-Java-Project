@@ -1,4 +1,4 @@
-package sokoban.IG.java;
+package sokoban.UI.controller;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -12,11 +12,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import sokoban.UI.app.SokobanApp;
 
 import java.io.IOException;
 import java.util.Objects;
 
-public class SETTINGSController {
+public class SettingsController {
 
 
 
@@ -34,8 +35,8 @@ public class SETTINGSController {
 
 
     public void initialize() {
-        music_image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/music.png"))));
-        effect_image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/effect.png"))));
+        music_image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/music.png"))));
+        effect_image.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/effect.png"))));
 
         EffectVolume.setText((int)SliderEFFECT.getValue() +" %");
         MusicVolume.setText((int)SliderMUSIC.getValue() +" %");
@@ -62,8 +63,8 @@ public class SETTINGSController {
 
         SliderMUSIC.valueProperty().addListener((observableValue, oldval, newval) ->
         {
-            if (Interface.mediaPlayer != null) {
-                Interface.mediaPlayer.setVolume(newval.doubleValue() / 100);
+            if (SokobanApp.mediaPlayer != null) {
+                SokobanApp.mediaPlayer.setVolume(newval.doubleValue() / 100);
             }
 
         });
@@ -71,8 +72,8 @@ public class SETTINGSController {
 
         SliderEFFECT.valueProperty().addListener((observableValue, oldval, newval) ->
         {
-            if (Interface.menuSELECTION != null) {
-                Interface.menuSELECTION.setVolume(newval.doubleValue() / 100);
+            if (SokobanApp.menuSELECTION != null) {
+                SokobanApp.menuSELECTION.setVolume(newval.doubleValue() / 100);
             }
 
         });
@@ -87,7 +88,7 @@ public class SETTINGSController {
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        stage.setScene(Interface.sceneInterface);
+        stage.setScene(SokobanApp.sceneInterface);
 
         stage.setResizable(false);
 

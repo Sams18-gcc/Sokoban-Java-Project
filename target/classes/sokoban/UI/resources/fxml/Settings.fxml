@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="SCENE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="690.0" prefWidth="660.0" stylesheets="@SETTINGS.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sokoban.IG.java.SETTINGSController">
+<AnchorPane fx:id="SCENE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="690.0" prefWidth="660.0" stylesheets="@../style/Settings.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sokoban.UI.controller.SettingsController">
     <children>
         <Label fx:id="TITRE" alignment="CENTER" contentDisplay="CENTER" layoutX="171.0" prefHeight="91.0" prefWidth="319.0" text="SOKOBAN">
             <font>

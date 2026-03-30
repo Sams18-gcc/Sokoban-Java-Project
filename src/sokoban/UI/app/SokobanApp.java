@@ -1,4 +1,4 @@
-package sokoban.IG.java;
+package sokoban.UI.app;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,18 +12,18 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class Interface extends Application {
+public class SokobanApp extends Application {
     public static Scene sceneInterface;
     public static MediaPlayer mediaPlayer;
     public static AudioClip menuSELECTION;
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader interface1 = new FXMLLoader(Interface.class.getResource("/sokoban/IG/resources/designe/Interface.fxml"));
+        FXMLLoader interface1 = new FXMLLoader(SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Interface.fxml"));
          sceneInterface = new Scene(interface1.load(), 660, 660);
 
         stage.setTitle("Interface");
         stage.setScene(sceneInterface);
-        sceneInterface.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/sokoban/IG/resources/designe/InterfaceStyle.css")).toExternalForm());
+        sceneInterface.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/sokoban/UI/resources/style/InterfaceStyle.css")).toExternalForm());
 
         stage.setResizable(false);
 

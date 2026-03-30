@@ -1,4 +1,4 @@
-package sokoban.IG.java;
+package sokoban.UI.controller;
 
 
 import javafx.event.ActionEvent;
@@ -12,12 +12,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import sokoban.UI.app.SokobanApp;
 import sokoban.app.Level;
 import sokoban.saving.StateManager;
 
@@ -27,7 +27,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Objects;
 
-public class STARTController {
+public class StartController {
 
     @FXML
     private Button BACKbutton;
@@ -52,7 +52,7 @@ public class STARTController {
     {
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        stage.setScene(Interface.sceneInterface);
+        stage.setScene(SokobanApp.sceneInterface);
 
         stage.setResizable(false);
 
@@ -129,10 +129,10 @@ public class STARTController {
         card.setStyle("-fx-alignment: center;");
         ImageView icon;
         state = (state == null) ? "" : state.trim();
-        Image locked = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/lockedGold.png")));
-        Image lockedHover = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/lockedHover.png")));
-        Image unlocked = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/unlocked.png")));
-        Image unlockedHover = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/unlockedHover.png")));
+        Image locked = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/lockedGold.png")));
+        Image lockedHover = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/lockedHover.png")));
+        Image unlocked = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/unlocked.png")));
+        Image unlockedHover = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/unlockedHover.png")));
         if("locked".equals(state))
         {
              icon = new ImageView(
@@ -182,18 +182,18 @@ public class STARTController {
 
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/sokoban/IG/resources/designe/Game.fxml")
+                    getClass().getResource("/sokoban/UI/resources/fxml/Game.fxml")
             );
 
             Parent root = loader.load();
 
-            GAMEController controller = loader.getController();
+            GameController controller = loader.getController();
             controller.setLevel(level);
 
             Scene scene = new Scene(root, 660, 660);
             scene.getStylesheets().add(
                     Objects.requireNonNull(
-                            getClass().getResource("/sokoban/IG/resources/designe/Game.css")
+                            getClass().getResource("/sokoban/UI/resources/style/Game.css")
                     ).toExternalForm()
             );
 

@@ -5,7 +5,7 @@ import sokoban.app.LevelState;
 import sokoban.core.Direction;
 import sokoban.core.Position;
 import sokoban.core.World;
-import sokoban.logic.Action;
+import sokoban.logic.ResultOfAction;
 import sokoban.logic.LogicKey;
 import sokoban.saving.StateManager;
 import java.util.List;
@@ -45,7 +45,7 @@ public class TerminalUi {
         } else if (input.equals("d")) {
             return LogicKey.MOVE_RIGHT;
         } else if (input.equals("p")) {
-            return LogicKey.PATHFINDING;
+            return LogicKey.FIND_PATH;
         } else if (input.equals("esc")) {
             return LogicKey.ESCAPE;
         } else if (input.equals("u")) { //j'ai ajouté les keys de undo,save,load,reload
@@ -158,7 +158,7 @@ public class TerminalUi {
 
             // cas special : le pathfinding demande d'abord une destination,
             // puis execute le chemin trouve et reaffiche le monde a chaque etape
-            if (lk == LogicKey.PATHFINDING) {
+            if (lk == LogicKey.FIND_PATH) {
                 int countDisplay = 0;
                 Position dest = setPathTargetPosition();
                 List<Direction> path = level.executePathFinding(dest);
@@ -193,20 +193,20 @@ public class TerminalUi {
                 // on sauvegarde l'etat du monde courant avant chaque action pour permettre l'undo
 
                 level.saveState();
-                Action result = level.executeUserAction(lk);
-                if(result != Action.MOVED && result != Action.BOX_IN_TARGET)
+                ResultOfAction result = level.handleUserAction(lk);
+                if(result != ResultOfAction.MOVED && result != ResultOfAction.BOX_IN_TARGET)
                     level.undo();
 
                 // si une boite vient d'entrer dans une target,
                 // on verifie si ca a termine le niveau
-                if (result == Action.BOX_IN_TARGET) {
+                if (result == ResultOfAction.BOX_IN_TARGET) {
                     if (level.getState() == LevelState.WON) {
                         displayWorldTerminal(level.getCurrentWorld());
                         displayVictoryMessage();
                     }
 
                     // si l'utilisateur demande une pause, on stoppe la boucle terminale
-                } else if (result == Action.PAUSE) {
+                } else if (result == ResultOfAction.PAUSED) {
 
                     level.stop();
                 }

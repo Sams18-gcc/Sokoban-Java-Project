@@ -28,13 +28,13 @@ public class GameLogic {
      * - MOVED si le joueur bouge normalement
      * - BOX_IN_TARGET si une boite entre dans une target
      */
-    public final Action movePlayer(Direction d, World world) {
+    public final ResultOfAction movePlayer(Direction d, World world) {
         if (d == null || world == null) {
             throw new NullPointerException();
         }
 
         if (!world.checkMove(d)) {
-            return Action.BLOCKED;
+            return ResultOfAction.BLOCKED;
         }
 
         boolean boxInTarget = false;
@@ -53,10 +53,10 @@ public class GameLogic {
 
 
         if (boxInTarget) {
-            return Action.BOX_IN_TARGET;
+            return ResultOfAction.BOX_IN_TARGET;
         }
 
-        return Action.MOVED;
+        return ResultOfAction.MOVED;
     }
 
     /*
@@ -90,12 +90,12 @@ public class GameLogic {
     }
 
     // traduit une action logique en comportement du jeu
-    public Action executeUserAction(LogicKey u, World world) {
-        if (u == null || world == null) throw new NullPointerException();
+    public ResultOfAction handleMoveKey(LogicKey k, World world) {
+        if (k == null || world == null) throw new NullPointerException();
 
         Direction d = null;
 
-        switch (u) {
+        switch (k) {
             case MOVE_UP:
                 d = Direction.UP;
                 break;
@@ -108,8 +108,6 @@ public class GameLogic {
             case MOVE_RIGHT:
                 d = Direction.RIGHT;
                 break;
-            case ESCAPE:
-                return Action.PAUSE;
         }
 
         return movePlayer(d, world);

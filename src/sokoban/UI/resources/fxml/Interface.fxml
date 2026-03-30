@@ -7,7 +7,7 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="SCENE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="690.0" prefWidth="660.0" stylesheets="@InterfaceStyle.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sokoban.IG.java.InterfaceController">
+<AnchorPane fx:id="SCENE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="690.0" prefWidth="660.0" stylesheets="@../style/InterfaceStyle.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sokoban.UI.controller.InterfaceController">
    <children>
       <MediaView fx:id="BackgroundVideo" fitHeight="690.0" fitWidth="660.0" />
       <Button fx:id="buttonSTART" alignment="CENTER" layoutX="198.0" layoutY="91.0" mnemonicParsing="false" onAction="#START" onMouseEntered="#AFFICHESKULL" onMouseExited="#CAHCERSKULL" prefHeight="25.0" prefWidth="264.0" text="START" />

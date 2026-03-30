@@ -1,4 +1,4 @@
-package sokoban.IG.java;
+package sokoban.UI.controller;
 
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotResult;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -19,6 +18,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
+import sokoban.UI.app.SokobanApp;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -52,30 +52,30 @@ public class InterfaceController {
     public void initialize() {
 
         media = new Media(Objects.requireNonNull(
-                getClass().getResource("/sokoban/IG/resources/photo/BackgroundVideo.mp4")
+                getClass().getResource("/sokoban/UI/resources/assets/BackgroundVideo.mp4")
         ).toExternalForm());
 
-        Interface.mediaPlayer = new MediaPlayer(media);
-        BackgroundVideo.setMediaPlayer(Interface.mediaPlayer);
+        SokobanApp.mediaPlayer = new MediaPlayer(media);
+        BackgroundVideo.setMediaPlayer(SokobanApp.mediaPlayer);
 
         BackgroundVideo.setPreserveRatio(true);
-        Interface.mediaPlayer.setAutoPlay(true);
-        Interface.mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        SokobanApp.mediaPlayer.setAutoPlay(true);
+        SokobanApp.mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
         skull1.setImage(new Image(Objects.requireNonNull(
-                getClass().getResourceAsStream("/sokoban/IG/resources/photo/skull.png")
+                getClass().getResourceAsStream("/sokoban/UI/resources/assets/skull.png")
         )));
         skull2.setImage(new Image(Objects.requireNonNull(
-                getClass().getResourceAsStream("/sokoban/IG/resources/photo/skull.png")
+                getClass().getResourceAsStream("/sokoban/UI/resources/assets/skull.png")
         )));
         skull3.setImage(new Image(Objects.requireNonNull(
-                getClass().getResourceAsStream("/sokoban/IG/resources/photo/skull.png")
+                getClass().getResourceAsStream("/sokoban/UI/resources/assets/skull.png")
         )));
         skull4.setImage(new Image(Objects.requireNonNull(
-                getClass().getResourceAsStream("/sokoban/IG/resources/photo/skull.png")
+                getClass().getResourceAsStream("/sokoban/UI/resources/assets/skull.png")
         )));
         skull5.setImage(new Image(Objects.requireNonNull(
-                getClass().getResourceAsStream("/sokoban/IG/resources/photo/skull.png")
+                getClass().getResourceAsStream("/sokoban/UI/resources/assets/skull.png")
         )));
 
         skull1.setVisible(false);
@@ -84,8 +84,8 @@ public class InterfaceController {
         skull4.setVisible(false);
         skull5.setVisible(false);
 
-        Interface.menuSELECTION = new AudioClip(
-                getClass().getResource("/sokoban/IG/resources/photo/menu-selection.mp3").toExternalForm()
+        SokobanApp.menuSELECTION = new AudioClip(
+                getClass().getResource("/sokoban/UI/resources/assets/menu-selection.mp3").toExternalForm()
         );
     }
 
@@ -93,19 +93,19 @@ public class InterfaceController {
         Button temp = (Button) event.getSource();
 
         if (temp == buttonSTART) {
-            Interface.menuSELECTION.play();
+            SokobanApp.menuSELECTION.play();
             skull1.setVisible(true);
         } else if (temp == buttonSETTINGS) {
-            Interface.menuSELECTION.play();
+            SokobanApp.menuSELECTION.play();
             skull2.setVisible(true);
         } else if (temp == buttonRULES) {
-            Interface.menuSELECTION.play();
+            SokobanApp.menuSELECTION.play();
             skull3.setVisible(true);
         } else if (temp == buttonEDITOR) {
-            Interface.menuSELECTION.play();
+            SokobanApp.menuSELECTION.play();
             skull4.setVisible(true);
         } else if (temp == buttonEXIT) {
-        Interface.menuSELECTION.play();
+        SokobanApp.menuSELECTION.play();
         skull5.setVisible(true);
     }
     }
@@ -128,11 +128,11 @@ public class InterfaceController {
 
     public void START(ActionEvent event) throws IOException {
         FXMLLoader START = new FXMLLoader(
-                Interface.class.getResource("/sokoban/IG/resources/designe/START.fxml")
+                SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Start.fxml")
         );
         Parent root = START.load();
 
-        STARTController controller = START.getController();
+        StartController controller = START.getController();
         controller.setLevelDirectoryName("levels");
         controller.constructLevels();
 
@@ -141,7 +141,7 @@ public class InterfaceController {
 
         stage.setTitle("RULES"); // a corriger plus tard
         sceneSTART.getStylesheets().add(
-                getClass().getResource("/sokoban/IG/resources/designe/START.css").toExternalForm()
+                getClass().getResource("/sokoban/UI/resources/style/Start.css").toExternalForm()
         );
         stage.setScene(sceneSTART);
         stage.setResizable(false);
@@ -150,14 +150,14 @@ public class InterfaceController {
 
     public void SETTINGS(ActionEvent event) throws IOException {
         FXMLLoader SETTINGS = new FXMLLoader(
-                Interface.class.getResource("/sokoban/IG/resources/designe/SETTINGS.fxml")
+                SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Settings.fxml")
         );
         Scene sceneSETTINGS = new Scene(SETTINGS.load(), 660, 660);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         stage.setTitle("RULES");
         sceneSETTINGS.getStylesheets().add(
-                getClass().getResource("/sokoban/IG/resources/designe/SETTINGS.css").toExternalForm()
+                getClass().getResource("/sokoban/UI/resources/style/Settings.css").toExternalForm()
         );
         stage.setScene(sceneSETTINGS);
         stage.setResizable(false);
@@ -166,14 +166,14 @@ public class InterfaceController {
 
     public void RULES(ActionEvent event) throws IOException {
         FXMLLoader RULES = new FXMLLoader(
-                Interface.class.getResource("/sokoban/IG/resources/designe/RULES.fxml")
+                SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Rules.fxml")
         );
         Scene sceneRULES = new Scene(RULES.load(), 660, 660);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         stage.setTitle("RULES");
         sceneRULES.getStylesheets().add(
-                getClass().getResource("/sokoban/IG/resources/designe/RULES.css").toExternalForm()
+                getClass().getResource("/sokoban/UI/resources/style/Rules.css").toExternalForm()
         );
         stage.setScene(sceneRULES);
         stage.setResizable(false);
@@ -181,7 +181,7 @@ public class InterfaceController {
     }
 
     public void EDITOR(ActionEvent event) {
-        Interface.menuSELECTION.play();
+        SokobanApp.menuSELECTION.play();
         Stage editorStage = new Stage();
         sokoban.editor.EditorGUI editorGUI = new sokoban.editor.EditorGUI();
 
@@ -211,13 +211,13 @@ public class InterfaceController {
         Button temp = (Button) event.getSource();
 
         if (temp == buttonSTART) {
-            Interface.menuSELECTION.play();
+            SokobanApp.menuSELECTION.play();
         } else if (temp == buttonSETTINGS) {
-            Interface.menuSELECTION.play();
+            SokobanApp.menuSELECTION.play();
         } else if (temp == buttonRULES) {
-            Interface.menuSELECTION.play();
+            SokobanApp.menuSELECTION.play();
         } else {
-            Interface.menuSELECTION.play();
+            SokobanApp.menuSELECTION.play();
         }
     }
 }

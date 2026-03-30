@@ -1,4 +1,4 @@
-package sokoban.IG.java;
+package sokoban.UI.controller;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
@@ -25,8 +25,8 @@ import sokoban.core.Direction;
 import sokoban.core.Grid;
 import sokoban.core.Position;
 import sokoban.core.World;
-import sokoban.logic.Action;
 import sokoban.logic.LogicKey;
+import sokoban.logic.ResultOfAction;
 import sokoban.saving.StateManager;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ import java.util.Objects;
 /// - reprendre une logique proche de TerminalUi pour les actions utilisateur
 /// SAMY : je travaille actuellement sur le code de cette branche dans
 /// une autre branche nommée interface-copy, veuillez ne pas y toucher svp.
-public class GAMEController {
+public class GameController {
     int taille_case = 60;
 
 
@@ -58,11 +58,11 @@ public class GAMEController {
 
     private Grid grid;
 
-    private final Image player = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/essaypion.gif")));
-    private final Image wall = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/stone.jpg")));
-    private final Image target = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/target.png")));
-    private final Image box = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/vrai_box.png")));
-    private final Image floor = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/ground.png")));
+    private final Image player = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/essaypion.gif")));
+    private final Image wall = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/stone.jpg")));
+    private final Image target = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/target.png")));
+    private final Image box = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/vrai_box.png")));
+    private final Image floor = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/ground.png")));
 
 
     private GraphicsContext GD;
@@ -138,7 +138,7 @@ public class GAMEController {
 
     //private LevelState levelState = level.getState();
 
-    public void getUserAction(KeyEvent event) {
+    public void handleUserAction(KeyEvent event) {
 
 
         LogicKey k = null;
@@ -165,56 +165,41 @@ public class GAMEController {
             k = LogicKey.RELOAD;
         }
 
-        executeUserAction(k);
+        processUserAction(k);
     }
 
-    public void executeUserAction(LogicKey k) {
+    public void processUserAction(LogicKey k) {
         if (k == null) {
             return;
         }
 
-        switch (k) {
-            case MOVE_UP:
-            case MOVE_DOWN:
-            case MOVE_LEFT:
-            case MOVE_RIGHT:
+        ResultOfAction resultOfAction = level.handleUserAction(k);
 
+        switch (resultOfAction) {
+            case MOVED:
+            case BOX_IN_TARGET:
+            case BLOCKED:
+            case LOADED:
+            case RELOADED:
+            case UNDONE:
+            case SAVED:
+                //savedConfirmationDisplay();
+                break;
 
-                if(level.simulateMove(k))
-                {
-                    level.saveState();
-                    level.executeUserAction(k);
-
-
-                }
-
+            case WON:
                 refreshView();
+                victoryDisplay();
                 break;
 
-            case UNDO:
-                level.undo();
-                refreshView();
+            case PATH_FINDING_REQUESTED:
+                //enablePathFindingMode();
                 break;
 
-            case SAVE:
-                save();
-                refreshView();
+            case PAUSED:
+                //pauseDisplay();
                 break;
 
-            case LOAD:
-                load();
-                refreshView();
-                break;
-
-            case RELOAD:
-                reload();
-                refreshView();
-                break;
-
-            case ESCAPE:
-                pause(); // ou retour menu
-                break;
-
+            case NOTHING:
             default:
                 break;
         }
@@ -230,8 +215,6 @@ public class GAMEController {
         drawWorld();
         canva.requestFocus();
     }
-
-
 
 
     public void executePathFinding(MouseEvent event) {
@@ -291,7 +274,7 @@ public class GAMEController {
     public void next(ActionEvent event) throws IOException {
 
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sokoban/IG/resources/designe/START.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sokoban/UI/resources/fxml/Start.fxml"));
         Parent root = loader.load();
 
 
@@ -301,7 +284,7 @@ public class GAMEController {
         Scene newScene = new Scene(root, 660, 660);
 
 
-        newScene.getStylesheets().add(getClass().getResource("/sokoban/IG/resources/designe/START.css").toExternalForm());
+        newScene.getStylesheets().add(getClass().getResource("/sokoban/UI/resources/style/Start.css").toExternalForm());
 
         stage.setScene(newScene);
         stage.show();
@@ -332,8 +315,8 @@ public class GAMEController {
 
 
     @FXML
-    public void win() {
-        Image img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/IG/resources/photo/Winner_pion.gif")));
+    public void victoryDisplay() {
+        Image img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/Winner_pion.gif")));
         Winner_image.setImage(img);
         Winner_image.setVisible(true);
         Winner_text.setVisible(true);
@@ -350,21 +333,14 @@ public class GAMEController {
 
     }
 
-    public void load(){
-
+    public void load() {
+        level.loadGame();
+        refreshView();
     }
 
-   public void reload() {
-       /* // pas encore fini
-
-
-        if (timer != null) {
-            timer.stop();
-        }
-        // stat.loadFresh(lvl);
-        initialize(level.getNumLevel());
-*/
-
+    public void reload() {
+        level.reloadGame();
+        refreshView();
     }
 
     @FXML
@@ -372,29 +348,26 @@ public class GAMEController {
 
 
         level.undo();
-        world = level.getCurrentWorld();
-        grid = world.getGrid();
-        canva.requestFocus();
+        refreshView();
 
 
     }
 
     public void save() {
 
+        level.saveGame();
 
-        // pas encore fini
-        stat.save(level);
     }
 
     public void back(ActionEvent event) throws IOException {
 
-        FXMLLoader GAME = new FXMLLoader(getClass().getResource("/sokoban/IG/resources/designe/START.fxml"));
+        FXMLLoader GAME = new FXMLLoader(getClass().getResource("/sokoban/UI/resources/fxml/Start.fxml"));
         Scene sceneSTART = new Scene(GAME.load(), 660, 660);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
 
         stage.setTitle("LEVEL1");
-        sceneSTART.getStylesheets().add(getClass().getResource("/sokoban/IG/resources/designe/START.css").toExternalForm());
+        sceneSTART.getStylesheets().add(getClass().getResource("/sokoban/UI/resources/style/Start.css").toExternalForm());
         stage.setScene(sceneSTART);
         stage.setResizable(false);
 
@@ -413,34 +386,29 @@ public class GAMEController {
     }
 
 
-  public void startTimer(){
-      timer = new AnimationTimer() {
-          @Override
-          public void handle(long now) {
+    public void startTimer() {
+        timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
 
-              double targetX = world.getPlayerPosition().getX() * 60;
-              double targetY = world.getPlayerPosition().getY() * 60;// On réduit l espace entre la postion actuelle et la prochaine
-              playerX += (targetX - playerX) * smooth;
-              playerY += (targetY - playerY) * smooth;
-
-
-              // cette methode est appele automatiquement 60 fois par seconde pour redessine le level a chaque fois
-              drawWorld(); //
-          }
-      };
-              timer.start();
-
-          // canva.setFocusTraversable(true);
-          //canva.requestFocus();
+                double targetX = world.getPlayerPosition().getX() * 60;
+                double targetY = world.getPlayerPosition().getY() * 60;// On réduit l espace entre la postion actuelle et la prochaine
+                playerX += (targetX - playerX) * smooth;
+                playerY += (targetY - playerY) * smooth;
 
 
-          // lancer la boucle pour refraicher
-  }
+                // cette methode est appele automatiquement 60 fois par seconde pour redessine le level a chaque fois
+                drawWorld(); //
+            }
+        };
+        timer.start();
+
+        // canva.setFocusTraversable(true);
+        //canva.requestFocus();
 
 
-
-
-
+        // lancer la boucle pour refraicher
+    }
 
 
 }
