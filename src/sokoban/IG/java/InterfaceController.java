@@ -5,7 +5,9 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotResult;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -101,11 +103,11 @@ public class InterfaceController {
             skull3.setVisible(true);
         } else if (temp == buttonEDITOR) {
             Interface.menuSELECTION.play();
-            skull5.setVisible(true);
-        } else {
-            Interface.menuSELECTION.play();
             skull4.setVisible(true);
-        }
+        } else if (temp == buttonEXIT) {
+        Interface.menuSELECTION.play();
+        skull5.setVisible(true);
+    }
     }
 
     public void CAHCERSKULL(Event event) {
@@ -118,9 +120,9 @@ public class InterfaceController {
         } else if (temp == buttonRULES) {
             skull3.setVisible(false);
         } else if (temp == buttonEDITOR) {
-            skull5.setVisible(false);
-        } else {
             skull4.setVisible(false);
+        } else if (temp == buttonEXIT) {
+            skull5.setVisible(false);
         }
     }
 
@@ -128,7 +130,13 @@ public class InterfaceController {
         FXMLLoader START = new FXMLLoader(
                 Interface.class.getResource("/sokoban/IG/resources/designe/START.fxml")
         );
-        Scene sceneSTART = new Scene(START.load(), 660, 660);
+        Parent root = START.load();
+
+        STARTController controller = START.getController();
+        controller.setLevelDirectoryName("levels");
+        controller.constructLevels();
+
+        Scene sceneSTART = new Scene(root, 660, 660);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         stage.setTitle("RULES"); // a corriger plus tard

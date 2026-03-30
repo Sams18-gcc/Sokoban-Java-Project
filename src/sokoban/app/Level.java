@@ -9,11 +9,8 @@ import sokoban.logic.LogicKey;
 import sokoban.saving.LoadGame;
 import sokoban.saving.StateManager;
 
-import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Stack;
 
 public class Level {
     // liste des mondes du niveau
@@ -66,6 +63,7 @@ public class Level {
             worlds.add(w);
             index++;
         }
+        saveState();
     }
 
     // renvoie le monde actuellement actif
@@ -80,6 +78,8 @@ public class Level {
         }
         actWorld = ref;
     }
+
+
 
     public int getActWorldRef() {
         return actWorld;
@@ -148,6 +148,18 @@ public class Level {
         return result;
     }
 
+    public boolean simulateMove(LogicKey k)
+    {
+        int worldLength = getCurrentWorld().getGrid().getLength();
+        int worldWidth = getCurrentWorld().getGrid().getWidth();
+        World copy = new World(worldLength, worldWidth, 0);
+        copy.loadWorld(getCurrentWorld().getGridArray());
+        Action resultSimulation = logic.executeUserAction(k,copy);
+        if(resultSimulation == Action.MOVED || resultSimulation == Action.BOX_IN_TARGET)
+            return true;
+        return false;
+    }
+
     // calcule un chemin vers une destination donnee
     public List<Direction> executePathFinding(Position dest) {
         if (dest == null) {
@@ -198,7 +210,7 @@ public class Level {
 
     }
 
-    public void saveMove()
+    public void saveState()
     {
         sm.saveUndoSnapshot(getCurrentWorld());
     }

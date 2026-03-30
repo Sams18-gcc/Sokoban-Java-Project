@@ -192,7 +192,7 @@ public class TerminalUi {
                 
                 // on sauvegarde l'etat du monde courant avant chaque action pour permettre l'undo
 
-                level.saveMove();
+                level.saveState();
                 Action result = level.executeUserAction(lk);
                 if(result != Action.MOVED && result != Action.BOX_IN_TARGET)
                     level.undo();
