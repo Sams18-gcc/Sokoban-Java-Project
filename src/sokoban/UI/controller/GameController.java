@@ -72,6 +72,7 @@ public class GameController {
     Level level;
 
 
+
     public void initialize() {
 
 
@@ -182,6 +183,7 @@ public class GameController {
             case LOADED:
             case RELOADED:
             case UNDONE:
+                refreshView();
             case SAVED:
                 //savedConfirmationDisplay();
                 break;
@@ -292,6 +294,7 @@ public class GameController {
 
     }
 
+
     @FXML
     private Button BACK_BUTTON;
     @FXML
@@ -326,38 +329,7 @@ public class GameController {
 
     }
 
-    @FXML
-    public void pause() {
-        // pas encore fini
 
-
-    }
-
-    public void load() {
-        level.loadGame();
-        refreshView();
-    }
-
-    public void reload() {
-        level.reloadGame();
-        refreshView();
-    }
-
-    @FXML
-    public void undo() {
-
-
-        level.undo();
-        refreshView();
-
-
-    }
-
-    public void save() {
-
-        level.saveGame();
-
-    }
 
     public void back(ActionEvent event) throws IOException {
 
@@ -403,11 +375,6 @@ public class GameController {
         };
         timer.start();
 
-        // canva.setFocusTraversable(true);
-        //canva.requestFocus();
-
-
-        // lancer la boucle pour refraicher
     }
 
 

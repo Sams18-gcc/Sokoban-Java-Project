@@ -111,6 +111,7 @@ public class StartController {
 
         File[] levels = levelsFolder.listFiles(File::isDirectory);
 
+
         if (levels == null) {
             return 0;
         }
