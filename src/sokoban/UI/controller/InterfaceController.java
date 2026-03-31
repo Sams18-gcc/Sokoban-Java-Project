@@ -134,7 +134,7 @@ public class InterfaceController {
 
 
 
-        Scene sceneSTART = new Scene(root, 660, 660);
+        Scene sceneSTART = new Scene(root, 990, 660);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         stage.setTitle("MODE"); // a corriger plus tard
