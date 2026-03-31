@@ -132,11 +132,12 @@ public class InterfaceController {
         );
         Parent root = START.load();
 
-       // StartController controller = START.getController();
-       // controller.setLevelDirectoryName("levels");
+        //StartController controller = START.getController();
+        //controller.setLevelDirectoryName("levels/storyMode");
         //controller.constructLevels();
 
-        Scene sceneSTART = new Scene(root, 660, 660);
+
+        Scene sceneSTART = new Scene(root, 990, 660);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         stage.setTitle("MODE");

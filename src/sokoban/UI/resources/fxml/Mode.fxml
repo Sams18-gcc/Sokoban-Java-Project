@@ -1,14 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="660.0" stylesheets="@../style/Mode.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sokoban.UI.controller.ModeController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="990.0" stylesheets="@../style/Mode.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sokoban.UI.controller.ModeController">
    <children>
-      <ImageView fx:id="BACKGROUND" fitHeight="660.0" fitWidth="660.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="PERSONALIZED_BUTTON" layoutX="385.0" layoutY="330.0" mnemonicParsing="false" onAction="#TO_PERSONALIZED" prefHeight="40.0" prefWidth="170.0" text="PERSONLIZED MODE" />
-      <Button fx:id="STORY_BUTTON" layoutX="97.0" layoutY="330.0" mnemonicParsing="false" onAction="#TO_STORY" prefHeight="40.0" prefWidth="170.0" text="STORY MODE" />
-      <Button fx:id="BACK_BUTTON" layoutX="245.0" layoutY="429.0" mnemonicParsing="false" onAction="#BACK" prefHeight="40.0" prefWidth="170.0" text="BACK" />
+      <ImageView fx:id="BACKGROUND" fitHeight="660.0" fitWidth="997.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/SelectMode.png" />
+         </image></ImageView>
+      <Button fx:id="PERSO_BUTTON" layoutX="577.0" layoutY="169.0" mnemonicParsing="false" onAction="#TO_PERSONALIZED" onMouseEntered="#MouseEnter_Free" onMouseExited="#MouseExit_Free" prefHeight="230.0" prefWidth="296.0">
+         <graphic>
+            <ImageView fx:id="PERSO_IMAGE" fitHeight="241.0" fitWidth="284.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/FreeMode.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Button fx:id="STORY_BUTTON" layoutX="166.0" layoutY="170.0" mnemonicParsing="false" onAction="#TO_STORY" onMouseEntered="#MouseEnter_Story" onMouseExited="#MouseExit_Story" prefHeight="230.0" prefWidth="250.0">
+         <graphic>
+            <ImageView fx:id="STORY_IMAGE" fitHeight="241.0" fitWidth="279.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/StoryMode.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Button fx:id="BACK_BUTTON" layoutX="391.0" layoutY="442.0" mnemonicParsing="false" onAction="#BACK" onMouseEntered="#MouseEnter_BACK" onMouseExited="#MouseExit_BACK" prefHeight="52.0" prefWidth="177.0">
+         <graphic>
+            <ImageView fx:id="BACK_IMAGE" fitHeight="93.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/BackButton.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
    </children>
 </AnchorPane>
