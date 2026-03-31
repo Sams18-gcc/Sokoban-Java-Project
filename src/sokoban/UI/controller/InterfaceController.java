@@ -128,20 +128,20 @@ public class InterfaceController {
 
     public void START(ActionEvent event) throws IOException {
         FXMLLoader START = new FXMLLoader(
-                SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Start.fxml")
+                SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Mode.fxml")
         );
         Parent root = START.load();
 
-        StartController controller = START.getController();
-        controller.setLevelDirectoryName("levels");
-        controller.constructLevels();
+       // StartController controller = START.getController();
+       // controller.setLevelDirectoryName("levels");
+        //controller.constructLevels();
 
         Scene sceneSTART = new Scene(root, 660, 660);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        stage.setTitle("RULES"); // a corriger plus tard
+        stage.setTitle("MODE");
         sceneSTART.getStylesheets().add(
-                getClass().getResource("/sokoban/UI/resources/style/Start.css").toExternalForm()
+                getClass().getResource("/sokoban/UI/resources/style/Mode.css").toExternalForm()
         );
         stage.setScene(sceneSTART);
         stage.setResizable(false);

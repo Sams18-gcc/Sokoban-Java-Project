@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&display=swap');
+
+
+.anchor-pane {
+    -fx-background-color: linear-gradient(
+        to bottom,
+        #0d0d0d,
+        #1a1a1a
+    );
+}
+
+
+#STORY_MODE, #PERSONALIZED_MODE {
+    -fx-background-color: linear-gradient(
+        to bottom right,
+        #141414,
+        #1f1f1f
+    );
+
+    -fx-border-color: #2f2f2f;
+    -fx-border-width: 1.5;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 10, 0.4, 0, 3);
+}
+
+#STORY_MODE:hover, #PERSONALIZED_MODE:hover {
+    -fx-border-color: #555555;
+
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.1), 15, 0.5, 0, 0);
+}
+
+
+.button {
+    -fx-font-family: "Cinzel";
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+
+    -fx-text-fill: #e0e0e0;
+    -fx-padding: 10 25 10 25;
+
+    -fx-background-color: linear-gradient(
+        to bottom right,
+        #111111,
+        #1a1a1a
+    );
+
+    -fx-border-color: #333333;
+    -fx-border-width: 2;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+
+    -fx-cursor: hand;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 6, 0.4, 0, 2);
+}
+
+.button:hover {
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #777777;
+
+    -fx-background-color: linear-gradient(
+        to bottom right,
+        #1a1a1a,
+        #2a2a2a
+    );
+
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.3), 15, 0.6, 0, 0);
+}
+
+.button:pressed {
+    -fx-background-color: linear-gradient(
+        to bottom right,
+        #0a0a0a,
+        #111111
+    );
+
+    -fx-scale-x: 0.96;
+    -fx-scale-y: 0.96;
+}
+
+#IMAGE_STORY, #IMAGE_PERSONLIZED {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 12, 0.5, 0, 3);
+}
+
+#IMAGE_STORY:hover, #IMAGE_PERSONLIZED:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 20, 0.6, 0, 0);
+}

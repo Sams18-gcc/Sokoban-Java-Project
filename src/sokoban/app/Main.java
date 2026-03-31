@@ -18,8 +18,8 @@ public class Main {
         StateManager sm = new StateManager(); //
         Level level = new Level(2, sm);
         level.init();
-        TerminalUi t = TerminalUi.game;       //
-        t.play(level,sm);                     //instance statemanager pour chaque level 
+        //TerminalUi t = TerminalUi.game;       //
+        //t.play(level,sm);                     //instance statemanager pour chaque level
 
     }
 }
