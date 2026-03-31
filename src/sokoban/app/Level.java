@@ -34,22 +34,37 @@ public class Level {
     // etat actuel de la partie
     private LevelState state;
 
-    public Level(int numLevel, StateManager sm) {
+    public Level(int numLevel, String levelsFolder, StateManager sm) {
 
 
         worlds = new ArrayList<World>();
         logic = GameLogic.logic;
         loader = LoadGame.gameLoader;
+        loader.setLevelsFolder(levelsFolder);
         this.sm = sm;
         this.numLevel = numLevel;
         actWorld = 0;
         state = LevelState.RUNNING;
     }
 
-    //YANIS
-    public LoadGame getLoader() {
-        return loader;
+    // initialise le monde courant
+    public void init() {
+
+        int index = 0;
+        if (!loader.loadGrids(numLevel))
+            return;
+
+        ArrayList<char[][]> grids = loader.getGrids();
+        for (char[][] g : grids) {
+            World w = new World(g.length, g[0].length, index);
+            w.loadWorld(g);
+            worlds.add(w);
+            index++;
+        }
+        saveState();
     }
+
+
 
     // renvoie le numero du level
     public int getNumLevel() {
@@ -81,22 +96,7 @@ public class Level {
         return state == LevelState.RUNNING;
     }
 
-    // initialise le monde courant
-    public void init() {
 
-        int index = 0;
-        if (!loader.loadGrids(numLevel))
-            return;
-
-        ArrayList<char[][]> grids = loader.getGrids();
-        for (char[][] g : grids) {
-            World w = new World(g.length, g[0].length, index);
-            w.loadWorld(g);
-            worlds.add(w);
-            index++;
-        }
-        saveState();
-    }
 
     // renvoie le monde actuellement actif
     public World getCurrentWorld() {

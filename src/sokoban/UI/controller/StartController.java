@@ -178,7 +178,7 @@ public class StartController {
 
     public void launchLevel(int numLevel, Stage stage) {
         StateManager sm = new StateManager();
-        Level level = new Level(2, sm);
+        Level level = new Level(numLevel, levelDirectoryName, sm);
         level.init();
 
         try {
@@ -190,6 +190,7 @@ public class StartController {
 
             GameController controller = loader.getController();
             controller.setLevel(level);
+            controller.setLevelsInfo(levelDirectoryName, getNbLevels());
 
             Scene scene = new Scene(root, 660, 660);
             scene.getStylesheets().add(

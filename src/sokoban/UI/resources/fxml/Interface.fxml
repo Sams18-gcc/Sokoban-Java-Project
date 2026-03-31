@@ -10,7 +10,7 @@
 <AnchorPane fx:id="SCENE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="690.0" prefWidth="660.0" stylesheets="@../style/InterfaceStyle.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sokoban.UI.controller.InterfaceController">
    <children>
       <MediaView fx:id="BackgroundVideo" fitHeight="690.0" fitWidth="660.0" />
-      <Button fx:id="buttonSTART" alignment="CENTER" layoutX="198.0" layoutY="91.0" mnemonicParsing="false" onAction="#START" onMouseEntered="#AFFICHESKULL" onMouseExited="#CAHCERSKULL" prefHeight="25.0" prefWidth="264.0" text="START" />
+      <Button fx:id="buttonSTART" alignment="CENTER" layoutX="198.0" layoutY="91.0" mnemonicParsing="false" onAction="#start" onMouseEntered="#AFFICHESKULL" onMouseExited="#CAHCERSKULL" prefHeight="25.0" prefWidth="264.0" text="START" />
       <Button fx:id="buttonSETTINGS" alignment="CENTER" layoutX="199.0" layoutY="138.0" mnemonicParsing="false" onAction="#SETTINGS" onMouseEntered="#AFFICHESKULL" onMouseExited="#CAHCERSKULL" prefHeight="25.0" prefWidth="264.0" text="SETTINGS" />
       <Button fx:id="buttonRULES" layoutX="198.0" layoutY="184.0" mnemonicParsing="false" onAction="#RULES" onMouseEntered="#AFFICHESKULL" onMouseExited="#CAHCERSKULL" prefHeight="25.0" prefWidth="264.0" text="RULES" />
       <Button fx:id="buttonEDITOR" layoutX="198.0" layoutY="232.0" mnemonicParsing="false" onAction="#EDITOR" onMouseEntered="#AFFICHESKULL" onMouseExited="#CAHCERSKULL" prefHeight="25.0" prefWidth="264.0" text="EDITOR" />

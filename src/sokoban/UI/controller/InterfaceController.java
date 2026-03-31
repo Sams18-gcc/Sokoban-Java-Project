@@ -126,13 +126,13 @@ public class InterfaceController {
         }
     }
 
-    public void START(ActionEvent event) throws IOException {
-        FXMLLoader START = new FXMLLoader(
+    public void start(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(
                 SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Start.fxml")
         );
-        Parent root = START.load();
+        Parent root = loader.load();
 
-        StartController controller = START.getController();
+        StartController controller = loader.getController();
         controller.setLevelDirectoryName("levels/storyMode");
         controller.constructLevels();
 
