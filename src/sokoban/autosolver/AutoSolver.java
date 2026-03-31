@@ -110,7 +110,7 @@ public class AutoSolver {
                     // 2. La case de destination de la boîte est-elle libre ?
                     if (isFree(playerStartPos, current.getBoxes()) && isFree(nextBoxPos, current.getBoxes())) {
                         
-                        // 3. LE COUP DE GÉNIE : Le joueur peut-il atteindre la case d'approche ?
+                        // 3. Le joueur peut-il atteindre la case d'approche ?
                         List<Direction> playerPath = PathSeek.findShortestPath(workingWorld, current.getPlayerPos(), playerStartPos);
                         
                         if (playerPath != null) { // Chemin trouvé par PathSeek !

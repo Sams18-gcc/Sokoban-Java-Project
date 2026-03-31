@@ -16,7 +16,7 @@ public class PuzzleState implements Comparable<PuzzleState> {
     
     // Scores pour l'algorithme A*
     private final int g; // Coût (nombre total de pas depuis le début)
-    private final int h; // Heuristique (distance de Manhattan)
+    private final int h; // Heuristique 
 
     public PuzzleState(Position playerPos, Set<Position> boxes, PuzzleState parent, 
                        List<Direction> pathToReach, Direction pushDirection, int g, int h) {
