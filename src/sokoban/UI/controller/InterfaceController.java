@@ -133,7 +133,7 @@ public class InterfaceController {
         Parent root = START.load();
 
         StartController controller = START.getController();
-        controller.setLevelDirectoryName("levels");
+        controller.setLevelDirectoryName("levels/storyMode");
         controller.constructLevels();
 
         Scene sceneSTART = new Scene(root, 660, 660);

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class LoadGame {
     public static final LoadGame gameLoader = new LoadGame();
-    private File levelsFolder = new File("levels");
+    private File levelsFolder = new File("levels/storyMode");
     private ArrayList<char[][]> grids = null ;
 
     private LoadGame(){}

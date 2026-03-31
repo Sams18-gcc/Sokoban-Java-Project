@@ -377,6 +377,18 @@ public class GameController {
 
     }
 
+    @FXML
+    public void save(){}
+    @FXML
+    public void reload(){}
+    @FXML
+    public void undo(){}
+    @FXML
+    public void load(){}
+    @FXML
+    public void pause(){}
+
+
 
 }
 
