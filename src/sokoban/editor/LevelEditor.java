@@ -295,7 +295,8 @@ public class LevelEditor {
         cursorCol = Math.min(1, cols - 1);
     }
 
-    // sauvegarde dans levels/levelN/worldN.txt
+    // sauvegarde dans levels/Personalized/levelN/worldN.txt
+    // cree state.txt avec "unlocked" pour le mode libre
     // refuse si invalide, calcule nbWorlds auto
     public boolean saveToProjectFile(int levelNum, int worldIndex, int totalWorlds) {
         ArrayList<String> warnings = validate();
@@ -309,7 +310,8 @@ public class LevelEditor {
             return false;
         }
 
-        File levelDir = new File("levels/level" + levelNum);
+        // on sauvegarde dans Personalized, pas dans storyMode
+        File levelDir = new File("levels/Personalized/level" + levelNum);
         if (!levelDir.exists()) levelDir.mkdirs();
 
         File worldFile = new File(levelDir, "world" + worldIndex + ".txt");
@@ -335,11 +337,21 @@ public class LevelEditor {
         } catch (IOException e) {
             System.out.println("[ERREUR] " + e.getMessage());
         }
+
+        // creer state.txt avec "unlocked" pour que l'IG sache que ce level est accessible
+        File stateFile = new File(levelDir, "state.txt");
+        try (PrintWriter pw = new PrintWriter(new FileWriter(stateFile))) {
+            pw.println("unlocked");
+        } catch (IOException e) {
+            System.out.println("[ERREUR] state.txt : " + e.getMessage());
+        }
+
         return true;
     }
 
+    // charge depuis levels/Personalized/levelN/worldN.txt
     public boolean loadFromProjectFile(int levelNum, int worldIndex) {
-        File worldFile = new File("levels/level" + levelNum + "/world" + worldIndex + ".txt");
+        File worldFile = new File("levels/Personalized/level" + levelNum + "/world" + worldIndex + ".txt");
         if (!worldFile.exists()) {
             System.out.println("[ERREUR] Pas trouvé : " + worldFile.getPath());
             return false;
