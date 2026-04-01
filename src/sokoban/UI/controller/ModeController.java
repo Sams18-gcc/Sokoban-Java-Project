@@ -84,7 +84,7 @@ public class ModeController {
         Parent root = start.load();
 
         StartController controller = start.getController();
-        controller.setLevelDirectoryName("levels/personnalized");
+        controller.setLevelDirectoryName("levels/storyMode");
         controller.constructLevels();
 
         Scene sceneSTART = new Scene(root, 990, 660);
@@ -101,14 +101,15 @@ public class ModeController {
 
     }
 
-    public void toPersonalized(ActionEvent event) {
+    public void toPersonalized(ActionEvent event)
+    {
         FXMLLoader start = new FXMLLoader(
                 SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Start.fxml")
         );
        try{
            Parent root = start.load();
            StartController controller = start.getController();
-           controller.setLevelDirectoryName("levels/storyMode");
+           controller.setLevelDirectoryName("levels/personnalized");
            controller.constructLevels();
 
            Scene sceneSTART = new Scene(root, 990, 660);

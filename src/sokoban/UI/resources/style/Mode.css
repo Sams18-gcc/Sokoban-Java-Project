@@ -1,4 +1,4 @@
-#STORY_BUTTON, #PERSO_BUTTON, #BACK_BUTTON {
+#storyButton, #personalizedButton, #backButton {
     -fx-opacity: 0.9;
 
     -fx-background-color: transparent;
@@ -11,7 +11,7 @@
 }
 
 
-#STORY_BUTTON:hover{
+#storyButton:hover{
 
     -fx-opacity: 1;
 
@@ -20,7 +20,7 @@
 
 
 }
-#PERSO_BUTTON:hover{
+#personalizedButton:hover{
 
     -fx-opacity: 1;
 
@@ -29,7 +29,7 @@
 
 
 }
-#BACK_BUTTON:hover{
+#backButton:hover{
 
     -fx-opacity: 1;
 
@@ -40,7 +40,7 @@
 }
 
 
-#STORY_BUTTON:pressed, #PERSO_BUTTON:pressed, #BACK_BUTTON:pressed {
+#storyButton:pressed, #personalizedButton:pressed, #backButton:pressed {
 
     -fx-scale-x: 1.04;
     -fx-scale-y: 1.04;

@@ -1,7 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&display=swap');
 
 .button {
-    -fx-font-family: "Cinzel";
+    -fx-font-family: "Arial Rounded MT Bold";
     -fx-font-size: 12px;
     -fx-font-weight: 500;
 
