@@ -67,7 +67,7 @@ public class GameController {
     private final Image player = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/player.gif")));
     private final Image wall = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/wall.png")));
     private final Image target = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/target.png")));
-    private final Image box = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/portal.png")));
+    private final Image box = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/box.png")));
     private final Image floor = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/floor.png")));
 
 
@@ -76,7 +76,6 @@ public class GameController {
     AnimationTimer timer;
     StateManager stat = new StateManager();
     Level level;
-
 
 
     public void initialize() {
@@ -257,32 +256,25 @@ public class GameController {
     }
 
     public void moveInPath(List<Direction> path) {
-
-        LogicKey k = null;
-
-
         Direction d = path.remove(0);
-        level.executeMove(d);
-        level.saveState();
-        grid = world.getGrid();
-        drawWorld();
-        // pour le delais
-        PauseTransition pause = new PauseTransition(Duration.millis(400));
-        pause.setOnFinished(
-                event -> {
-                    // on rappelle la methode pour faire le pas suivant
-                    moveInPath(path);
-                }
-        );
 
-        pause.play();
+        LogicKey lk = level.directionToLogicKey(d);
+        ResultOfAction result = level.handleUserAction(lk);
 
+
+        refreshView();
+
+        if (!path.isEmpty()) {
+            PauseTransition pause = new PauseTransition(Duration.millis(400));
+            pause.setOnFinished(event -> moveInPath(path));
+            pause.play();
+        }
     }
 
     @FXML
     public void next(ActionEvent event) throws IOException {
         StateManager sm = new StateManager();
-        Level nextLevel = new Level(level.getNumLevel()+1, levelsDirectoryName, sm);
+        Level nextLevel = new Level(level.getNumLevel() + 1, levelsDirectoryName, sm);
         nextLevel.init();
 
 
@@ -351,7 +343,6 @@ public class GameController {
     }
 
 
-
     public void back(ActionEvent event) throws IOException {
 
         FXMLLoader loader = new FXMLLoader(
@@ -385,30 +376,27 @@ public class GameController {
         startTimer();
     }
 
-    public void setLevelsInfo(String levelsDirectory, int nbLevels)
-    {
+    public void setLevelsInfo(String levelsDirectory, int nbLevels) {
         this.levelsDirectoryName = levelsDirectory;
         this.nbLevels = nbLevels;
     }
 
-    public void unlockNextLevel()
-    {
-        int nextLevelNum = ( level.getNumLevel() == nbLevels )? -1 : level.getNumLevel() + 1;
-        if(nextLevelNum == -1){
+    public void unlockNextLevel() {
+        int nextLevelNum = (level.getNumLevel() == nbLevels) ? -1 : level.getNumLevel() + 1;
+        if (nextLevelNum == -1) {
             // display gameCompletedDisplay();
-            }
-        File nextLevelDirectory = new File(levelsDirectoryName,  "level"+nextLevelNum );
-        if(!nextLevelDirectory.exists() || !nextLevelDirectory.isDirectory())
+        }
+        File nextLevelDirectory = new File(levelsDirectoryName, "level" + nextLevelNum);
+        if (!nextLevelDirectory.exists() || !nextLevelDirectory.isDirectory())
             throw new IllegalStateException();
         File stateFile = new File(nextLevelDirectory, "state.txt");
-        if(!stateFile.exists() || !stateFile.isFile())
+        if (!stateFile.exists() || !stateFile.isFile())
             throw new IllegalStateException();
-        try(BufferedWriter writer =
-                new BufferedWriter(new FileWriter(stateFile));
-        ){
+        try (BufferedWriter writer =
+                     new BufferedWriter(new FileWriter(stateFile));
+        ) {
             writer.write("unlocked");
-        }catch(IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -436,16 +424,24 @@ public class GameController {
     }
 
     @FXML
-    public void save(){}
-    @FXML
-    public void reload(){}
-    @FXML
-    public void undo(){}
-    @FXML
-    public void load(){}
-    @FXML
-    public void pause(){}
+    public void save() {
+    }
 
+    @FXML
+    public void reload() {
+    }
+
+    @FXML
+    public void undo() {
+    }
+
+    @FXML
+    public void load() {
+    }
+
+    @FXML
+    public void pause() {
+    }
 
 
 }

@@ -134,7 +134,7 @@ public class Level {
     }
 
     // victoire
-    public void victory() {
+    public void setVictory() {
         state = LevelState.WON;
     }
 
@@ -231,6 +231,7 @@ public class Level {
         ResultOfAction resultOfAction = logic.handleMoveKey(k, getCurrentWorld());
 
         if (checkVictory()) {
+            setVictory();
             return ResultOfAction.WON;
         }
 
@@ -298,19 +299,14 @@ public class Level {
         );
     }
 
-    // execute directement un mouvement dans une direction
-    public ResultOfAction executeMove(Direction d) {
-
-        ResultOfAction result = logic.movePlayer(d, getCurrentWorld());
-
-        // si une box atteint un but, on verifie les autres
-        if (result == ResultOfAction.BOX_IN_TARGET) {
-            if (checkVictory()) {
-                victory();
-            }
+    public LogicKey directionToLogicKey(Direction d) {
+        switch (d) {
+            case UP:    return LogicKey.MOVE_UP;
+            case DOWN:  return LogicKey.MOVE_DOWN;
+            case LEFT:  return LogicKey.MOVE_LEFT;
+            case RIGHT: return LogicKey.MOVE_RIGHT;
+            default:    return null;
         }
-
-        return result;
     }
 
     // sauvegarde l'etat courant pour un futur undo
