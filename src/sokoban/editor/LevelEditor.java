@@ -25,14 +25,13 @@ public class LevelEditor {
 
     private void initEmpty() {
         grid = new char[rows][cols];
-        for (int i = 0; i < rows; i++) {
+        for (int i = 0; i < rows; i++)
             for (int j = 0; j < cols; j++) {
-                if (i == 0 || j == 0 || i == rows - 1 || j == cols - 1)
+                if (i == 0 || j == 0 || i == rows-1 || j == cols-1)
                     grid[i][j] = '#';
                 else
                     grid[i][j] = ' ';
             }
-        }
     }
 
     public void display() {
@@ -44,23 +43,23 @@ public class LevelEditor {
         for (int i = 0; i < rows; i++) {
             System.out.printf("%3d ", i);
             for (int j = 0; j < cols; j++) {
-                if (i == cursorRow && j == cursorCol) {
+                if (i == cursorRow && j == cursorCol)
                     System.out.print("[" + grid[i][j] + "]");
-                } else {
+                else
                     System.out.print(" " + grid[i][j] + " ");
-                }
             }
             System.out.println();
         }
         System.out.println();
-        System.out.printf("Curseur : (%d, %d)  |  Case : '%c'%n", cursorRow, cursorCol, grid[cursorRow][cursorCol]);
+        System.out.printf("Curseur : (%d, %d)  |  Case : '%c'%n",
+                cursorRow, cursorCol, grid[cursorRow][cursorCol]);
         printHelp();
     }
 
     private void printHelp() {
         System.out.println("--- Commandes ---");
-        System.out.println("Déplacer curseur : w(haut) s(bas) a(gauche) d(droite)");
-        System.out.println("Placer : # mur | x cible | @ joueur | o boîte | e sortie | . vide");
+        System.out.println("Deplacer : w/a/s/d");
+        System.out.println("Placer : # mur | x cible | @ joueur | O boite | e sortie | . vide");
         System.out.println("Fichier : save | load | savefile | loadfile | quit");
         System.out.println("Autres : n(nouvelle grille) | validate | export");
         System.out.print("> ");
@@ -76,10 +75,9 @@ public class LevelEditor {
     }
 
     private void placeElement(char c) {
-        grid[cursorRow][cursorCol] = c;
+        setCell(cursorRow, cursorCol, c);
     }
 
-    // getters pour le gui
     public int getRows() { return rows; }
     public int getCols() { return cols; }
     public char getWorldName() { return worldName; }
@@ -91,9 +89,22 @@ public class LevelEditor {
         return grid[r][c];
     }
 
+    // les bordures restent des murs quoi qu'il arrive
     public void setCell(int r, int c, char ch) {
-        if (r >= 0 && r < rows && c >= 0 && c < cols)
-            grid[r][c] = ch;
+        if (r >= 0 && r < rows && c >= 0 && c < cols) {
+            if (r == 0 || c == 0 || r == rows-1 || c == cols-1)
+                grid[r][c] = '#';
+            else
+                grid[r][c] = ch;
+        }
+    }
+
+    public boolean borduresIntactes() {
+        for (int i = 0; i < rows; i++)
+            if (grid[i][0] != '#' || grid[i][cols-1] != '#') return false;
+        for (int j = 0; j < cols; j++)
+            if (grid[0][j] != '#' || grid[rows-1][j] != '#') return false;
+        return true;
     }
 
     public void setCursor(int r, int c) {
@@ -130,7 +141,7 @@ public class LevelEditor {
         initEmpty();
     }
 
-    // verifie si le niveau est correct, retourne les warnings
+    // check joueur, boites, cibles
     public ArrayList<String> validate() {
         ArrayList<String> warnings = new ArrayList<>();
         boolean hasPlayer = false;
@@ -147,19 +158,19 @@ public class LevelEditor {
                 if (c == 'x') targetCount++;
             }
 
-        if (!hasPlayer) warnings.add("Pas de joueur (@) dans le niveau !");
-        if (boxCount == 0) warnings.add("Pas de boîte (O) dans le niveau !");
-        if (targetCount == 0) warnings.add("Pas de cible (x) dans le niveau !");
+        if (!hasPlayer) warnings.add("Pas de joueur (@)");
+        if (boxCount == 0) warnings.add("Pas de boite (O)");
+        if (targetCount == 0) warnings.add("Pas de cible (x)");
         if (boxCount != targetCount)
-            warnings.add("Nombre de boîtes (" + boxCount + ") != nombre de cibles (" + targetCount + ") !");
+            warnings.add("Boites (" + boxCount + ") != cibles (" + targetCount + ")");
 
         return warnings;
     }
 
-    // export format sokoban standard avec header
+    // export sokoban standard avec header
     public String exportLevel() {
         ArrayList<String> warnings = validate();
-        for (String w : warnings) System.out.println("[AVERTISSEMENT] " + w);
+        for (String w : warnings) System.out.println("[!] " + w);
 
         int size = Math.max(rows, cols);
         StringBuilder sb = new StringBuilder();
@@ -176,10 +187,10 @@ public class LevelEditor {
         return sb.toString();
     }
 
-    // import depuis format sokoban standard
+    // import sokoban standard
     public void importLevel(String text) {
         if (text == null || text.trim().isEmpty()) {
-            System.out.println("[ERREUR] Texte vide, import annulé.");
+            System.out.println("[ERREUR] Texte vide.");
             return;
         }
 
@@ -189,30 +200,25 @@ public class LevelEditor {
             return;
         }
 
-        // premiere ligne = nom_monde taille
-        String header = lines[0].trim();
-        String[] parts = header.split("\\s+");
+        String[] parts = lines[0].trim().split("\\s+");
         if (parts.length >= 2)
             worldName = parts[0].charAt(0);
 
         ArrayList<String> gridLines = new ArrayList<>();
-        for (int i = 1; i < lines.length; i++) {
-            if (!lines[i].isEmpty())
-                gridLines.add(lines[i]);
-        }
+        for (int i = 1; i < lines.length; i++)
+            if (!lines[i].isEmpty()) gridLines.add(lines[i]);
 
         if (gridLines.isEmpty()) {
-            System.out.println("[ERREUR] Aucune ligne de grille.");
+            System.out.println("[ERREUR] Pas de grille.");
             return;
         }
 
         int newRows = gridLines.size();
         int newCols = 0;
-        for (String l : gridLines)
-            newCols = Math.max(newCols, l.length());
+        for (String l : gridLines) newCols = Math.max(newCols, l.length());
 
         if (newRows < 5 || newCols < 5) {
-            System.out.println("[ERREUR] Grille trop petite (min 5x5).");
+            System.out.println("[ERREUR] Trop petit.");
             return;
         }
 
@@ -225,13 +231,11 @@ public class LevelEditor {
             for (int j = 0; j < cols; j++) {
                 if (j < line.length()) {
                     char c = line.charAt(j);
-                    // conversions format standard -> editeur
                     switch (c) {
                         case '$': c = 'O'; break;
-                        case '*': c = 'O'; break;
                         case '.': c = 'x'; break;
+                        case '*': c = 'O'; break;
                         case '+': c = '@'; break;
-
                     }
                     grid[i][j] = c;
                 } else {
@@ -241,23 +245,21 @@ public class LevelEditor {
         }
         cursorRow = Math.min(1, rows - 1);
         cursorCol = Math.min(1, cols - 1);
-        System.out.println("Niveau importé ! (" + rows + "x" + cols + ", monde '" + worldName + "')");
+        System.out.println("Importé ! (" + rows + "x" + cols + ")");
     }
 
-    // export au format du projet (comme dans les worldN.txt)
-    // O majuscule pour les boites, x pour les cibles
+    // format projet brut (memes symboles que World.java)
     public String exportProjectFormat() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+            for (int j = 0; j < cols; j++)
                 sb.append(grid[i][j]);
-            }
             sb.append("\n");
         }
         return sb.toString();
     }
 
-    // import depuis format projet (worldN.txt brut sans header)
+    // import worldN.txt brut
     public void importProjectFormat(String text) {
         if (text == null || text.trim().isEmpty()) {
             System.out.println("[ERREUR] Texte vide.");
@@ -276,7 +278,7 @@ public class LevelEditor {
         for (String l : gridLines) newCols = Math.max(newCols, l.length());
 
         if (newRows < 5 || newCols < 5) {
-            System.out.println("[ERREUR] Grille trop petite.");
+            System.out.println("[ERREUR] Trop petit.");
             return;
         }
 
@@ -286,24 +288,30 @@ public class LevelEditor {
 
         for (int i = 0; i < rows; i++) {
             String line = gridLines.get(i);
-            for (int j = 0; j < cols; j++) {
-                if (j < line.length()) {
-                    grid[i][j] = line.charAt(j);
-                } else {
-                    grid[i][j] = ' ';
-                }
-            }
+            for (int j = 0; j < cols; j++)
+                grid[i][j] = (j < line.length()) ? line.charAt(j) : ' ';
         }
         cursorRow = Math.min(1, rows - 1);
         cursorCol = Math.min(1, cols - 1);
     }
 
-    // sauvegarde dans levels/levelN/worldN.txt
-    public void saveToProjectFile(int levelNum, int worldIndex, int totalWorlds) {
+    // sauvegarde dans levels/Personalized/levelN/worldN.txt
+    // cree state.txt avec "unlocked" pour le mode libre
+    // refuse si invalide, calcule nbWorlds auto
+    public boolean saveToProjectFile(int levelNum, int worldIndex, int totalWorlds) {
         ArrayList<String> warnings = validate();
-        for (String w : warnings) System.out.println("[AVERTISSEMENT] " + w);
+        if (!warnings.isEmpty()) {
+            for (String w : warnings) System.out.println("[ERREUR] " + w);
+            System.out.println("Sauvegarde annulee.");
+            return false;
+        }
+        if (!borduresIntactes()) {
+            System.out.println("[ERREUR] Bordures cassees.");
+            return false;
+        }
 
-        File levelDir = new File("levels/level" + levelNum);
+        // on sauvegarde dans Personalized, pas dans storyMode
+        File levelDir = new File("levels/Personalized/level" + levelNum);
         if (!levelDir.exists()) levelDir.mkdirs();
 
         File worldFile = new File(levelDir, "world" + worldIndex + ".txt");
@@ -312,22 +320,40 @@ public class LevelEditor {
             System.out.println("Sauvegardé : " + worldFile.getPath());
         } catch (IOException e) {
             System.out.println("[ERREUR] " + e.getMessage());
+            return false;
         }
 
-        // mettre a jour nbWorlds.txt
+        // compter les worldN.txt existants
+        int realCount = 0;
+        File[] files = levelDir.listFiles();
+        if (files != null)
+            for (File f : files)
+                if (f.getName().matches("world\\d+\\.txt"))
+                    realCount++;
+
         File nbFile = new File(levelDir, "nbWorlds.txt");
         try (PrintWriter pw = new PrintWriter(new FileWriter(nbFile))) {
-            pw.println(totalWorlds);
+            pw.println(realCount);
         } catch (IOException e) {
-            System.out.println("[ERREUR] nbWorlds : " + e.getMessage());
+            System.out.println("[ERREUR] " + e.getMessage());
         }
+
+        // creer state.txt avec "unlocked" pour que l'IG sache que ce level est accessible
+        File stateFile = new File(levelDir, "state.txt");
+        try (PrintWriter pw = new PrintWriter(new FileWriter(stateFile))) {
+            pw.println("unlocked");
+        } catch (IOException e) {
+            System.out.println("[ERREUR] state.txt : " + e.getMessage());
+        }
+
+        return true;
     }
 
-    // charge un monde depuis levels/
+    // charge depuis levels/Personalized/levelN/worldN.txt
     public boolean loadFromProjectFile(int levelNum, int worldIndex) {
-        File worldFile = new File("levels/level" + levelNum + "/world" + worldIndex + ".txt");
+        File worldFile = new File("levels/Personalized/level" + levelNum + "/world" + worldIndex + ".txt");
         if (!worldFile.exists()) {
-            System.out.println("[ERREUR] Fichier pas trouvé : " + worldFile.getPath());
+            System.out.println("[ERREUR] Pas trouvé : " + worldFile.getPath());
             return false;
         }
         try (BufferedReader br = new BufferedReader(new FileReader(worldFile))) {
@@ -344,7 +370,6 @@ public class LevelEditor {
         }
     }
 
-    // boucle principale du mode terminal
     public void run() {
         Scanner sc = new Scanner(System.in);
         display();
@@ -364,7 +389,7 @@ public class LevelEditor {
                 case "e": placeElement('e'); break;
                 case ".": placeElement(' '); break;
                 case " ": placeElement(' '); break;
-                case "quit": System.out.println("À bientôt !"); return;
+                case "quit": System.out.println("A bientot !"); return;
 
                 case "validate":
                     ArrayList<String> warnings = validate();
@@ -382,25 +407,24 @@ public class LevelEditor {
                     break;
 
                 case "save":
-                    System.out.println("=== DÉBUT DU NIVEAU ===");
+                    System.out.println("=== NIVEAU ===");
                     System.out.println(exportLevel());
                     System.out.println("=== FIN ===");
                     break;
 
                 case "savefile":
-                    System.out.print("Numéro du level : ");
+                    System.out.print("Numero du level : ");
                     int ln = Integer.parseInt(sc.nextLine().trim());
-                    System.out.print("Index du monde (0, 1, ...) : ");
+                    System.out.print("Index du monde : ");
                     int wi = Integer.parseInt(sc.nextLine().trim());
-                    System.out.print("Nombre total de mondes dans ce level : ");
-                    int tw = Integer.parseInt(sc.nextLine().trim());
-                    saveToProjectFile(ln, wi, tw);
+                    if (!saveToProjectFile(ln, wi, 0))
+                        System.out.println("Echec.");
                     break;
 
                 case "loadfile":
-                    System.out.print("Numéro du level : ");
+                    System.out.print("Numero du level : ");
                     int ln2 = Integer.parseInt(sc.nextLine().trim());
-                    System.out.print("Index du monde (0, 1, ...) : ");
+                    System.out.print("Index du monde : ");
                     int wi2 = Integer.parseInt(sc.nextLine().trim());
                     loadFromProjectFile(ln2, wi2);
                     break;
@@ -409,21 +433,20 @@ public class LevelEditor {
                     System.out.println("Collez le niveau (terminez avec 'END') :");
                     StringBuilder sb = new StringBuilder();
                     String line;
-                    while (sc.hasNextLine() && !(line = sc.nextLine()).equals("END")) {
+                    while (sc.hasNextLine() && !(line = sc.nextLine()).equals("END"))
                         sb.append(line).append("\n");
-                    }
                     importLevel(sb.toString());
                     break;
 
                 case "n":
-                    System.out.print("Nombre de lignes (min 5) : ");
+                    System.out.print("Lignes (min 5) : ");
                     int r = Integer.parseInt(sc.nextLine().trim());
-                    System.out.print("Nombre de colonnes (min 5) : ");
+                    System.out.print("Colonnes (min 5) : ");
                     int c2 = Integer.parseInt(sc.nextLine().trim());
-                    System.out.print("Nom du monde (une lettre) : ");
+                    System.out.print("Monde (1 lettre) : ");
                     char name = sc.nextLine().trim().charAt(0);
                     resize(r, c2, name);
-                    System.out.println("Nouvelle grille créée !");
+                    System.out.println("Nouvelle grille !");
                     break;
 
                 default:
