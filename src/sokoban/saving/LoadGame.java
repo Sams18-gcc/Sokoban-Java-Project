@@ -8,10 +8,16 @@ import java.util.ArrayList;
 
 public class LoadGame {
     public static final LoadGame gameLoader = new LoadGame();
-    private File levelsFolder = new File("levels");
+    private File levelsFolder;
     private ArrayList<char[][]> grids = null ;
 
     private LoadGame(){}
+
+    public void setLevelsFolder(String levelsFolder)
+    {
+        this.levelsFolder = new File(levelsFolder);
+
+    }
     public boolean loadGrids(int numLevel)
     {
         grids = new ArrayList<char[][]>();

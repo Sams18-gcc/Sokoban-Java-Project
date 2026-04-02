@@ -11,7 +11,7 @@ public enum LogicKey {
     MOVE_LEFT,
     MOVE_RIGHT,
     ESCAPE,
-    PATHFINDING,
+    FIND_PATH,
     LOAD,
     SAVE,
     UNDO,
