@@ -311,7 +311,7 @@ public class LevelEditor {
         }
 
         // on sauvegarde dans Personalized, pas dans storyMode
-        File levelDir = new File("levels/Personalized/level" + levelNum);
+        File levelDir = new File("levels/personalized/level" + levelNum);
         if (!levelDir.exists()) levelDir.mkdirs();
 
         File worldFile = new File(levelDir, "world" + worldIndex + ".txt");
@@ -351,7 +351,7 @@ public class LevelEditor {
 
     // charge depuis levels/Personalized/levelN/worldN.txt
     public boolean loadFromProjectFile(int levelNum, int worldIndex) {
-        File worldFile = new File("levels/Personalized/level" + levelNum + "/world" + worldIndex + ".txt");
+        File worldFile = new File("levels/personalized/level" + levelNum + "/world" + worldIndex + ".txt");
         if (!worldFile.exists()) {
             System.out.println("[ERREUR] Pas trouvé : " + worldFile.getPath());
             return false;

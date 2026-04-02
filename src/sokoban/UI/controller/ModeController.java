@@ -109,7 +109,7 @@ public class ModeController {
        try{
            Parent root = start.load();
            StartController controller = start.getController();
-           controller.setLevelDirectoryName("levels/personnalized");
+           controller.setLevelDirectoryName("levels/personalized");
            controller.constructLevels();
 
            Scene sceneSTART = new Scene(root, 990, 660);

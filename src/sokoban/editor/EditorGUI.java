@@ -327,7 +327,7 @@ public class EditorGUI extends Application {
 
         Dialog<int[]> dialog = new Dialog<>();
         dialog.setTitle("Sauvegarder");
-        dialog.setHeaderText("Sauvegarder dans levels/Personalized/levelN/worldN.txt\n(nbWorlds.txt et state.txt crees auto)");
+        dialog.setHeaderText("Sauvegarder dans levels/personalized/levelN/worldN.txt\n(nbWorlds.txt et state.txt crees auto)");
 
         TextField lvlF = new TextField("1");
         TextField wF = new TextField("0");
@@ -353,7 +353,7 @@ public class EditorGUI extends Application {
 
         dialog.showAndWait().ifPresent(res -> {
             if (editor.saveToProjectFile(res[0], res[1], 0))
-                statusLabel.setText("Sauvé : levels/Personalized/level" + res[0] + "/world" + res[1] + ".txt");
+                statusLabel.setText("Sauvé : levels/personalized/level" + res[0] + "/world" + res[1] + ".txt");
             else
                 erreur("Sauvegarde echouee.");
         });
@@ -362,7 +362,7 @@ public class EditorGUI extends Application {
     private void dialogLoad() {
         Dialog<int[]> dialog = new Dialog<>();
         dialog.setTitle("Charger");
-        dialog.setHeaderText("Charger depuis levels/Personalized/levelN/worldN.txt");
+        dialog.setHeaderText("Charger depuis levels/personalized/levelN/worldN.txt");
 
         TextField lvlF = new TextField("1");
         TextField wF = new TextField("0");
