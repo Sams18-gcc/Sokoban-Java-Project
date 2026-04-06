@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import sokoban.UI.app.SokobanApp;
 
@@ -19,21 +20,26 @@ import java.util.Objects;
 public class ModeController {
 
     @FXML
-    private Button storyButton;
+    private Button storyModeButton;
     @FXML
-    private Button personalizedButton;
+    private Button personalizedModeButton;
     @FXML
     private Button backButton;
     @FXML
     private ImageView background;
     @FXML
-    private ImageView persoImage;
+    private ImageView personalizedModeImage;
     @FXML
     private ImageView storyImage;
     @FXML
     private ImageView backImage;
+    @FXML
+    private StackPane SCENE;
 
     public void initialize() {
+
+        background.fitHeightProperty().bind(SCENE.heightProperty());
+        background.fitWidthProperty().bind(SCENE.widthProperty());
 
 
     }
@@ -54,14 +60,14 @@ public class ModeController {
     @FXML
     private void mouseEnterFreeMode(MouseEvent event) {
 
-        persoImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/freeModeHover.png"))));
+        personalizedModeImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/freeModeHover.png"))));
 
     }
 
     @FXML
     private void mouseExitFreeMode(MouseEvent event) {
 
-        persoImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/FreeMode.png"))));
+        personalizedModeImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/FreeMode.png"))));
     }
 
     @FXML
@@ -95,7 +101,7 @@ public class ModeController {
                 getClass().getResource("/sokoban/UI/resources/style/Mode.css").toExternalForm()
         );
         stage.setScene(sceneSTART);
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.show();
 
 

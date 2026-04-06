@@ -12,7 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -41,7 +41,7 @@ public class InterfaceController {
     @FXML
     private Button buttonEDITOR;
     @FXML
-    private AnchorPane SCENE;
+    private StackPane SCENE;
 
     private Stage stage;
 
@@ -55,12 +55,16 @@ public class InterfaceController {
                 getClass().getResource("/sokoban/UI/resources/assets/BackgroundVideo.mp4")
         ).toExternalForm());
 
+
         SokobanApp.mediaPlayer = new MediaPlayer(media);
         BackgroundVideo.setMediaPlayer(SokobanApp.mediaPlayer);
 
-        BackgroundVideo.setPreserveRatio(true);
+
+        BackgroundVideo.setPreserveRatio(false);
         SokobanApp.mediaPlayer.setAutoPlay(true);
         SokobanApp.mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        BackgroundVideo.fitWidthProperty().bind(SCENE.widthProperty());
+        BackgroundVideo.fitHeightProperty().bind(SCENE.heightProperty());
 
         skull1.setImage(new Image(Objects.requireNonNull(
                 getClass().getResourceAsStream("/sokoban/UI/resources/assets/skull.png")
@@ -83,6 +87,7 @@ public class InterfaceController {
         skull3.setVisible(false);
         skull4.setVisible(false);
         skull5.setVisible(false);
+
 
         SokobanApp.menuSELECTION = new AudioClip(
                 getClass().getResource("/sokoban/UI/resources/assets/menu-selection.mp3").toExternalForm()
@@ -133,52 +138,54 @@ public class InterfaceController {
         Parent root = loader.load();
 
 
-
-        Scene sceneSTART = new Scene(root, 990, 660);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        stage.setTitle("MODE"); // a corriger plus tard
-        sceneSTART.getStylesheets().add(
+        Scene startScene = new Scene(root, stage.getWidth(), stage.getHeight());
+
+        stage.setTitle("Levels"); // a corriger plus tard
+        startScene.getStylesheets().add(
                 getClass().getResource("/sokoban/UI/resources/style/Mode.css").toExternalForm()
         );
-        stage.setScene(sceneSTART);
-        stage.setResizable(false);
+        stage.setScene(startScene);
+        stage.setResizable(true);
         stage.show();
     }
 
-    public void SETTINGS(ActionEvent event) throws IOException {
+    public void settings(ActionEvent event) throws IOException {
         FXMLLoader SETTINGS = new FXMLLoader(
                 SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Settings.fxml")
         );
-        Scene sceneSETTINGS = new Scene(SETTINGS.load(), 660, 660);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        stage.setTitle("RULES");
+        Scene sceneSETTINGS = new Scene(SETTINGS.load(),stage.getWidth(), stage.getHeight());
+
+        stage.setTitle("Settings");
         sceneSETTINGS.getStylesheets().add(
                 getClass().getResource("/sokoban/UI/resources/style/Settings.css").toExternalForm()
         );
         stage.setScene(sceneSETTINGS);
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.show();
     }
 
-    public void RULES(ActionEvent event) throws IOException {
+    public void rules(ActionEvent event) throws IOException {
         FXMLLoader RULES = new FXMLLoader(
                 SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Rules.fxml")
         );
-        Scene sceneRULES = new Scene(RULES.load(), 660, 660);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        stage.setTitle("RULES");
+        Scene sceneRULES = new Scene(RULES.load(), stage.getWidth(), stage.getHeight());
+
+        stage.setTitle("Rules");
         sceneRULES.getStylesheets().add(
                 getClass().getResource("/sokoban/UI/resources/style/Rules.css").toExternalForm()
         );
         stage.setScene(sceneRULES);
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.show();
     }
 
-    public void EDITOR(ActionEvent event) {
+    public void editor(ActionEvent event) {
         SokobanApp.menuSELECTION.play();
         Stage editorStage = new Stage();
         sokoban.editor.EditorGUI editorGUI = new sokoban.editor.EditorGUI();
@@ -193,7 +200,7 @@ public class InterfaceController {
         }
     }
 
-    public void EXIT(ActionEvent event) {
+    public void exit(ActionEvent event) {
         Alert alerte = new Alert(Alert.AlertType.CONFIRMATION);
         alerte.setContentText("VOUS VOULEZ QUITTER LE JEU ?");
         alerte.setHeaderText("SORTIR DE JEU");

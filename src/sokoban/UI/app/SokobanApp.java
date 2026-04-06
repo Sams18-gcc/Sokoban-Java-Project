@@ -18,25 +18,28 @@ public class SokobanApp extends Application {
     public static AudioClip menuSELECTION;
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader interface1 = new FXMLLoader(SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Interface.fxml"));
-         sceneInterface = new Scene(interface1.load(), 660, 660);
+         FXMLLoader interface1 = new FXMLLoader(SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Interface.fxml"));
+
+         sceneInterface = new Scene(interface1.load());
 
         stage.setTitle("Interface");
         stage.setScene(sceneInterface);
         sceneInterface.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/sokoban/UI/resources/style/InterfaceStyle.css")).toExternalForm());
 
-        stage.setResizable(false);
+        stage.setResizable(true);
 
         stage.show();
+        stage.setFullScreenExitHint("");
+        stage.setFullScreen(false);
 
-        stage.setOnCloseRequest(e->
+       /* stage.setOnCloseRequest(e->
         {
             e.consume();
             EXIT(stage);
-        });
+        });*/
     }
 
-    public void EXIT(Stage stage) {
+    /*public void EXIT(Stage stage) {
         Alert alerte = new Alert(Alert.AlertType.CONFIRMATION);
         alerte.setContentText("VOUS VOULEZ QUITTER LE JEU ?");
         alerte.setHeaderText("SORTIR DE JEU");
@@ -45,5 +48,5 @@ public class SokobanApp extends Application {
 
             stage.close();
         }
-    }
+    }*/
 }
