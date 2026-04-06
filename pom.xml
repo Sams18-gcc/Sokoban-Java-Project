@@ -54,13 +54,17 @@
     </dependencies>
 
     <build>
-    <sourceDirectory>src/sokoban</sourceDirectory>
-
+    <sourceDirectory>src</sourceDirectory>
+     
     <resources>
-        <resource>
-            <directory>src/sokoban/IG/resources</directory>
-        </resource>
-    </resources>
+    <resource>
+        <directory>src</directory>
+        <includes>
+            <include>sokoban/UI/resources/**</include>
+        </includes>
+    </resource>
+</resources>     
+
         <plugins>
             <!-- Compilation Java -->
             <plugin>
