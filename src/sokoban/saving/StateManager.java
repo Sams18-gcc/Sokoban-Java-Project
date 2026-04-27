@@ -16,9 +16,14 @@ public class StateManager {
 
 
     public void save(Level level) {
+        LoadGame loader = LoadGame.gameLoader;
+        String levelsPath = loader.getLevelsFolderPath();
+        String mode = new File(levelsPath).getName();
+
+        File folder = new File(savesFolder, mode);
+
         saveFileName = "save_level" + level.getNumLevel() + ".txt";
 
-        File folder = new File(savesFolder);
         if (!folder.exists()) folder.mkdirs();
 
         File file = new File(folder, saveFileName);
@@ -63,7 +68,11 @@ public class StateManager {
 
     public boolean load(Level level) {
         saveFileName = "save_level" + level.getNumLevel() + ".txt";
-        File file = new File(savesFolder, saveFileName);
+        LoadGame loader = LoadGame.gameLoader;
+        String levelsPath = loader.getLevelsFolderPath();
+        String mode = new File(levelsPath).getName();
+
+        File file = new File(new File(savesFolder, mode), saveFileName);
 
         if (!file.exists()) {
             return false;

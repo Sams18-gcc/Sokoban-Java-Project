@@ -16,7 +16,7 @@ public class Main {
 
 
         StateManager sm = new StateManager(); //
-        Level level = new Level(2, "levels/storyMode" ,sm);
+        Level level = new Level(1, "levels/personalized" ,sm);
         level.init();
         TerminalUi t = TerminalUi.game;       //
         t.play(level,sm);                     //instance statemanager pour chaque level 

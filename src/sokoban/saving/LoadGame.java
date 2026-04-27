@@ -144,7 +144,10 @@ public class LoadGame {
 
     }
 
-
+    public String getLevelsFolderPath() {
+     return levelsFolder.getPath();
+   }
+   
     }
 
 
