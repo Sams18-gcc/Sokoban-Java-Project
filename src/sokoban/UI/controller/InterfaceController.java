@@ -51,17 +51,26 @@ public class InterfaceController {
     @FXML
     public void initialize() {
 
-        media = new Media(Objects.requireNonNull(
-                getClass().getResource("/sokoban/UI/resources/assets/BackgroundVideo.mp4")
-        ).toExternalForm());
-
-        SokobanApp.mediaPlayer = new MediaPlayer(media);
-        BackgroundVideo.setMediaPlayer(SokobanApp.mediaPlayer);
-
-        BackgroundVideo.setPreserveRatio(true);
-        SokobanApp.mediaPlayer.setAutoPlay(true);
-        SokobanApp.mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-
+        try {
+    media = new Media(Objects.requireNonNull(
+            getClass().getResource("/sokoban/UI/resources/assets/BackgroundVideo.mp4")
+    ).toExternalForm());
+    SokobanApp.mediaPlayer = new MediaPlayer(media);
+    BackgroundVideo.setMediaPlayer(SokobanApp.mediaPlayer);
+    BackgroundVideo.setPreserveRatio(true);
+    SokobanApp.mediaPlayer.setAutoPlay(true);
+    SokobanApp.mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+} catch (Exception e) {
+    System.out.println("Vidéo non disponible, affichage image de remplacement.");
+    ImageView imageRemplacement = new ImageView(new Image(
+            Objects.requireNonNull(
+                getClass().getResourceAsStream("/sokoban/UI/resources/assets/black_background.jpg")
+            )
+    ));
+    imageRemplacement.setFitWidth(660);
+    imageRemplacement.setFitHeight(690);
+    SCENE.getChildren().add(0, imageRemplacement);
+}
         skull1.setImage(new Image(Objects.requireNonNull(
                 getClass().getResourceAsStream("/sokoban/UI/resources/assets/skull.png")
         )));
