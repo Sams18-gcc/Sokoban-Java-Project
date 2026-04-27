@@ -40,6 +40,20 @@ public class ModeController {
 
         background.fitHeightProperty().bind(SCENE.heightProperty());
         background.fitWidthProperty().bind(SCENE.widthProperty());
+        storyModeButton.prefWidthProperty().bind(SCENE.widthProperty().multiply(0.4));
+        storyModeButton.prefHeightProperty().bind((SCENE.widthProperty().multiply(0.3)));
+        storyImage.fitWidthProperty().bind(SCENE.widthProperty().multiply(0.4));
+        storyImage.fitHeightProperty().bind(SCENE.heightProperty().multiply(0.3));
+
+        personalizedModeButton.prefWidthProperty().bind(SCENE.widthProperty().multiply(0.4));
+        personalizedModeButton.prefHeightProperty().bind(SCENE.heightProperty().multiply(0.3));
+        personalizedModeImage.fitWidthProperty().bind(SCENE.widthProperty().multiply(0.4));
+        personalizedModeImage.fitHeightProperty().bind(SCENE.heightProperty().multiply(0.3));
+
+        backButton.prefWidthProperty().bind(SCENE.widthProperty().multiply(0.2));
+        backButton.prefHeightProperty().bind(SCENE.heightProperty().multiply(0.1));
+        backImage.fitWidthProperty().bind(SCENE.widthProperty().multiply(0.2));
+        backImage.fitHeightProperty().bind(SCENE.heightProperty().multiply(0.1));
 
 
     }
@@ -47,7 +61,7 @@ public class ModeController {
     @FXML
     private void mouseOnStoryMode(MouseEvent event) {
 
-        storyImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/StoryModeHover.png"))));
+        storyImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/StoryMode.png"))));
 
     }
 
@@ -60,7 +74,7 @@ public class ModeController {
     @FXML
     private void mouseEnterFreeMode(MouseEvent event) {
 
-        personalizedModeImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/freeModeHover.png"))));
+        personalizedModeImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/FreeMode.png"))));
 
     }
 
@@ -73,7 +87,7 @@ public class ModeController {
     @FXML
     private void mouseEnterBackButton(MouseEvent event) {
 
-        backImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/backButtonHover.png"))));
+        backImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/BackButton.png"))));
 
     }
 
@@ -91,6 +105,7 @@ public class ModeController {
 
         StartController controller = start.getController();
         controller.setLevelDirectoryName("levels/storyMode");
+        controller.setBackground("StoryModeBackground.png");
         controller.constructLevels();
 
         Scene sceneSTART = new Scene(root, 990, 660);
@@ -117,6 +132,7 @@ public class ModeController {
            StartController controller = start.getController();
            controller.setLevelDirectoryName("levels/personnalized");
            controller.constructLevels();
+           controller.setBackground("FreeModeBackground.png");
 
            Scene sceneSTART = new Scene(root, 990, 660);
            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
