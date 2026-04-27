@@ -9,21 +9,40 @@ import sokoban.pathfinding.PathSeek;
 
 import java.util.*;
 
+/**
+ * Moteur de résolution automatique d'un niveau de Sokoban utilisant l'algorithme A* (A-Star).
+ * <p>
+ * Cette classe implémente une stratégie de recherche par "macro-mouvements" :
+ * l'algorithme réfléchit en termes de poussées de boîtes, et utilise la classe {@link PathSeek}
+ * pour vérifier si le joueur peut physiquement atteindre la position requise pour effectuer la poussée.
+ * </p>
+ */
 public class AutoSolver {
 
     private final World initialWorld;
-    private final World workingWorld; // Un monde "brouillon" pour utiliser PathSeek
+    private final World workingWorld; 
     private final List<Position> targets;
 
+    /**
+     * Initialise le solveur automatique pour un monde donné.
+     *
+     * @param world Le monde (World) initial à résoudre.
+     */
     public AutoSolver(World world) {
         this.initialWorld = world;
         this.targets = findTargets(world);
         
-        // On clone le monde pour que PathSeek puisse l'utiliser sans modifier le vrai jeu
+        // Clonage du monde pour les calculs internes de PathSeek
         this.workingWorld = new World(world.getGrid().getLength(), world.getGrid().getWidth(), world.getWorldRef());
         this.workingWorld.loadWorld(world.getGridArray());
     }
 
+    /**
+     * Scanne la grille pour lister les positions de toutes les cibles.
+     *
+     * @param world Le monde à analyser.
+     * @return Une liste contenant les positions des cibles.
+     */
     private List<Position> findTargets(World world) {
         List<Position> t = new ArrayList<>();
         int rows = world.getGrid().getLength();
@@ -38,6 +57,12 @@ public class AutoSolver {
         return t;
     }
 
+    /**
+     * Calcule l'heuristique (distance estimée jusqu'à la victoire) en utilisant la distance de Manhattan.
+     *
+     * @param boxes L'ensemble des positions actuelles des boîtes.
+     * @return La somme des distances minimales entre chaque boîte et une cible.
+     */
     private int calculateHeuristic(Set<Position> boxes) {
         int totalDistance = 0;
         for (Position box : boxes) {
@@ -51,6 +76,12 @@ public class AutoSolver {
         return totalDistance;
     }
 
+    /**
+     * Vérifie si l'état actuel est un état de victoire (toutes les boîtes sont sur des cibles).
+     *
+     * @param boxes L'ensemble des positions actuelles des boîtes.
+     * @return true si le niveau est résolu, false sinon.
+     */
     private boolean isVictory(Set<Position> boxes) {
         for (Position box : boxes) {
             boolean onTarget = false;
@@ -65,6 +96,17 @@ public class AutoSolver {
         return true;
     }
 
+    /**
+     * Lance l'algorithme de résolution automatique A*.
+     * <p>
+     * Explore les combinaisons de poussées de boîtes en favorisant les états ayant
+     * la plus faible distance heuristique. Réutilise le composant PathSeek pour valider
+     * les déplacements du joueur.
+     * </p>
+     *
+     * @return Une liste ordonnée des directions à appliquer pour résoudre le niveau, 
+     * ou null si aucune solution n'a pu être trouvée.
+     */
     public List<Direction> solve() {
         Set<Position> initialBoxes = new HashSet<>();
         for (Box b : initialWorld.getBoxes()) {
@@ -89,39 +131,30 @@ public class AutoSolver {
             if (closedSet.contains(current)) continue;
             closedSet.add(current);
 
-            // C'est ici que l'on intègre PathSeek. On met à jour notre monde brouillon :
             workingWorld.setPlayerAt(current.getPlayerPos());
             workingWorld.setBoxesFromPositions(new ArrayList<>(current.getBoxes()));
 
-            // Pour chaque boîte, on essaie de la pousser dans les 4 directions
             for (Position boxPos : current.getBoxes()) {
                 for (Direction pushDir : Direction.values()) {
                     
-                    // Où le joueur doit-il se tenir pour pousser ? (À l'opposé de la direction)
                     Direction approachDir = getOpposite(pushDir);
                     Position playerStartPos = new Position(boxPos.getY(), boxPos.getX());
                     playerStartPos.translate(approachDir);
                     
-                    // Où va atterrir la boîte ?
                     Position nextBoxPos = new Position(boxPos.getY(), boxPos.getX());
                     nextBoxPos.translate(pushDir);
                     
-                    // 1. La case d'approche du joueur est-elle libre ?
-                    // 2. La case de destination de la boîte est-elle libre ?
                     if (isFree(playerStartPos, current.getBoxes()) && isFree(nextBoxPos, current.getBoxes())) {
                         
-                        // 3. Le joueur peut-il atteindre la case d'approche ?
                         List<Direction> playerPath = PathSeek.findShortestPath(workingWorld, current.getPlayerPos(), playerStartPos);
                         
-                        if (playerPath != null) { // Chemin trouvé par PathSeek !
+                        if (playerPath != null) { 
                             Set<Position> nextBoxes = new HashSet<>(current.getBoxes());
                             nextBoxes.remove(boxPos);
                             nextBoxes.add(nextBoxPos);
                             
-                            // Après avoir poussé, le joueur prend la place de l'ancienne boîte
                             Position nextPlayerPos = new Position(boxPos.getY(), boxPos.getX());
-                            
-                            int newG = current.getG() + playerPath.size() + 1; // +1 pour la poussée
+                            int newG = current.getG() + playerPath.size() + 1; 
                             
                             PuzzleState nextState = new PuzzleState(
                                     nextPlayerPos, nextBoxes, current, playerPath, pushDir, newG, calculateHeuristic(nextBoxes)
@@ -138,16 +171,29 @@ public class AutoSolver {
         return null;
     }
 
+    /**
+     * Vérifie si une position donnée est traversable (pas de mur et pas de boîte).
+     *
+     * @param pos          La position à vérifier.
+     * @param currentBoxes L'ensemble des boîtes dans l'état actuel.
+     * @return true si la case est libre, false sinon.
+     */
     private boolean isFree(Position pos, Set<Position> currentBoxes) {
         try {
             if (initialWorld.getCellatPosition(pos).getCellType() == CellType.WALL) return false;
             if (currentBoxes.contains(pos)) return false;
             return true;
         } catch (ArrayIndexOutOfBoundsException e) {
-            return false;
+            return false; 
         }
     }
 
+    /**
+     * Renvoie la direction opposée à celle fournie (utile pour trouver la position d'approche).
+     *
+     * @param d La direction initiale.
+     * @return La direction strictement opposée.
+     */
     private Direction getOpposite(Direction d) {
         switch(d) {
             case UP: return Direction.DOWN;
@@ -158,23 +204,27 @@ public class AutoSolver {
         return null;
     }
 
+    /**
+     * Remonte l'arbre des états parents depuis l'état final pour générer la liste complète des actions.
+     *
+     * @param state L'état victorieux du puzzle.
+     * @return La liste complète et chronologique des directions à effectuer par le joueur.
+     */
     private List<Direction> reconstructSolution(PuzzleState state) {
         List<Direction> fullSolution = new ArrayList<>();
         PuzzleState current = state;
         
         while (current.getParent() != null) {
-            // On ajoute la poussée finale
             fullSolution.add(current.getPushDirection());
             
-            // On ajoute le chemin du joueur à l'envers (car on remonte l'arbre)
             List<Direction> approach = current.getPathToReach();
             for (int i = approach.size() - 1; i >= 0; i--) {
                 fullSolution.add(approach.get(i));
             }
+            
             current = current.getParent();
         }
         
-        // On remet toute la liste à l'endroit
         Collections.reverse(fullSolution);
         return fullSolution;
     }

@@ -15,5 +15,6 @@ public enum LogicKey {
     LOAD,
     SAVE,
     UNDO,
+    HINT,
     RELOAD//si on veut restart le jeu mid playing
 }

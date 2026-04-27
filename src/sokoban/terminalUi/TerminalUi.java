@@ -48,7 +48,9 @@ public class TerminalUi {
             return LogicKey.PATHFINDING;
         } else if (input.equals("esc")) {
             return LogicKey.ESCAPE;
-        } else if (input.equals("u")) { //j'ai ajouté les keys de undo,save,load,reload
+        } else if (input.equals("i")) {
+            return LogicKey.HINT; 
+        }else if (input.equals("u")) { //j'ai ajouté les keys de undo,save,load,reload
             return LogicKey.UNDO;
         }else if (input.equals("sv")){
              return LogicKey.SAVE;
@@ -71,7 +73,7 @@ public class TerminalUi {
 
     // affiche les commandes disponibles
     public void showOptionsTerminal() {
-          System.out.println("Left(q) | Right(d) | Up(z) | Down(s) | Auto(p) | Undo(u) | Save(sv) | Load(ld) | Reload(r)");
+          System.out.println("Left(q) | Right(d) | Up(z) | Down(s) | Auto(p) | Undo(u) | Save(sv) | Load(ld) | Reload(r) | Hint(i) | Escape(esc)");
     }
 
     /*
@@ -135,6 +137,19 @@ public class TerminalUi {
             // gestion de undo 
             if (lk == LogicKey.UNDO) {
                 sm.undo(level.getCurrentWorld());
+                continue;
+            }
+            if (lk == LogicKey.HINT) {
+                System.out.println("Recherche de la solution en cours, patientez...");
+                sokoban.autosolver.AutoSolver solver = new sokoban.autosolver.AutoSolver(level.getCurrentWorld());
+                List<Direction> solution = solver.solve();
+                
+                if (solution != null) {
+                    System.out.println("Solution trouvée en " + solution.size() + " mouvements !");
+                    System.out.println("Premiers mouvements conseillés : " + solution);
+                } else {
+                    System.out.println("Aucune solution trouvée depuis cette position.");
+                }
                 continue;
             }
 
