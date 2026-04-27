@@ -2,6 +2,7 @@ package sokoban.terminalUi;
 
 import sokoban.app.Level;
 import sokoban.app.LevelState;
+import sokoban.app.VictoryCondition;
 import sokoban.core.Direction;
 import sokoban.core.Position;
 import sokoban.core.World;
@@ -200,6 +201,29 @@ public class TerminalUi {
 
                 default:
                     break;
+            }
+        }
+    }
+    // permet au joueur de choisir le mode de victoire avant de commencer
+    public VictoryCondition chooseVictoryCondition() {
+
+        System.out.println("Choisissez le mode de victoire :");
+        System.out.println("1 - Tous les mondes doivent etre resolus");
+        System.out.println("2 - Une feuille de l'arbre doit etre resolue");
+        System.out.println("3 - Seul le monde racine doit etre resolu");
+
+        while (true) {
+            System.out.print("Votre choix : ");
+            String input = sc.nextLine();
+
+            if (input.equals("1")) {
+                return VictoryCondition.ALL_WORLDS;
+            } else if (input.equals("2")) {
+                return VictoryCondition.LEAVES_ONLY;
+            } else if (input.equals("3")) {
+                return VictoryCondition.ROOT_ONLY;
+            } else {
+                System.out.println("Choix invalide. Tapez 1, 2 ou 3.");
             }
         }
     }

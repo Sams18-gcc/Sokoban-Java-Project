@@ -43,10 +43,11 @@ public class Level {
     // noeud courant dans l'arbre
     private WorldNode currentNode;
 
-    // compteur pour donner un identifiant aux portails
-    private int nextPortalId;
+    // mode de victoire actuel
+    private VictoryCondition victoryCondition;
 
     public Level(int numLevel, String levelsFolder, StateManager sm) {
+
 
         worlds = new ArrayList<World>();
         logic = GameLogic.logic;
@@ -57,9 +58,10 @@ public class Level {
         actWorld = 0;
         state = LevelState.RUNNING;
 
+        // ajout rec
         root = null;
         currentNode = null;
-        nextPortalId = 1;
+        victoryCondition = VictoryCondition.ALL_WORLDS;
     }
 
     // initialise le monde courant
@@ -77,49 +79,13 @@ public class Level {
             index++;
         }
 
+        // ajout rec
         buildTree();
 
         saveState();
     }
 
-    // construit l'arbre des mondes a partir de la liste worlds
-    private void buildTree() {
 
-        if (worlds.isEmpty()) {
-            return;
-        }
-
-        root = new WorldNode(worlds.get(0));
-        currentNode = root;
-        nextPortalId = 1;
-
-        buildTreeRecursive(root, 1);
-    }
-
-    // construit l'arbre recursivement
-    private int buildTreeRecursive(WorldNode node, int nextIndex) {
-
-        for (Box box : node.getWorldact().getBoxes()) {
-
-            if (!(box instanceof PortalBox)) {
-                continue;
-            }
-
-            if (nextIndex >= worlds.size()) {
-                break;
-            }
-
-            PortalBox portalBox = (PortalBox) box;
-            portalBox.setPortalId(nextPortalId++);
-
-            WorldNode childNode = new WorldNode(worlds.get(nextIndex));
-            node.addChild(childNode, portalBox);
-
-            nextIndex = buildTreeRecursive(childNode, nextIndex + 1);
-        }
-
-        return nextIndex;
-    }
 
     // renvoie le numero du level
     public int getNumLevel() {
@@ -151,17 +117,7 @@ public class Level {
         return state == LevelState.RUNNING;
     }
 
-    // renvoie la racine de l'arbre
-    public WorldNode getRoot() {
 
-        return root;
-    }
-
-    // renvoie le noeud courant
-    public WorldNode getCurrentNode() {
-
-        return currentNode;
-    }
 
     // renvoie le monde actuellement actif
     public World getCurrentWorld() {
@@ -206,31 +162,15 @@ public class Level {
     // verifie si toutes les boites de tous les mondes sont bien placees
     public boolean checkVictory() {
 
-        if (root == null) {
-            for (World w : worlds) {
-                if (!w.allBoxesInTarget()) {
-                    return false;
-                }
-            }
-            return true;
+        if (root != null) {
+            return checkVictoryRecursive();
         }
 
-        return checkVictoryRecursive(root);
-    }
-
-    // verification recursive de la victoire dans l'arbre
-    private boolean checkVictoryRecursive(WorldNode node) {
-
-        if (!node.getWorldact().allBoxesInTarget()) {
-            return false;
-        }
-
-        for (WorldNode child : node.getChildren()) {
-            if (!checkVictoryRecursive(child)) {
+        for (World w : worlds) {
+            if (!w.allBoxesInTarget()) {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -292,6 +232,7 @@ public class Level {
             case UNDO:
                 return ActionCategory.STATE;
 
+
             case ESCAPE:
                 return ActionCategory.INTERFACE;
 
@@ -334,104 +275,6 @@ public class Level {
         }
 
         return resultOfAction;
-    }
-
-    // gere les actions de traversee entre les mondes
-    public ResultOfAction handleTraverseAction(LogicKey k) {
-        switch (k) {
-            case TRAVERSE_CHILD_UP:
-                return traverseToChild(Direction.UP);
-
-            case TRAVERSE_CHILD_DOWN:
-                return traverseToChild(Direction.DOWN);
-
-            case TRAVERSE_CHILD_LEFT:
-                return traverseToChild(Direction.LEFT);
-
-            case TRAVERSE_CHILD_RIGHT:
-                return traverseToChild(Direction.RIGHT);
-
-            case TRAVERSE_PARENT_UP:
-                return traverseToParent(Direction.UP);
-
-            case TRAVERSE_PARENT_DOWN:
-                return traverseToParent(Direction.DOWN);
-
-            case TRAVERSE_PARENT_LEFT:
-                return traverseToParent(Direction.LEFT);
-
-            case TRAVERSE_PARENT_RIGHT:
-                return traverseToParent(Direction.RIGHT);
-
-            default:
-                return ResultOfAction.NOTHING;
-        }
-    }
-
-    // renvoie la PortalBox adjacente au joueur dans la direction donnee
-    public PortalBox getAdjacentPortal(Direction direction) {
-        if (direction == null) {
-            throw new NullPointerException();
-        }
-
-        Position portalPos = getCurrentWorld().getPlayerPosition();
-        portalPos.translate(direction);
-
-        Box box = getCurrentWorld().getBoxatPosition(portalPos);
-
-        if (!(box instanceof PortalBox)) {
-            return null;
-        }
-
-        return (PortalBox) box;
-    }
-
-    // traverse vers un monde enfant
-    public ResultOfAction traverseToChild(Direction direction) {
-        if (direction == null) {
-            throw new NullPointerException();
-        }
-
-        PortalBox portalBox = getAdjacentPortal(direction);
-
-        if (portalBox == null) {
-            return ResultOfAction.BLOCKED;
-        }
-
-        if (!portalBox.isOpen()) {
-            return ResultOfAction.BLOCKED;
-        }
-
-        if (portalBox.getNextWorld() == null) {
-            return ResultOfAction.BLOCKED;
-        }
-
-        currentNode = portalBox.getNextWorld();
-        actWorld = currentNode.getWorldact().getWorldRef();
-
-        return ResultOfAction.MOVED;
-    }
-
-    // traverse vers le monde parent
-    public ResultOfAction traverseToParent(Direction direction) {
-        if (direction == null) {
-            throw new NullPointerException();
-        }
-
-        PortalBox portalBox = getAdjacentPortal(direction);
-
-        if (portalBox == null) {
-            return ResultOfAction.BLOCKED;
-        }
-
-        if (currentNode == null || currentNode.getParent() == null) {
-            return ResultOfAction.BLOCKED;
-        }
-
-        currentNode = currentNode.getParent();
-        actWorld = currentNode.getWorldact().getWorldRef();
-
-        return ResultOfAction.MOVED;
     }
 
     public ResultOfAction handleInterfaceAction(LogicKey k) {
@@ -530,5 +373,238 @@ public class Level {
     // annule la derniere action
     public void undo() {
         sm.undo(getCurrentWorld());
+    }
+
+    /*--------------------------------------------------
+                    AJOUTS RECURSIVITE
+    --------------------------------------------------*/
+
+    // construit l'arbre des mondes a partir de la liste worlds
+    private void buildTree() {
+
+        if (worlds.isEmpty()) {
+            return;
+        }
+
+        root = new WorldNode(worlds.get(0));
+        currentNode = root;
+
+        buildTreeRecursive(root, 1);
+    }
+
+    // construit l'arbre recursivement
+    private int buildTreeRecursive(WorldNode node, int nextIndex) {
+
+        for (Box box : node.getWorldact().getBoxes()) {
+
+            if (!(box instanceof PortalBox)) {
+                continue;
+            }
+
+            if (nextIndex >= worlds.size()) {
+                break;
+            }
+
+            PortalBox portalBox = (PortalBox) box;
+
+            WorldNode childNode = new WorldNode(worlds.get(nextIndex));
+            node.addChild(childNode, portalBox);
+
+            nextIndex = buildTreeRecursive(childNode, nextIndex + 1);
+        }
+
+        return nextIndex;
+    }
+
+    // renvoie la racine de l'arbre
+    public WorldNode getRoot() {
+
+        return root;
+    }
+
+    // renvoie le noeud courant
+    public WorldNode getCurrentNode() {
+
+        return currentNode;
+    }
+
+    // renvoie le mode de victoire actuel
+    public VictoryCondition getVictoryCondition() {
+
+        return victoryCondition;
+    }
+
+    // change le mode de victoire
+    public void setVictoryCondition(VictoryCondition victoryCondition) {
+
+        if (victoryCondition == null) {
+            throw new NullPointerException();
+        }
+
+        this.victoryCondition = victoryCondition;
+    }
+
+    // verifie la victoire selon le mode choisi
+    public boolean checkVictoryRecursive() {
+
+        if (root == null) {
+            for (World w : worlds) {
+                if (!w.allBoxesInTarget()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        switch (victoryCondition) {
+
+            case ALL_WORLDS:
+                return checkVictoryAllWorlds(root);
+
+            case LEAVES_ONLY:
+                return checkVictoryLeavesOnly(root);
+
+            case ROOT_ONLY:
+                return checkVictoryRootOnly();
+
+            default:
+                return false;
+        }
+    }
+
+    // verifie si tous les mondes de l'arbre sont resolus
+    private boolean checkVictoryAllWorlds(WorldNode node) {
+
+        if (!node.getWorldact().allBoxesInTarget()) {
+            return false;
+        }
+
+        for (WorldNode child : node.getChildren()) {
+            if (!checkVictoryAllWorlds(child)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // verifie si au moins une feuille de l'arbre est resolue
+    private boolean checkVictoryLeavesOnly(WorldNode node) {
+
+        if (node.isLeaf()) {
+            return node.getWorldact().allBoxesInTarget();
+        }
+
+        for (WorldNode child : node.getChildren()) {
+            if (checkVictoryLeavesOnly(child)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // verifie si le monde racine est resolu
+    private boolean checkVictoryRootOnly() {
+
+        return root.getWorldact().allBoxesInTarget();
+    }
+
+    // gere les actions de traversee entre les mondes
+    public ResultOfAction handleTraverseAction(LogicKey k) {
+        switch (k) {
+            case TRAVERSE_CHILD_UP:
+                return traverseToChild(Direction.UP);
+
+            case TRAVERSE_CHILD_DOWN:
+                return traverseToChild(Direction.DOWN);
+
+            case TRAVERSE_CHILD_LEFT:
+                return traverseToChild(Direction.LEFT);
+
+            case TRAVERSE_CHILD_RIGHT:
+                return traverseToChild(Direction.RIGHT);
+
+            case TRAVERSE_PARENT_UP:
+                return traverseToParent(Direction.UP);
+
+            case TRAVERSE_PARENT_DOWN:
+                return traverseToParent(Direction.DOWN);
+
+            case TRAVERSE_PARENT_LEFT:
+                return traverseToParent(Direction.LEFT);
+
+            case TRAVERSE_PARENT_RIGHT:
+                return traverseToParent(Direction.RIGHT);
+
+            default:
+                return ResultOfAction.NOTHING;
+        }
+    }
+
+    // renvoie la PortalBox adjacente au joueur dans la direction donnee
+    public PortalBox getAdjacentPortal(Direction direction) {
+        if (direction == null) {
+            throw new NullPointerException();
+        }
+
+        Position portalPos = getCurrentWorld().getPlayerPosition();
+        portalPos.translate(direction);
+
+        Box box = getCurrentWorld().getBoxatPosition(portalPos);
+
+        if (!(box instanceof PortalBox)) {
+            return null;
+        }
+
+        return (PortalBox) box;
+    }
+
+    // traverse vers un monde enfant
+    public ResultOfAction traverseToChild(Direction direction) {
+        if (direction == null) {
+            throw new NullPointerException();
+        }
+
+        PortalBox portalBox = getAdjacentPortal(direction);
+
+        if (portalBox == null) {
+            return ResultOfAction.BLOCKED;
+        }
+
+        if (!portalBox.isOpen()) {
+            return ResultOfAction.BLOCKED;
+        }
+
+        if (portalBox.getNextWorld() == null) {
+            return ResultOfAction.BLOCKED;
+        }
+
+        currentNode = portalBox.getNextWorld();
+        actWorld = currentNode.getWorldact().getWorldRef();
+
+        return ResultOfAction.MOVED;
+    }
+
+    // traverse vers le monde parent
+    public ResultOfAction traverseToParent(Direction direction) {
+        if (direction == null) {
+            throw new NullPointerException();
+        }
+
+        PortalBox portalBox = getAdjacentPortal(direction);
+
+        if (portalBox == null) {
+            return ResultOfAction.BLOCKED;
+        }
+
+        if (currentNode == null || currentNode.getParent() == null) {
+            return ResultOfAction.BLOCKED;
+        }
+
+        currentNode = currentNode.getParent();
+        actWorld = currentNode.getWorldact().getWorldRef();
+
+        return ResultOfAction.MOVED;
     }
 }

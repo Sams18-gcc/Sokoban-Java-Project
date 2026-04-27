@@ -7,6 +7,10 @@ import java.util.ArrayList;
 
     public class WorldNode {
 
+
+        /*--------------------------------------------------
+                            ATTRIBUTS
+        --------------------------------------------------*/
         // monde contenu dans ce noeud
         private final World worldact;
 
@@ -15,6 +19,10 @@ import java.util.ArrayList;
 
         // liste des mondes enfants
         private final ArrayList<WorldNode> children;
+
+        /*--------------------------------------------------
+                        CONSTRUCTEUR
+        --------------------------------------------------*/
 
         public WorldNode(World world) {
             if (world == null) {
@@ -25,6 +33,11 @@ import java.util.ArrayList;
             this.parent = null;
             this.children = new ArrayList<WorldNode>();
         }
+
+
+        /*--------------------------------------------------
+                   SETTERS AND GETTERS
+        --------------------------------------------------*/
 
         // renvoie le monde contenu dans ce noeud
         public World getWorldact() {
@@ -51,6 +64,10 @@ import java.util.ArrayList;
             children.add(child);
             portalBox.linkTo(child);
         }
+
+        /*--------------------------------------------------
+                        METHODES
+        --------------------------------------------------*/
 
         // verifie si le noeud est la racine
         public boolean isRoot() {

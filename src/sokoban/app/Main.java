@@ -18,7 +18,8 @@ public class Main {
         StateManager sm = new StateManager(); //
         Level level = new Level(2, "levels/storyMode" ,sm);
         level.init();
-        TerminalUi t = TerminalUi.game;       //
+        TerminalUi t = TerminalUi.game;//
+        level.setVictoryCondition(t.chooseVictoryCondition());
         t.play(level,sm);                     //instance statemanager pour chaque level 
 
     }
