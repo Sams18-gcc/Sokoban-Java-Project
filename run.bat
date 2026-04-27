@@ -1,2 +1,2 @@
 @echo off
-java -jar sokoban-1.0-SNAPSHOT.jar
+java -jar release\sokoban-1.0-SNAPSHOT.jar
