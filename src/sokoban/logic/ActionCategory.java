@@ -7,12 +7,16 @@ package sokoban.logic;
  * Exemples :
  * - un deplacement du joueur -> MOVE
  * - une recherche de chemin -> PATH_FINDING
- * - une action liee a la sauvegarde ou au chargement -> STATE_MANAGING
- * - une action liee a l'interface, comme pause -> INTERFACE_MANAGING
+ * - une action liee a la sauvegarde ou au chargement -> STATE
+ * - une action liee a l'interface, comme pause -> INTERFACE
+ * - une traversee entre mondes -> TRAVERSE
  */
 public enum ActionCategory {
     // action de deplacement du joueur
     MOVE,
+
+    // action de traversee entre les mondes
+    TRAVERSE,
 
     // action de recherche de chemin
     PATH_FINDING,

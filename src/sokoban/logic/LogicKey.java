@@ -10,10 +10,23 @@ public enum LogicKey {
     MOVE_DOWN,
     MOVE_LEFT,
     MOVE_RIGHT,
+
+    // traverser vers un monde enfant
+    TRAVERSE_CHILD_UP,
+    TRAVERSE_CHILD_DOWN,
+    TRAVERSE_CHILD_LEFT,
+    TRAVERSE_CHILD_RIGHT,
+
+    // traverser vers le monde parent
+    TRAVERSE_PARENT_UP,
+    TRAVERSE_PARENT_DOWN,
+    TRAVERSE_PARENT_LEFT,
+    TRAVERSE_PARENT_RIGHT,
+
     ESCAPE,
     FIND_PATH,
     LOAD,
     SAVE,
     UNDO,
-    RELOAD//si on veut restart le jeu mid playing
+    RELOAD // si on veut restart le jeu mid playing
 }
