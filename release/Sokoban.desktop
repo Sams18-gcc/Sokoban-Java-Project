@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Sokoban
+Comment=Lancer le jeu Sokoban
+Exec=bash -c 'cd "$(dirname "%k")" && java -jar sokoban-1.0-SNAPSHOT.jar'
+Icon=
+Terminal=false
+Categories=Game;
