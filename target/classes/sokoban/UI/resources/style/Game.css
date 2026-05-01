@@ -1,4 +1,9 @@
-
+#anchorPane {
+    -fx-background-image: url("/sokoban/UI/resources/assets/wallpaper.gif");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
 
 #SCENE {
     -fx-background-color: linear-gradient(to bottom, #1b1b1b, #2e2e2e);
@@ -26,14 +31,27 @@
     -fx-background-radius: 8px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 8, 0, 4, 4);
 }
+#cote {
+    -fx-text-fill: #ffd700;
+    -fx-font-family: "Arial Rounded MT Bold";
+    -fx-font-size: 27px;
+    -fx-background-color: rgba(50, 50, 50, 0.8);
+    -fx-padding: 10px;
+    -fx-border-color: #ffcc00;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 8, 0, 4, 4);
+}
 
 
-#Winner_text {
+#text {
     -fx-fill: #ff4500;
     -fx-font-family: "Arial Rounded MT Bold";
     -fx-font-size: 23px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 4, 0, 2, 2);
 }
+
 
 
 #Winner_image {
