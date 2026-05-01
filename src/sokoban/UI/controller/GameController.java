@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import sokoban.UI.app.SokobanApp;
 import sokoban.app.Level;
+import sokoban.autosolver.AutoSolver;
 import sokoban.core.Direction;
 import sokoban.core.Grid;
 import sokoban.core.Position;
@@ -49,7 +50,7 @@ public class GameController {
     int taille_case = 60;
 
 
-    List<Direction> path;
+
     Stage stage;
     private double playerX;
     private double playerY;
@@ -169,6 +170,9 @@ public class GameController {
             k = LogicKey.ESCAPE;
         } else if (code == KeyCode.R) {
             k = LogicKey.RELOAD;
+        } else if (code == KeyCode.H) {
+            k = LogicKey.AUTO_SOLVE;
+
         }
 
         processUserAction(k);
@@ -202,6 +206,11 @@ public class GameController {
             case PATH_FINDING_REQUESTED:
                 //enablePathFindingMode();
                 break;
+
+            case SOLVER_REQUESTED:
+                executeAutoSolver();
+                break;
+
 
             case PAUSED:
                 //pauseDisplay();
@@ -244,15 +253,21 @@ public class GameController {
 
         Position posTarget = new Position(row, colonne);
 
-
+        List<Direction> path;
         path = level.executePathFinding(posTarget);
         if (path != null && !path.isEmpty()) {
             moveInPath(path);
-        } else {
-            throw new IllegalStateException("PATH NON TROUVÉ");
         }
 
 
+
+    }
+
+    public void executeAutoSolver() {
+        List<Direction> solution = level.executeAutoSolver();
+        if (solution != null && !solution.isEmpty()) {
+            moveInPath(solution);
+        }
     }
 
     public void moveInPath(List<Direction> path) {
@@ -262,7 +277,13 @@ public class GameController {
         ResultOfAction result = level.handleUserAction(lk);
 
 
+
         refreshView();
+        if (result == ResultOfAction.WON) {
+            unlockNextLevel();
+            victoryDisplay();
+            return;
+        }
 
         if (!path.isEmpty()) {
             PauseTransition pause = new PauseTransition(Duration.millis(400));

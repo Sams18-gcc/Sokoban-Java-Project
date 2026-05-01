@@ -6,7 +6,7 @@
 ## Membres de groupe: 
   Benadouda Ryma 
   Haddad Yanis 
-  Ait Aidar Amayas 
+  Ait Aider Amayas 
   Bedad Amar
   Khimoum Aymen 
   Zaidi Manil

@@ -17,6 +17,8 @@ public enum ActionCategory {
     // action de recherche de chemin
     PATH_FINDING,
 
+    SOLVER,
+
     // action de gestion d'etat (save, load, reload, undo...)
     STATE,
 
