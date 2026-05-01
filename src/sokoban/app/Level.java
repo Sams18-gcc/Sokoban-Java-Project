@@ -302,12 +302,12 @@ public class Level {
         );
     }
 
-   /* public List<Direction> executeAutoSolver() {
+    public List<Direction> executeAutoSolver() {
         if (state != LevelState.RUNNING) {
             return null;
         }
         return logic.executeAutoSolver(getCurrentWorld());
-    }*/
+    }
 
     public LogicKey directionToLogicKey(Direction d) {
         switch (d) {
