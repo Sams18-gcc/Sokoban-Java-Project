@@ -307,7 +307,7 @@ public class GameController {
             Parent root = loader.load();
 
             GameController controller = loader.getController();
-            controller.setLevel(level);
+            controller.setLevel(nextLevel);
             controller.setLevelsInfo(levelsDirectoryName, nbLevels);
 
             Scene scene = new Scene(root, 660, 660);

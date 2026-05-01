@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import sokoban.UI.app.SokobanApp;
 
@@ -19,21 +20,40 @@ import java.util.Objects;
 public class ModeController {
 
     @FXML
-    private Button storyButton;
+    private Button storyModeButton;
     @FXML
-    private Button personalizedButton;
+    private Button personalizedModeButton;
     @FXML
     private Button backButton;
     @FXML
     private ImageView background;
     @FXML
-    private ImageView persoImage;
+    private ImageView personalizedModeImage;
     @FXML
     private ImageView storyImage;
     @FXML
     private ImageView backImage;
+    @FXML
+    private StackPane SCENE;
 
     public void initialize() {
+
+        background.fitHeightProperty().bind(SCENE.heightProperty());
+        background.fitWidthProperty().bind(SCENE.widthProperty());
+        storyModeButton.prefWidthProperty().bind(SCENE.widthProperty().multiply(0.4));
+        storyModeButton.prefHeightProperty().bind((SCENE.widthProperty().multiply(0.3)));
+        storyImage.fitWidthProperty().bind(SCENE.widthProperty().multiply(0.4));
+        storyImage.fitHeightProperty().bind(SCENE.heightProperty().multiply(0.3));
+
+        personalizedModeButton.prefWidthProperty().bind(SCENE.widthProperty().multiply(0.4));
+        personalizedModeButton.prefHeightProperty().bind(SCENE.heightProperty().multiply(0.3));
+        personalizedModeImage.fitWidthProperty().bind(SCENE.widthProperty().multiply(0.4));
+        personalizedModeImage.fitHeightProperty().bind(SCENE.heightProperty().multiply(0.3));
+
+        backButton.prefWidthProperty().bind(SCENE.widthProperty().multiply(0.2));
+        backButton.prefHeightProperty().bind(SCENE.heightProperty().multiply(0.1));
+        backImage.fitWidthProperty().bind(SCENE.widthProperty().multiply(0.2));
+        backImage.fitHeightProperty().bind(SCENE.heightProperty().multiply(0.1));
 
 
     }
@@ -41,7 +61,7 @@ public class ModeController {
     @FXML
     private void mouseOnStoryMode(MouseEvent event) {
 
-        storyImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/StoryModeHover.png"))));
+        storyImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/StoryMode.png"))));
 
     }
 
@@ -54,20 +74,20 @@ public class ModeController {
     @FXML
     private void mouseEnterFreeMode(MouseEvent event) {
 
-        persoImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/freeModeHover.png"))));
+        personalizedModeImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/FreeMode.png"))));
 
     }
 
     @FXML
     private void mouseExitFreeMode(MouseEvent event) {
 
-        persoImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/FreeMode.png"))));
+        personalizedModeImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/FreeMode.png"))));
     }
 
     @FXML
     private void mouseEnterBackButton(MouseEvent event) {
 
-        backImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/backButtonHover.png"))));
+        backImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/BackButton.png"))));
 
     }
 
@@ -85,6 +105,7 @@ public class ModeController {
 
         StartController controller = start.getController();
         controller.setLevelDirectoryName("levels/storyMode");
+        controller.setBackground("StoryModeBackground.png");
         controller.constructLevels();
 
         Scene sceneSTART = new Scene(root, 990, 660);
@@ -95,7 +116,7 @@ public class ModeController {
                 getClass().getResource("/sokoban/UI/resources/style/Mode.css").toExternalForm()
         );
         stage.setScene(sceneSTART);
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.show();
 
 
@@ -111,6 +132,7 @@ public class ModeController {
            StartController controller = start.getController();
            controller.setLevelDirectoryName("levels/personalized");
            controller.constructLevels();
+           controller.setBackground("FreeModeBackground.png");
 
            Scene sceneSTART = new Scene(root, 990, 660);
            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

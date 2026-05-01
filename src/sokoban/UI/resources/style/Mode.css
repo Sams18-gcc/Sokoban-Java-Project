@@ -1,4 +1,4 @@
-#storyButton, #personalizedButton, #backButton {
+#storyModeButton, #personalizedModeButton, #backButton {
     -fx-opacity: 0.9;
 
     -fx-background-color: transparent;
@@ -11,7 +11,7 @@
 }
 
 
-#storyButton:hover{
+#storyModeButton:hover{
 
     -fx-opacity: 1;
 
@@ -20,7 +20,7 @@
 
 
 }
-#personalizedButton:hover{
+#personalizedModeButton:hover{
 
     -fx-opacity: 1;
 
@@ -40,7 +40,7 @@
 }
 
 
-#storyButton:pressed, #personalizedButton:pressed, #backButton:pressed {
+#storyModeButton:pressed, #personalizedModeButton:pressed, #backButton:pressed {
 
     -fx-scale-x: 1.04;
     -fx-scale-y: 1.04;
