@@ -69,7 +69,7 @@ public class GameController {
 
     private Grid grid;
 
-    private final Image player = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/pion.png")));
+    private final Image player = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/Player.gif")));
     private final Image wall = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/wall.png")));
     private final Image target = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/target.png")));
     private final Image box = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/box.png")));
