@@ -87,7 +87,7 @@
          <graphic>
             <ImageView fitHeight="109.0" fitWidth="163.0" pickOnBounds="true">
                <image>
-                  <Image url="@../assets/loadButton.png" />
+                  <Image url="@../assets/solveButton.png" />
                </image>
             </ImageView>
          </graphic>

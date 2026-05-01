@@ -50,21 +50,29 @@ public class InterfaceController {
 
     @FXML
     public void initialize() {
-
-        media = new Media(Objects.requireNonNull(
-                getClass().getResource("/sokoban/UI/resources/assets/BackgroundVideo.mp4")
-        ).toExternalForm());
-
-
-        SokobanApp.mediaPlayer = new MediaPlayer(media);
-        BackgroundVideo.setMediaPlayer(SokobanApp.mediaPlayer);
+        try {
+            media = new Media(Objects.requireNonNull(
+                    getClass().getResource("/sokoban/UI/resources/assets/BackgroundVideo.mp4")
+            ).toExternalForm());
+            SokobanApp.mediaPlayer = new MediaPlayer(media);
+            BackgroundVideo.setMediaPlayer(SokobanApp.mediaPlayer);
 
 
-        BackgroundVideo.setPreserveRatio(false);
-        SokobanApp.mediaPlayer.setAutoPlay(true);
-        SokobanApp.mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        BackgroundVideo.fitWidthProperty().bind(SCENE.widthProperty());
-        BackgroundVideo.fitHeightProperty().bind(SCENE.heightProperty());
+            BackgroundVideo.setPreserveRatio(false);
+            SokobanApp.mediaPlayer.setAutoPlay(true);
+            SokobanApp.mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            BackgroundVideo.fitWidthProperty().bind(SCENE.widthProperty());
+            BackgroundVideo.fitHeightProperty().bind(SCENE.heightProperty());
+        }catch(Exception e)
+        {
+                ImageView replaceImage = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/ressources/assets/black_background.jpg"))));
+                replaceImage.fitWidthProperty().bind(SCENE.widthProperty());
+                replaceImage.fitHeightProperty().bind(SCENE.heightProperty());
+                SCENE.getChildren().add(0, replaceImage);
+        }
+
+
+
 
         skull1.setImage(new Image(Objects.requireNonNull(
                 getClass().getResourceAsStream("/sokoban/UI/resources/assets/skull.png")
