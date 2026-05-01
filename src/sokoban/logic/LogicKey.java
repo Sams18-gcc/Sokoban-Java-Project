@@ -12,8 +12,10 @@ public enum LogicKey {
     MOVE_RIGHT,
     ESCAPE,
     FIND_PATH,
+    AUTO_SOLVE,
     LOAD,
     SAVE,
     UNDO,
     RELOAD//si on veut restart le jeu mid playing
+
 }

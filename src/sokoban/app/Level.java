@@ -65,7 +65,6 @@ public class Level {
     }
 
 
-
     // renvoie le numero du level
     public int getNumLevel() {
 
@@ -95,7 +94,6 @@ public class Level {
 
         return state == LevelState.RUNNING;
     }
-
 
 
     // renvoie le monde actuellement actif
@@ -160,12 +158,14 @@ public class Level {
 
         ActionCategory actionCategory = classifyAction(k);
 
-        switch(actionCategory) {
+        switch (actionCategory) {
             case MOVE:
                 return handleMoveAction(k);
 
             case PATH_FINDING:
                 return ResultOfAction.PATH_FINDING_REQUESTED;
+            case SOLVER:
+                return ResultOfAction.SOLVER_REQUESTED;
 
             case INTERFACE:
                 return handleInterfaceAction(k);
@@ -199,6 +199,9 @@ public class Level {
 
             case FIND_PATH:
                 return ActionCategory.PATH_FINDING;
+
+            case AUTO_SOLVE:
+                return ActionCategory.SOLVER;
 
             default:
                 return ActionCategory.UNHANDLED;
@@ -299,13 +302,25 @@ public class Level {
         );
     }
 
+    public List<Direction> executeAutoSolver() {
+        if (state != LevelState.RUNNING) {
+            return null;
+        }
+        return logic.executeAutoSolver(getCurrentWorld());
+    }
+
     public LogicKey directionToLogicKey(Direction d) {
         switch (d) {
-            case UP:    return LogicKey.MOVE_UP;
-            case DOWN:  return LogicKey.MOVE_DOWN;
-            case LEFT:  return LogicKey.MOVE_LEFT;
-            case RIGHT: return LogicKey.MOVE_RIGHT;
-            default:    return null;
+            case UP:
+                return LogicKey.MOVE_UP;
+            case DOWN:
+                return LogicKey.MOVE_DOWN;
+            case LEFT:
+                return LogicKey.MOVE_LEFT;
+            case RIGHT:
+                return LogicKey.MOVE_RIGHT;
+            default:
+                return null;
         }
     }
 

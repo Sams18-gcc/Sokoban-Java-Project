@@ -37,6 +37,8 @@ public enum ResultOfAction {
     // un chemin vers la destination a ete trouve
     PATH_FINDING_REQUESTED,
 
+    SOLVER_REQUESTED,
+
     // la derniere action a ete annulee
     UNDONE,
 

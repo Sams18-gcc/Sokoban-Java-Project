@@ -1,5 +1,6 @@
 package sokoban.logic;
 
+import sokoban.autosolver.AutoSolver;
 import sokoban.core.CellType;
 import sokoban.core.Direction;
 import sokoban.core.Position;
@@ -121,6 +122,10 @@ public class GameLogic {
 
         return PathSeek.findShortestPath(world, start, dest);
     }
-    // a appeler a chaque fois que le joueur bouge
+    public List<Direction> executeAutoSolver(World world) {
+        if (world == null) throw new NullPointerException();
+        AutoSolver solver = new AutoSolver(world);
+        return solver.solve();
+    }
 
 }
