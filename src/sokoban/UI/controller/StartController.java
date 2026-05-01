@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
@@ -33,16 +34,26 @@ public class StartController {
     private Button BACKbutton;
 
     @FXML
-    private AnchorPane LEVELS_fenetre,SCENE;
-    @FXML
-    private Label TITRE2;
+    private AnchorPane SCENE;
+
     @FXML
     private TilePane levelsContainer;
+    @FXML private ImageView background;
+    @FXML private ImageView backImage;
+    @FXML private StackPane ROOT;
+
 
     private Stage stage;
     private String levelDirectoryName;
     public void initialize() {
-
+        backImage.setImage(new Image(Objects.requireNonNull(
+                getClass().getResourceAsStream("/sokoban/UI/resources/assets/BackButton.png"))));
+        backImage.fitWidthProperty().bind(ROOT.widthProperty().multiply(0.18));
+        backImage.fitHeightProperty().bind(ROOT.heightProperty().multiply(0.1));
+        background.fitWidthProperty().bind(ROOT.widthProperty());
+        background.fitHeightProperty().bind(ROOT.heightProperty());
+        levelsContainer.setPadding(new javafx.geometry.Insets(20));
+        levelsContainer.prefWidthProperty().bind(ROOT.widthProperty().multiply(0.6));
     }
 
 
@@ -154,8 +165,8 @@ public class StartController {
              });
 
         }
-        icon.setFitWidth(130);
-        icon.setFitHeight(170);
+        icon.fitWidthProperty().bind(ROOT.widthProperty().multiply(0.12));
+        icon.fitHeightProperty().bind(ROOT.heightProperty().multiply(0.2));
         icon.setPreserveRatio(true);
 
 
@@ -178,7 +189,7 @@ public class StartController {
 
     public void launchLevel(int numLevel, Stage stage) {
         StateManager sm = new StateManager();
-        Level level = new Level(2, sm);
+        Level level = new Level(numLevel, levelDirectoryName, sm);
         level.init();
 
         try {
@@ -190,6 +201,7 @@ public class StartController {
 
             GameController controller = loader.getController();
             controller.setLevel(level);
+            controller.setLevelsInfo(levelDirectoryName, getNbLevels());
 
             Scene scene = new Scene(root, 660, 660);
             scene.getStylesheets().add(
@@ -206,6 +218,21 @@ public class StartController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @FXML
+    private void mouseEnterBack(javafx.scene.input.MouseEvent event) {
+        backImage.setScaleX(1.1);
+        backImage.setScaleY(1.1);
+    }
+    @FXML
+    private void mouseExitBack(javafx.scene.input.MouseEvent event) {
+        backImage.setScaleX(1.0);
+        backImage.setScaleY(1.0);
+    }
+
+    public void setBackground(String imageName) {
+        background.setImage(new Image(Objects.requireNonNull(
+                getClass().getResourceAsStream("/sokoban/UI/resources/assets/" + imageName))));
     }
 }
 

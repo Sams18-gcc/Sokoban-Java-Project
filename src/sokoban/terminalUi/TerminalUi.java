@@ -8,6 +8,7 @@ import sokoban.core.World;
 import sokoban.logic.ResultOfAction;
 import sokoban.logic.LogicKey;
 import sokoban.saving.StateManager;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -27,7 +28,8 @@ public class TerminalUi {
 
     public static final TerminalUi game = new TerminalUi();
 
-    private TerminalUi(){}
+    private TerminalUi() {
+    }
 
     /*
      * Lit l'entree clavier de l'utilisateur
@@ -50,13 +52,13 @@ public class TerminalUi {
             return LogicKey.ESCAPE;
         } else if (input.equals("u")) { //j'ai ajouté les keys de undo,save,load,reload
             return LogicKey.UNDO;
-        }else if (input.equals("sv")){
-             return LogicKey.SAVE;
-        }else if (input.equals("ld")) {
-             return LogicKey.LOAD;
-        } else if (input.equals("r")){
-             return LogicKey.RELOAD;
-        }else {
+        } else if (input.equals("sv")) {
+            return LogicKey.SAVE;
+        } else if (input.equals("ld")) {
+            return LogicKey.LOAD;
+        } else if (input.equals("r")) {
+            return LogicKey.RELOAD;
+        } else {
             return null;
         }
     }
@@ -71,7 +73,7 @@ public class TerminalUi {
 
     // affiche les commandes disponibles
     public void showOptionsTerminal() {
-          System.out.println("Left(q) | Right(d) | Up(z) | Down(s) | Auto(p) | Undo(u) | Save(sv) | Load(ld) | Reload(r)");
+        System.out.println("Left(q) | Right(d) | Up(z) | Down(s) | Auto(p) | Undo(u) | Save(sv) | Load(ld) | Reload(r)");
     }
 
     /*
@@ -118,65 +120,35 @@ public class TerminalUi {
      * - on appelle Level pour executer cette action
      * - puis on affiche le resultat si besoin
      */
-    public void play(Level level, StateManager sm) {// des push a la undostack avant chaque movement important (meme pathfind)
-    
+    public void play(Level level, StateManager sm) {
+
         while (level.getState() == LevelState.RUNNING) {
-            // on reaffiche le monde avant chaque nouvelle action
             displayWorldTerminal(level.getCurrentWorld());
             showOptionsTerminal();
 
-            // lecture de l'action utilisateur au clavier
             LogicKey lk = getUserAction();
 
-            // si l'entree n'est pas reconnue, on recommence simplement
             if (lk == null)
                 continue;
 
-            // gestion de undo 
-            if (lk == LogicKey.UNDO) {
-                sm.undo(level.getCurrentWorld());
-                continue;
-            }
-
-            // sauvegarde de la partie en cours dans un fichier
-            if (lk == LogicKey.SAVE) {
-                sm.save(level);
-                continue;
-            }
-
-            // chargement de la derniere sauvegarde depuis le fichier
-            if (lk == LogicKey.LOAD) {
-                sm.load(level);
-                continue;
-            }
-
-            // rechargement du niveau si on veut recommencer
-            if (lk == LogicKey.RELOAD) {
-                sm.loadFresh(level);
-                continue;
-            }
-
-            // cas special : le pathfinding demande d'abord une destination,
-            // puis execute le chemin trouve et reaffiche le monde a chaque etape
+            // cas pathfinding : demande une destination, puis joue le chemin
             if (lk == LogicKey.FIND_PATH) {
-                int countDisplay = 0;
                 Position dest = setPathTargetPosition();
                 List<Direction> path = level.executePathFinding(dest);
 
-                // aucun chemin possible vers la destination demandee
                 if (path == null) {
                     System.out.println("Aucun chemin trouve.");
                     continue;
                 }
 
-                // on joue le chemin et on affiche le deplacement progressivement
+                int countDisplay = 0;
                 for (Direction d : path) {
                     countDisplay++;
-                    // on sauvegarde l'etat avant chaque deplacement du pathfinding pour pouvoir l'annuler
-                    sm.saveUndoSnapshot(level.getCurrentWorld());
-                    level.executeMove(d);
 
-                    // on reaffiche entre les deplacements pour voir le parcours
+                    LogicKey key = level.directionToLogicKey(d);
+                    ResultOfAction result = level.handleUserAction(key);
+
+
                     if (countDisplay < path.size()) {
                         displayWorldTerminal(level.getCurrentWorld());
                         try {
@@ -187,29 +159,26 @@ public class TerminalUi {
                     }
                 }
 
-            } else {
-                // pour les autres actions, on passe directement par Level
-                
-                // on sauvegarde l'etat du monde courant avant chaque action pour permettre l'undo
 
-                level.saveState();
-                ResultOfAction result = level.handleUserAction(lk);
-                if(result != ResultOfAction.MOVED && result != ResultOfAction.BOX_IN_TARGET)
-                    level.undo();
 
-                // si une boite vient d'entrer dans une target,
-                // on verifie si ca a termine le niveau
-                if (result == ResultOfAction.BOX_IN_TARGET) {
-                    if (level.getState() == LevelState.WON) {
-                        displayWorldTerminal(level.getCurrentWorld());
-                        displayVictoryMessage();
-                    }
+                continue;
+            }
 
-                    // si l'utilisateur demande une pause, on stoppe la boucle terminale
-                } else if (result == ResultOfAction.PAUSED) {
+            // tous les autres cas passent par handleUserAction
+            ResultOfAction result = level.handleUserAction(lk);
 
+            switch (result) {
+                case WON:
+                    displayWorldTerminal(level.getCurrentWorld());
+                    displayVictoryMessage();
+                    break;
+
+                case PAUSED:
                     level.stop();
-                }
+                    break;
+
+                default:
+                    break;
             }
         }
     }

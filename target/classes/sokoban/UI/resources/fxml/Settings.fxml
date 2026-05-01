@@ -4,44 +4,57 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 
-<AnchorPane fx:id="SCENE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="690.0" prefWidth="660.0" stylesheets="@../style/Settings.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sokoban.UI.controller.SettingsController">
-    <children>
-        <Label fx:id="TITRE" alignment="CENTER" contentDisplay="CENTER" layoutX="171.0" prefHeight="91.0" prefWidth="319.0" text="SOKOBAN">
-            <font>
-                <Font name="Bell MT" size="45.0" />
-            </font>
-        </Label>
-      <Button fx:id="BACKbutton" layoutX="51.0" layoutY="46.0" mnemonicParsing="false" onAction="#BackAction" text="BACK" />
-      <AnchorPane fx:id="Settings_fenetre" layoutX="102.0" layoutY="219.0" prefHeight="239.0" prefWidth="456.0">
-         <children>
-            <Label fx:id="LabelMusic" layoutX="145.0" layoutY="31.0" prefHeight="22.0" prefWidth="188.0" text="Music Volume :">
-               <font>
-                  <Font name="Gentium Book Basic Bold" size="17.0" />
-               </font>
-            </Label>
-            <Label fx:id="LabelEffect" layoutX="145.0" layoutY="134.0" prefHeight="29.0" prefWidth="157.0" text="Effect Volume :">
-               <font>
-                  <Font name="Gentium Book Basic Bold" size="17.0" />
-               </font>
-            </Label>
-            <Slider fx:id="SliderEFFECT" layoutX="34.0" layoutY="174.0" prefHeight="17.0" prefWidth="390.0" value="50.0" />
-            <Slider fx:id="SliderMUSIC" layoutX="34.0" layoutY="66.0" prefHeight="14.0" prefWidth="390.0" value="50.0" />
-            <Label fx:id="MusicVolume" layoutX="284.0" layoutY="32.0" text="50 %">
-               <font>
-                  <Font name="Bauhaus 93" size="20.0" />
-               </font>
-            </Label>
-            <Label fx:id="EffectVolume" layoutX="284.0" layoutY="134.0" prefHeight="29.0" prefWidth="84.0" text="50 % ">
-               <font>
-                  <Font name="Bauhaus 93" size="20.0" />
-               </font>
-            </Label>
-            <ImageView fx:id="music_image" fitHeight="29.0" fitWidth="29.0" layoutX="104.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="effect_image" fitHeight="29.0" fitWidth="29.0" layoutX="104.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true" />
-         </children>
-      </AnchorPane>
-    </children>
-</AnchorPane>
+<StackPane fx:id="ROOT" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="sokoban.UI.controller.SettingsController">
+    <ImageView fx:id="background" pickOnBounds="true" preserveRatio="false"/>
+    <BorderPane fx:id="SCENE" prefHeight="690.0" prefWidth="660.0" stylesheets="@../style/Settings.css">
+
+        <top>
+            <HBox>
+                <Button fx:id="BACKbutton" mnemonicParsing="false" onAction="#BackAction" onMouseEntered="#mouseEnterBack" onMouseExited="#mouseExitBack">
+                    <graphic>
+                        <ImageView fx:id="backImage" fitHeight="50.0" fitWidth="150.0"
+                                   pickOnBounds="true" preserveRatio="true"/>
+                    </graphic>
+                </Button>
+            </HBox>
+        </top>
+
+        <center>
+            <StackPane>
+                <VBox alignment="CENTER" spacing="20" StackPane.alignment="CENTER">
+                    <HBox alignment="CENTER" spacing="10">
+                        <Label fx:id="LabelMusic" prefHeight="22.0" prefWidth="120.0" text="Music Volume :">
+                            <font><Font name="Gentium Book Basic Bold" size="17.0"/></font>
+                        </Label>
+                        <Slider fx:id="SliderMUSIC" prefHeight="40.0" prefWidth="400.0" value="50.0"/>
+                        <Label fx:id="MusicVolume" prefWidth="40" text="50 %">
+                            <font><Font name="Bauhaus 93" size="20.0"/></font>
+                        </Label>
+                        <ImageView fx:id="music_image" fitHeight="22.0" fitWidth="29.0"
+                                   pickOnBounds="true" preserveRatio="true"/>
+                    </HBox>
+                    <HBox alignment="CENTER" spacing="10">
+                        <Label fx:id="LabelEffect" prefHeight="22.0" prefWidth="120.0" text="Effect Volume :">
+                            <font><Font name="Gentium Book Basic Bold" size="17.0"/></font>
+                        </Label>
+                        <Slider fx:id="SliderEFFECT" prefHeight="40.0" prefWidth="400.0" value="50.0"/>
+                        <Label fx:id="EffectVolume" prefWidth="40" text="50 %">
+                            <font><Font name="Bauhaus 93" size="20.0"/></font>
+                        </Label>
+                        <ImageView fx:id="effect_image" fitHeight="29.0" fitWidth="29.0"
+                                   pickOnBounds="true" preserveRatio="true"/>
+                    </HBox>
+                </VBox>
+            </StackPane>
+        </center>
+
+    </BorderPane>
+</StackPane>
