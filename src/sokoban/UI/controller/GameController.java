@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import sokoban.UI.app.SokobanApp;
 import sokoban.app.Level;
-import sokoban.autosolver.AutoSolver;
+
 import sokoban.core.Direction;
 import sokoban.core.Grid;
 import sokoban.core.Position;
