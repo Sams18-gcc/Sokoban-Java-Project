@@ -2,6 +2,7 @@ package sokoban.terminalUi;
 
 import sokoban.app.Level;
 import sokoban.app.LevelState;
+import sokoban.app.VictoryCondition;
 import sokoban.core.Direction;
 import sokoban.core.Position;
 import sokoban.core.World;
@@ -46,11 +47,32 @@ public class TerminalUi {
             return LogicKey.MOVE_LEFT;
         } else if (input.equals("d")) {
             return LogicKey.MOVE_RIGHT;
+
+            // traverser vers un monde enfant
+        } else if (input.equals("ez")) {
+            return LogicKey.TRAVERSE_CHILD_UP;
+        } else if (input.equals("es")) {
+            return LogicKey.TRAVERSE_CHILD_DOWN;
+        } else if (input.equals("eq")) {
+            return LogicKey.TRAVERSE_CHILD_LEFT;
+        } else if (input.equals("ed")) {
+            return LogicKey.TRAVERSE_CHILD_RIGHT;
+
+            // traverser vers le monde parent
+        } else if (input.equals("pz")) {
+            return LogicKey.TRAVERSE_PARENT_UP;
+        } else if (input.equals("ps")) {
+            return LogicKey.TRAVERSE_PARENT_DOWN;
+        } else if (input.equals("pq")) {
+            return LogicKey.TRAVERSE_PARENT_LEFT;
+        } else if (input.equals("pd")) {
+            return LogicKey.TRAVERSE_PARENT_RIGHT;
+
         } else if (input.equals("p")) {
             return LogicKey.FIND_PATH;
         } else if (input.equals("esc")) {
             return LogicKey.ESCAPE;
-        } else if (input.equals("u")) { //j'ai ajouté les keys de undo,save,load,reload
+        } else if (input.equals("u")) {
             return LogicKey.UNDO;
         } else if (input.equals("sv")) {
             return LogicKey.SAVE;
@@ -73,7 +95,7 @@ public class TerminalUi {
 
     // affiche les commandes disponibles
     public void showOptionsTerminal() {
-        System.out.println("Left(q) | Right(d) | Up(z) | Down(s) | Auto(p) | Undo(u) | Save(sv) | Load(ld) | Reload(r)");
+        System.out.println("Move: z/s/q/d | Child portal: ez/es/eq/ed | Parent portal: pz/ps/pq/pd | Auto(p) | Undo(u) | Save(sv) | Load(ld) | Reload(r)");
     }
 
     /*
@@ -179,6 +201,29 @@ public class TerminalUi {
 
                 default:
                     break;
+            }
+        }
+    }
+    // permet au joueur de choisir le mode de victoire avant de commencer
+    public VictoryCondition chooseVictoryCondition() {
+
+        System.out.println("Choisissez le mode de victoire :");
+        System.out.println("1 - Tous les mondes doivent etre resolus");
+        System.out.println("2 - Une feuille de l'arbre doit etre resolue");
+        System.out.println("3 - Seul le monde racine doit etre resolu");
+
+        while (true) {
+            System.out.print("Votre choix : ");
+            String input = sc.nextLine();
+
+            if (input.equals("1")) {
+                return VictoryCondition.ALL_WORLDS;
+            } else if (input.equals("2")) {
+                return VictoryCondition.LEAVES_ONLY;
+            } else if (input.equals("3")) {
+                return VictoryCondition.ROOT_ONLY;
+            } else {
+                System.out.println("Choix invalide. Tapez 1, 2 ou 3.");
             }
         }
     }

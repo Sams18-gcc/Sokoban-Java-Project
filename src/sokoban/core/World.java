@@ -3,6 +3,7 @@ package sokoban.core;
 import sokoban.entity.Box;
 import sokoban.entity.Cell;
 import sokoban.entity.Player;
+import sokoban.entity.PortalBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,11 @@ public class World {
                     Box box = new Box(i, j);
                     boxes.add(box);
 
+                } else if (grid.getElement(i, j) == 'P') {
+                    cells[i][j] = new Cell(i, j, CellType.FLOOR, false);
+                    PortalBox portalBox = new PortalBox(i, j);
+                    boxes.add(portalBox);
+
                 } else {
                     cells[i][j] = new Cell(i, j, CellType.FLOOR, true);
                 }
@@ -71,7 +77,8 @@ public class World {
     // retourne vrai si c'est une box a la position pos
     public boolean isBox(Position pos) {
         if (pos == null) throw new NullPointerException();
-        return grid.getElement(pos.getY(), pos.getX()) == 'O';
+        return grid.getElement(pos.getY(), pos.getX()) == 'O'
+                || grid.getElement(pos.getY(), pos.getX()) == 'P';
     }
 
     // renvoie la boite a une position donnee si elle existe
@@ -119,7 +126,8 @@ public class World {
         actualPos.translate(d);
 
         if (!cells[actualPos.getY()][actualPos.getX()].isFree()) {
-            if (grid.getElement(actualPos.getY(), actualPos.getX()) == 'O')
+            if (grid.getElement(actualPos.getY(), actualPos.getX()) == 'O'
+                    || grid.getElement(actualPos.getY(), actualPos.getX()) == 'P')
                 actualPos.translate(d);
         }
 
@@ -194,6 +202,4 @@ public class World {
     public int getWorldRef() {
         return worldRef;
     }
-
-
 }
