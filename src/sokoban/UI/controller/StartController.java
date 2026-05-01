@@ -45,6 +45,8 @@ public class StartController {
 
     private Stage stage;
     private String levelDirectoryName;
+
+
     public void initialize() {
         backImage.setImage(new Image(Objects.requireNonNull(
                 getClass().getResourceAsStream("/sokoban/UI/resources/assets/BackButton.png"))));
@@ -54,19 +56,32 @@ public class StartController {
         background.fitHeightProperty().bind(ROOT.heightProperty());
         levelsContainer.setPadding(new javafx.geometry.Insets(20));
         levelsContainer.prefWidthProperty().bind(ROOT.widthProperty().multiply(0.6));
+
+
+
+
     }
 
 
 
 
-    public void BackAction(ActionEvent event)
-    {
+    public void BackAction(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(
+                SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Mode.fxml")
+        );
+        Parent root = loader.load();
+
+
+        Scene sceneSTART = new Scene(root, 720, 720);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        stage.setScene(SokobanApp.sceneInterface);
+        stage.setTitle("GAME MODE");
 
-        stage.setResizable(false);
-
+        sceneSTART.getStylesheets().add(
+                getClass().getResource("/sokoban/UI/resources/style/Mode.css").toExternalForm()
+        );
+        stage.setScene(sceneSTART);
+        stage.setResizable(true);
         stage.show();
     }
 
@@ -203,7 +218,7 @@ public class StartController {
             controller.setLevel(level);
             controller.setLevelsInfo(levelDirectoryName, getNbLevels());
 
-            Scene scene = new Scene(root, 660, 660);
+            Scene scene = new Scene(root, 750, 700);
             scene.getStylesheets().add(
                     Objects.requireNonNull(
                             getClass().getResource("/sokoban/UI/resources/style/Game.css")
@@ -212,7 +227,8 @@ public class StartController {
 
             stage.setTitle("LEVEL " + numLevel);
             stage.setScene(scene);
-            stage.setResizable(false);
+            stage.setResizable(true);
+            stage.setFullScreen(true);
             stage.show();
 
         } catch (IOException e) {

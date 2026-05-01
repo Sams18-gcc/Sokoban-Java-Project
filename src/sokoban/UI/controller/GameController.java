@@ -17,12 +17,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import sokoban.UI.app.SokobanApp;
 import sokoban.app.Level;
-import sokoban.autosolver.AutoSolver;
 import sokoban.core.Direction;
 import sokoban.core.Grid;
 import sokoban.core.Position;
@@ -31,6 +31,7 @@ import sokoban.logic.LogicKey;
 import sokoban.logic.ResultOfAction;
 import sokoban.saving.StateManager;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -47,16 +48,19 @@ import java.util.Objects;
 /// SAMY : je travaille actuellement sur le code de cette branche dans
 /// une autre branche nommée interface-copy, veuillez ne pas y toucher svp.
 public class GameController {
-    int taille_case = 60;
+    //int taille_case = 60;
 
 
-
+    List<Direction> path;
     Stage stage;
     private double playerX;
     private double playerY;
     private final double smooth = 0.33;
     private String levelsDirectoryName;
     private int nbLevels;
+
+    private double visualX = 0;
+    private double visualY = 0;
 
 
     private World world;
@@ -65,7 +69,7 @@ public class GameController {
 
     private Grid grid;
 
-    private final Image player = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/player.gif")));
+    private final Image player = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/pion.png")));
     private final Image wall = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/wall.png")));
     private final Image target = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/target.png")));
     private final Image box = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/box.png")));
@@ -85,65 +89,83 @@ public class GameController {
         RELOAD_BUTTON.setFocusTraversable(false);
         BACK_BUTTON.setFocusTraversable(false);
         SAVE_BUTTON.setFocusTraversable(false);
-        PAUSE_BUTTON.setFocusTraversable(false);
+        LOAD_BUTTON.setFocusTraversable(false);
         UNDO_BUTTON.setFocusTraversable(false);
 
 
         GD = canva.getGraphicsContext2D();
 
 
+
+
+        canva.widthProperty().bind(((AnchorPane)canva.getParent()).widthProperty().subtract(250));
+        canva.heightProperty().bind(((AnchorPane)canva.getParent()).heightProperty().subtract(50));
+
+
+        canva.widthProperty().addListener(evt -> drawWorld());
+        canva.heightProperty().addListener(evt -> drawWorld());
+
+
+
     }
 
 
+
+
+    private double getDynamicTileSize() {
+
+        double sidePadding = 60;
+
+
+        double availableWidth = canva.getWidth()-sidePadding ;
+        double availableHeight = canva.getHeight()-sidePadding ;
+
+
+        availableWidth = Math.max(availableWidth, 100);
+        availableHeight = Math.max(availableHeight, 100);
+
+        double sizeX = availableWidth / grid.getWidth();
+        double sizeY = availableHeight / grid.getLength();
+
+
+        return Math.min(sizeX, sizeY);
+    }
     public void drawWorld() {
+        if (grid == null) return;
+
         GD.clearRect(0, 0, canva.getWidth(), canva.getHeight());
+        double dynamicTaille = getDynamicTileSize();
+
+        double gridWidth = grid.getWidth() * dynamicTaille;
+        double gridHeight = grid.getLength() * dynamicTaille;
 
 
-        // calculer la taille total de la grille
-        double gridWidth = grid.getWidth() * taille_case;
-        double gridHeight = grid.getLength() * taille_case;
-
-        //pour centrer le dessin
         double startX = (canva.getWidth() - gridWidth) / 2;
         double startY = (canva.getHeight() - gridHeight) / 2;
+
+
 
 
         for (int i = 0; i < grid.getLength(); i++) {
             for (int j = 0; j < grid.getWidth(); j++) {
                 char typecell = grid.getElement(i, j);
-                int taille_case = 60;
+                double x = startX + (j * dynamicTaille);
+                double y = startY + (i * dynamicTaille);
 
+                GD.drawImage(floor, x, y, dynamicTaille, dynamicTaille);
 
-                double x = startX + (j * taille_case);
-                double y = startY + (i * taille_case);
-
-
-                GD.drawImage(floor, x, y, taille_case, taille_case);
-
-                if (typecell == '#') {
-                    GD.drawImage(wall, x, y, taille_case, taille_case);
-
-                } else if (typecell == 'O') {
-                    GD.drawImage(box, x, y, taille_case, taille_case);
-                } else if (typecell == 'x') {
-                    GD.drawImage(target, x, y, taille_case, taille_case);
-                }
-
+                if (typecell == '#') GD.drawImage(wall, x, y, dynamicTaille, dynamicTaille);
+                else if (typecell == 'O') GD.drawImage(box, x, y, dynamicTaille, dynamicTaille);
+                else if (typecell == 'x') GD.drawImage(target, x, y, dynamicTaille, dynamicTaille);
             }
-
-
         }
 
-        double playerPixelX = startX + playerX;
-        double playerPixelY = startY + playerY;
 
-        GD.drawImage(player, playerPixelX - 18, playerPixelY - 18, 95, 95);
-
-
+        GD.drawImage(player, startX + visualX, startY + visualY, dynamicTaille, dynamicTaille);
     }
 
 
-    //private LevelState levelState = level.getState();
+
 
     public void handleUserAction(KeyEvent event) {
 
@@ -170,9 +192,6 @@ public class GameController {
             k = LogicKey.ESCAPE;
         } else if (code == KeyCode.R) {
             k = LogicKey.RELOAD;
-        } else if (code == KeyCode.H) {
-            k = LogicKey.AUTO_SOLVE;
-
         }
 
         processUserAction(k);
@@ -207,11 +226,6 @@ public class GameController {
                 //enablePathFindingMode();
                 break;
 
-            case SOLVER_REQUESTED:
-                executeAutoSolver();
-                break;
-
-
             case PAUSED:
                 //pauseDisplay();
                 break;
@@ -226,8 +240,12 @@ public class GameController {
         world = level.getCurrentWorld();
         grid = world.getGrid();
 
-        playerX = world.getPlayerPosition().getX() * 60;
-        playerY = world.getPlayerPosition().getY() * 60;
+        // Use the dynamic tile size, NOT 60
+        double dynamicTaille = getDynamicTileSize();
+
+        // Update target positions for the AnimationTimer
+        playerX = world.getPlayerPosition().getX() * dynamicTaille;
+        playerY = world.getPlayerPosition().getY() * dynamicTaille;
 
         drawWorld();
         canva.requestFocus();
@@ -235,38 +253,27 @@ public class GameController {
 
 
     public void executePathFinding(MouseEvent event) {
+        double dynamicTaille = getDynamicTileSize();
 
-        // calculer la taille total de la grille
-        double gridWidth = grid.getWidth() * taille_case;
-        double gridHeight = grid.getLength() * taille_case;
-
-        //pour centrer le dessin
+        double gridWidth = grid.getWidth() * dynamicTaille;
+        double gridHeight = grid.getLength() * dynamicTaille;
         double startX = (canva.getWidth() - gridWidth) / 2;
         double startY = (canva.getHeight() - gridHeight) / 2;
 
-
-        //parceque j ai utiliser canvas qui a ces coordonnee comme des doubles
-        //donc je dois divisier sur la taille d une seule case
-        int colonne = (int) ((event.getX() - startX) / taille_case);
-        int row = (int) ((event.getY() - startY) / taille_case);
-
+        int colonne = (int) ((event.getX() - startX) / dynamicTaille);
+        int row = (int) ((event.getY() - startY) / dynamicTaille);
 
         Position posTarget = new Position(row, colonne);
-
-        List<Direction> path;
         path = level.executePathFinding(posTarget);
+
         if (path != null && !path.isEmpty()) {
+
             moveInPath(path);
-        }
 
+        } else {
 
+            throw new IllegalStateException("PATH NON TROUVÉ");
 
-    }
-
-    public void executeAutoSolver() {
-        List<Direction> solution = level.executeAutoSolver();
-        if (solution != null && !solution.isEmpty()) {
-            moveInPath(solution);
         }
     }
 
@@ -277,13 +284,7 @@ public class GameController {
         ResultOfAction result = level.handleUserAction(lk);
 
 
-
         refreshView();
-        if (result == ResultOfAction.WON) {
-            unlockNextLevel();
-            victoryDisplay();
-            return;
-        }
 
         if (!path.isEmpty()) {
             PauseTransition pause = new PauseTransition(Duration.millis(400));
@@ -294,6 +295,16 @@ public class GameController {
 
     @FXML
     public void next(ActionEvent event) throws IOException {
+        if (timer != null) timer.stop();
+
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        if (level.getNumLevel() >= nbLevels) {
+
+            fin();
+            return;
+        }
+
         StateManager sm = new StateManager();
         Level nextLevel = new Level(level.getNumLevel() + 1, levelsDirectoryName, sm);
         nextLevel.init();
@@ -319,13 +330,46 @@ public class GameController {
 
             stage.setTitle("LEVEL " + nextLevel.getNumLevel());
             stage.setScene(scene);
-            stage.setResizable(false);
+            stage.setResizable(true);
+            stage.setFullScreen(true);
             stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void fin() {
+        try {
+
+            if (timer != null) timer.stop();
+
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sokoban/UI/resources/fxml/Start.fxml"));
+
+            Parent root = loader.load();
+
+            if (stage == null) {
+                stage = (Stage) canva.getScene().getWindow();
+            }
+
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+
+            scene.getStylesheets().add(
+                    Objects.requireNonNull(
+                            getClass().getResource("/sokoban/UI/resources/style/Start.css")
+                    ).toExternalForm()
+            );
+            stage.setScene(scene);
+            stage.setTitle("Congratulations!");
+            stage.show();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
     }
 
 
@@ -336,7 +380,8 @@ public class GameController {
     @FXML
     private Button RELOAD_BUTTON;
     @FXML
-    private Button PAUSE_BUTTON;
+    private Button LOAD_BUTTON;
+
     @FXML
     private Button UNDO_BUTTON;
 
@@ -346,7 +391,7 @@ public class GameController {
     @FXML
     private ImageView Winner_image;
     @FXML
-    private Text Winner_text;
+    private Text text;
     @FXML
     private Button Winner_next;
 
@@ -356,7 +401,7 @@ public class GameController {
         Image img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/sokoban/UI/resources/assets/playerCelebrating.gif")));
         Winner_image.setImage(img);
         Winner_image.setVisible(true);
-        Winner_text.setVisible(true);
+        text.setVisible(true);
         Winner_label.setVisible(true);
         Winner_next.setVisible(true);
 
@@ -366,23 +411,26 @@ public class GameController {
 
     public void back(ActionEvent event) throws IOException {
 
+
+        if (timer != null) {
+            timer.stop();
+        }
         FXMLLoader loader = new FXMLLoader(
-                SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Start.fxml")
+                SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Mode.fxml")
         );
         Parent root = loader.load();
 
-        StartController controller = loader.getController();
-        controller.setLevelDirectoryName(levelsDirectoryName);
-        controller.constructLevels();
-        Scene sceneSTART = new Scene(root, 660, 660);
+
+        Scene sceneMode = new Scene(root, 900, 900);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        stage.setTitle("RULES"); // a corriger plus tard
-        sceneSTART.getStylesheets().add(
-                getClass().getResource("/sokoban/UI/resources/style/Start.css").toExternalForm()
+        stage.setTitle("GAME MODE");
+
+        sceneMode.getStylesheets().add(
+                getClass().getResource("/sokoban/UI/resources/style/Mode.css").toExternalForm()
         );
-        stage.setScene(sceneSTART);
-        stage.setResizable(false);
+        stage.setScene(sceneMode);
+
         stage.show();
 
     }
@@ -391,8 +439,14 @@ public class GameController {
         this.level = level;
         world = level.getCurrentWorld();
         grid = world.getGrid();
-        this.playerX = world.getPlayerPosition().getX() * 60;
-        this.playerY = world.getPlayerPosition().getY() * 60;
+
+        double dynamicTaille = getDynamicTileSize();
+        this.playerX = world.getPlayerPosition().getX() * dynamicTaille;
+        this.playerY = world.getPlayerPosition().getY() * dynamicTaille;
+
+
+        this.visualX = this.playerX;
+        this.visualY = this.playerY;
         drawWorld();
         startTimer();
     }
@@ -405,7 +459,7 @@ public class GameController {
     public void unlockNextLevel() {
         int nextLevelNum = (level.getNumLevel() == nbLevels) ? -1 : level.getNumLevel() + 1;
         if (nextLevelNum == -1) {
-            // display gameCompletedDisplay();
+
         }
         File nextLevelDirectory = new File(levelsDirectoryName, "level" + nextLevelNum);
         if (!nextLevelDirectory.exists() || !nextLevelDirectory.isDirectory())
@@ -426,45 +480,90 @@ public class GameController {
 
 
     public void startTimer() {
+        if (timer != null) timer.stop();
+
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-
-                double targetX = world.getPlayerPosition().getX() * 60;
-                double targetY = world.getPlayerPosition().getY() * 60;// On réduit l espace entre la postion actuelle et la prochaine
-                playerX += (targetX - playerX) * smooth;
-                playerY += (targetY - playerY) * smooth;
+                double dynamicTaille = getDynamicTileSize();
 
 
-                // cette methode est appele automatiquement 60 fois par seconde pour redessine le level a chaque fois
-                drawWorld(); //
+                double targetX = world.getPlayerPosition().getX() * dynamicTaille;
+                double targetY = world.getPlayerPosition().getY() * dynamicTaille;
+
+
+                visualX += (targetX - visualX) * smooth;
+                visualY += (targetY - visualY) * smooth;
+
+                drawWorld();
             }
         };
         timer.start();
-
     }
 
     @FXML
     public void save() {
+
+
+        stat.save(level);
     }
 
     @FXML
     public void reload() {
+
+        level.reloadGame(); // Resets the logic
+
+
+        world = level.getCurrentWorld();
+        grid = world.getGrid();
+
+        double dynamicTaille = getDynamicTileSize();
+
+        visualX = world.getPlayerPosition().getX() * dynamicTaille;
+        visualY = world.getPlayerPosition().getY() * dynamicTaille;
+
+
+        refreshView();
+        startTimer();
     }
 
     @FXML
     public void undo() {
+
+        level.undo();
+        double dynamicTaille = getDynamicTileSize();
+        visualX = level.getCurrentWorld().getPlayerPosition().getX() * dynamicTaille;
+        visualY = level.getCurrentWorld().getPlayerPosition().getY() * dynamicTaille;
+        refreshView();
     }
 
     @FXML
     public void load() {
+
+        level.loadGame();
+
+
+        world = level.getCurrentWorld();
+        grid = world.getGrid();
+
+        double dynamicTaille = getDynamicTileSize();
+        visualX = world.getPlayerPosition().getX() * dynamicTaille;
+        visualY = world.getPlayerPosition().getY() * dynamicTaille;
+
+
+        refreshView();
+        startTimer();
+
+
     }
 
-    @FXML
-    public void pause() {
-    }
 
 
 }
+
+
+
+
+
 
 

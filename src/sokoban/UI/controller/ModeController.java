@@ -108,7 +108,7 @@ public class ModeController {
         controller.setBackground("StoryModeBackground.png");
         controller.constructLevels();
 
-        Scene sceneSTART = new Scene(root, 990, 660);
+        Scene sceneSTART = new Scene(root, 800, 660);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         stage.setTitle("LEVELS");
@@ -142,7 +142,7 @@ public class ModeController {
                    getClass().getResource("/sokoban/UI/resources/style/Mode.css").toExternalForm()
            );
            stage.setScene(sceneSTART);
-           stage.setResizable(false);
+           stage.setResizable(true);
            stage.show();
        }catch(IOException e)
        {
