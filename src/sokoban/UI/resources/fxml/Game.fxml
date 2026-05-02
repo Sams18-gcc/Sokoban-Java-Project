@@ -80,5 +80,17 @@
             <Font name="Arial Rounded MT Bold" size="23.0" />
          </font>
       </Text>
+      <Button fx:id="AUTO_BUTTON" layoutX="142.0" mnemonicParsing="false" onAction="#auto" prefHeight="106.0" prefWidth="190.0" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+         <effect>
+            <Blend />
+         </effect>
+         <graphic>
+            <ImageView fitHeight="109.0" fitWidth="163.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../assets/loadButton.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
    </children>
 </AnchorPane>
