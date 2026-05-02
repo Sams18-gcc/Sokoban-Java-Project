@@ -22,70 +22,67 @@ public class LoadGame {
     {
         grids = new ArrayList<char[][]>();
         int nbWorlds = getnbWorlds(numLevel);
-         if(nbWorlds == -1)
-             return false;
-        // verifier si le dossier existe
-        if(!levelsFolder.exists() || !levelsFolder.isDirectory())
+        System.out.println("DEBUG nbWorlds=" + nbWorlds + " pour level=" + numLevel);
+        if(nbWorlds == -1) {
+            System.out.println("FAIL: getnbWorlds a retourne -1");
             return false;
-        File worldsFolder = new File(levelsFolder, "level" + numLevel );
-        // verifier si le level existe
-        if(!worldsFolder.exists() || !worldsFolder.isDirectory())
+        }
+        if(!levelsFolder.exists() || !levelsFolder.isDirectory()) {
+            System.out.println("FAIL: levelsFolder invalide: " + levelsFolder.getAbsolutePath());
             return false;
+        }
+        File worldsFolder = new File(levelsFolder, "level" + numLevel);
+        if(!worldsFolder.exists() || !worldsFolder.isDirectory()) {
+            System.out.println("FAIL: worldsFolder introuvable: " + worldsFolder.getAbsolutePath());
+            return false;
+        }
 
-        // indexer les mondes du level
         int worldIndex = 0;
-        // grille  en cours de lecture
         File currWorldGrid = null;
-        // ligne lu depuis le fichier
         String line;
-        // une liste de toutes les lignes lues depuis le fichier
-        // represente la matrice
         ArrayList<String> lines;
 
-        // lire toutes les grilles (chaque grille represente un monde)
         while(worldIndex < nbWorlds) {
             lines = new ArrayList<String>();
-            // recuperer le fichier contenant la grille actuelle
-            currWorldGrid = new File(worldsFolder, "world" + worldIndex +".txt");
-            if(!currWorldGrid.exists() || !currWorldGrid.isFile())
-                return false;
-
-            // initialiser le lecteur du fichier
-            try (BufferedReader reader =
-                         new BufferedReader(
-                                 new FileReader(currWorldGrid)
-                         );
-
-                    ){
-
-                // tant qu'on a pas fini de lire le fichier
-
-                while((line=reader.readLine())!=null)
-                {
-                    lines.add(line);
-                }
-            }catch(IOException e)
-                {
-                    e.printStackTrace();
-                    return false;
-                }
-            if (lines.isEmpty()) {
+            currWorldGrid = new File(worldsFolder, "world" + worldIndex + ".txt");
+            System.out.println("DEBUG lecture: " + currWorldGrid.getAbsolutePath());
+            if(!currWorldGrid.exists() || !currWorldGrid.isFile()) {
+                System.out.println("FAIL: fichier introuvable: " + currWorldGrid.getAbsolutePath());
                 return false;
             }
-            try{
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(currWorldGrid))) {
+                while((line = reader.readLine()) != null) {
+                    lines.add(line);
+                }
+            } catch(IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            if(lines.isEmpty()) {
+                System.out.println("FAIL: fichier vide: " + currWorldGrid.getAbsolutePath());
+                return false;
+            }
+
+            System.out.println("DEBUG " + lines.size() + " lignes lues, longueurs:");
+            for(int i = 0; i < lines.size(); i++) {
+                System.out.println("  ligne " + i + " longueur=" + lines.get(i).length() + " [" + lines.get(i) + "]");
+            }
+
+            try {
                 char[][] actGrid = convertLinesToGrid(lines);
                 grids.add(worldIndex, actGrid);
-            }catch(IllegalArgumentException e)
-            {
+            } catch(IllegalArgumentException e) {
+                System.out.println("FAIL: grille invalide (lignes de longueurs differentes) dans " + currWorldGrid.getAbsolutePath());
                 return false;
             }
 
             worldIndex++;
-            }
-
-        return true;
         }
 
+        return true;
+    }
     private char[][] convertLinesToGrid(ArrayList<String> lines) {
         int rows = lines.size();
         int cols = lines.get(0).length();

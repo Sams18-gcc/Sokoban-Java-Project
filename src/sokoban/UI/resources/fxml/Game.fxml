@@ -75,7 +75,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Text fx:id="text" disable="true" layoutX="450.0" layoutY="271.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LEVEL 1 COMPLETED" visible="false" wrappingWidth="279.396484375">
+      <Text fx:id="text" disable="true" layoutX="450.0" layoutY="271.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LEVEL COMPLETED" visible="false" wrappingWidth="279.396484375">
          <font>
             <Font name="Arial Rounded MT Bold" size="23.0" />
          </font>

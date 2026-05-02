@@ -185,6 +185,7 @@ public class InterfaceController {
         stage.show();
     }
 
+
     public void editor(ActionEvent event) {
         SokobanApp.menuSELECTION.play();
         Stage editorStage = new Stage();
