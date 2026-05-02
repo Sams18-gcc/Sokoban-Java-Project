@@ -23,8 +23,7 @@ public class EditorGUI extends Application {
 
     private static final int CELL_SIZE = 48;
 
-    // ====== PALETTE UI - Theme METAL SLUG ======
-    // (les couleurs gameplay dans couleurCase() restent inchangees)
+    
     private static final String BG_ROOT       = "#120606"; // fond general - noir profond teinte rouge
     private static final String BG_CANVAS     = "#0a0303"; // fond canvas - presque noir
     private static final String BG_SURFACE    = "#1f1010"; // barres et palette
@@ -52,7 +51,7 @@ public class EditorGUI extends Application {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: " + BG_ROOT + ";");
 
-        // === En-tete avec titre style Metal Slug + barre d'outils ===
+       
         VBox topZone = new VBox();
         topZone.getChildren().addAll(createTitleBar(), createTopBar(primaryStage));
         root.setTop(topZone);
@@ -79,7 +78,7 @@ public class EditorGUI extends Application {
         );
         root.setCenter(scrollPane);
 
-        // === Barre de statut style militaire ===
+        
         statusLabel = new Label("PRET.");
         statusLabel.setFont(Font.font("Monospaced", FontWeight.BOLD, 11));
         statusLabel.setTextFill(Color.web(TEXT_DIM));
@@ -112,7 +111,7 @@ public class EditorGUI extends Application {
         canvas.requestFocus();
     }
 
-    // === Bandeau de titre style Metal Slug ===
+    
     private HBox createTitleBar() {
         HBox titleBar = new HBox();
         titleBar.setAlignment(Pos.CENTER_LEFT);
@@ -376,7 +375,7 @@ public class EditorGUI extends Application {
             }
         }
 
-        // curseur rouge fluo coherent avec le theme
+        
         int cr = editor.getCursorRow();
         int cc = editor.getCursorCol();
         gc.setStroke(Color.rgb(255, 48, 48));
@@ -384,7 +383,7 @@ public class EditorGUI extends Application {
         gc.strokeRect(cc * CELL_SIZE + 2, cr * CELL_SIZE + 2, CELL_SIZE - 4, CELL_SIZE - 4);
     }
 
-    // === COULEURS GAMEPLAY (volontairement inchangees) ===
+    
     private Color couleurCase(char c) {
         switch (c) {
             case '#': return Color.rgb(101, 67, 33);
@@ -587,8 +586,7 @@ public class EditorGUI extends Application {
         a.showAndWait();
     }
 
-    // === Bouton barre du haut, style Metal Slug ===
-    // accent=true -> action principale (rouge sang), accent=false -> action neutre
+  
     private Button makeButton(String text, boolean accent) {
         Button btn = new Button(text);
         btn.setFont(Font.font("Monospaced", FontWeight.BOLD, 11));
