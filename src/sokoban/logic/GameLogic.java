@@ -7,6 +7,7 @@ import sokoban.core.Direction;
 import sokoban.core.Position;
 import sokoban.core.World;
 import sokoban.entity.Box;
+import sokoban.entity.PortalBox;
 import sokoban.pathfinding.PathSeek;
 
 
@@ -39,10 +40,13 @@ public class GameLogic {
             return ResultOfAction.BLOCKED;
         }
 
+
         boolean boxInTarget = false;
         Position actualPos = world.getPlayerPosition();
         Position nextPos = world.getPlayerPosition();
         nextPos.translate(d);
+
+
 
         // si une boite est devant, on la deplace aussi
         if (world.isBox(nextPos)) {

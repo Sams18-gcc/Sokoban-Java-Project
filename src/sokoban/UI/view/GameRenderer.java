@@ -23,8 +23,9 @@ public class GameRenderer {
     private final Image imgTarget = load("/sokoban/UI/resources/assets/target.png");
     private final Image imgBox    = load("/sokoban/UI/resources/assets/box.png");
     private final Image imgFloor  = load("/sokoban/UI/resources/assets/floor.png");
+    private final Image imgPortal  = load("/sokoban/UI/resources/assets/portal.png");
 
-    // position visuelle lissee du joueur (en pixels
+    // position visuelle lissee du joueur en pixels
     private double visualX = 0;
     private double visualY = 0;
 
@@ -106,6 +107,8 @@ public class GameRenderer {
                 if      (cell == '#') gc.drawImage(imgWall,   x, y, tileSize, tileSize);
                 else if (cell == 'O') gc.drawImage(imgBox,    x, y, tileSize, tileSize);
                 else if (cell == 'x') gc.drawImage(imgTarget, x, y, tileSize, tileSize);
+                else if (cell == 'P') gc.drawImage(imgPortal, x, y, tileSize, tileSize);
+
             }
         }
     }

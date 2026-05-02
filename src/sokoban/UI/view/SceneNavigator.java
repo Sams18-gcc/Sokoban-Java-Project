@@ -10,10 +10,10 @@ import sokoban.app.Level;
 import java.io.IOException;
 import java.util.Objects;
 
-/**
- * Responsabilite unique : charger et afficher les scenes JavaFX.
- * Ne contient aucune logique de jeu.
- */
+
+ // charger et afficher les scenes JavaFX.
+ // Ne contient aucune logique de jeu.
+
 public class SceneNavigator {
 
     private static final String FXML_GAME = "/sokoban/UI/resources/fxml/Game.fxml";
@@ -27,9 +27,8 @@ public class SceneNavigator {
         this.stage = stage;
     }
 
-    /**
-     * Charge et affiche l'ecran de jeu pour le niveau donne.
-     */
+     // Charge et affiche l'ecran de jeu pour le niveau donne.
+
     public void goToLevel(Level level, String levelsDirectory, int nbLevels) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_GAME));
@@ -51,9 +50,9 @@ public class SceneNavigator {
         }
     }
 
-    /**
-     * Retourne au menu de selection de mode.
-     */
+
+      //Retourne au menu de selection de mode.
+
     public void goToModeMenu() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_MODE));
@@ -71,9 +70,8 @@ public class SceneNavigator {
         }
     }
 
-    /**
-     * Affiche l'ecran de fin (tous les niveaux termines).
-     */
+    //Affiche l'ecran de fin .
+
     public void goToEndScreen() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML_MODE));
@@ -91,9 +89,7 @@ public class SceneNavigator {
         }
     }
 
-    // -------------------------------------------------------
-    // Prive
-    // -------------------------------------------------------
+
 
     private Scene buildScene(Parent root, String cssPath,
                              double width, double height) {

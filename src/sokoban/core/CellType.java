@@ -4,7 +4,9 @@ public enum CellType {
     TARGET('x'),
     FLOOR(' '),
     WALL('#'),
-    EXIT('e');
+    EXIT('e'),
+    PORTAL('P');
+
 
     private final char symbole;
 

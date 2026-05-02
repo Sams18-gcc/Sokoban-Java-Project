@@ -34,8 +34,8 @@ import java.util.List;
 import java.util.Objects;
 
 
- // Responsabilite : recevoir les evenements utilisateur (clavier, boutons, souris),
- // les traduire en LogicKey, les deleguer a Level, puis mettre a jour la vue.
+ //  recevoir les evenements utilisateur clavier boutons
+ // les traduire en LogicKey les deleguer a Level puis mettre a jour la vue.
 
 
  // il delegue a GameRenderer et SceneNavigator.
