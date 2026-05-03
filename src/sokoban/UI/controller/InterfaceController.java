@@ -4,6 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import sokoban.UI.view.SceneNavigator;
+import sokoban.UI.view.GameRenderer;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -131,75 +133,7 @@ public class InterfaceController {
         }
     }
 
-    public void start(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(
-                SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Mode.fxml")
-        );
-        Parent root = loader.load();
 
-
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-        Scene startScene = new Scene(root, stage.getWidth(), stage.getHeight());
-
-        stage.setTitle("Levels"); // a corriger plus tard
-        startScene.getStylesheets().add(
-                getClass().getResource("/sokoban/UI/resources/style/Mode.css").toExternalForm()
-        );
-        stage.setScene(startScene);
-        stage.setResizable(true);
-        stage.show();
-    }
-
-    public void settings(ActionEvent event) throws IOException {
-        FXMLLoader SETTINGS = new FXMLLoader(
-                SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Settings.fxml")
-        );
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-        Scene sceneSETTINGS = new Scene(SETTINGS.load(),stage.getWidth(), stage.getHeight());
-
-        stage.setTitle("Settings");
-        sceneSETTINGS.getStylesheets().add(
-                getClass().getResource("/sokoban/UI/resources/style/Settings.css").toExternalForm()
-        );
-        stage.setScene(sceneSETTINGS);
-        stage.setResizable(true);
-        stage.show();
-    }
-
-    public void rules(ActionEvent event) throws IOException {
-        FXMLLoader RULES = new FXMLLoader(
-                SokobanApp.class.getResource("/sokoban/UI/resources/fxml/Rules.fxml")
-        );
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-        Scene sceneRULES = new Scene(RULES.load(), stage.getWidth(), stage.getHeight());
-
-        stage.setTitle("Rules");
-        sceneRULES.getStylesheets().add(
-                getClass().getResource("/sokoban/UI/resources/style/Rules.css").toExternalForm()
-        );
-        stage.setScene(sceneRULES);
-        stage.setResizable(true);
-        stage.show();
-    }
-
-
-    public void editor(ActionEvent event) {
-        SokobanApp.menuSELECTION.play();
-        Stage editorStage = new Stage();
-        sokoban.editor.EditorGUI editorGUI = new sokoban.editor.EditorGUI();
-
-        try {
-            editorGUI.start(editorStage);
-        } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setContentText("Impossible d'ouvrir l'editeur : " + e.getMessage());
-            alert.showAndWait();
-        }
-    }
 
     public void exit(ActionEvent event) {
         Alert alerte = new Alert(Alert.AlertType.CONFIRMATION);
@@ -210,6 +144,36 @@ public class InterfaceController {
         if (alerte.showAndWait().get() == ButtonType.OK) {
             stage = (Stage) (SCENE.getScene().getWindow());
             stage.close();
+        }
+    }
+    @FXML
+    public void start(ActionEvent event) {
+        getNavigator(event).goToModeMenu();
+    }
+
+
+
+    @FXML
+    public void settings(ActionEvent event) {
+        getNavigator(event).goToSettings();
+    }
+
+    @FXML
+    public void rules(ActionEvent event) {
+        getNavigator(event).goToRules();
+    }
+
+    @FXML
+    public void editor(ActionEvent event) {
+        Stage editorStage = new Stage();
+        sokoban.editor.EditorGUI editorGUI = new sokoban.editor.EditorGUI();
+        try {
+            editorGUI.start(editorStage);
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setContentText("Impossible d'ouvrir l'editeur : " + e.getMessage());
+            alert.showAndWait();
         }
     }
 
@@ -226,4 +190,9 @@ public class InterfaceController {
             SokobanApp.menuSELECTION.play();
         }
     }
+    private SceneNavigator getNavigator(ActionEvent event) {
+        Stage stage = (Stage) SCENE.getScene().getWindow();
+        return new SceneNavigator(stage);
+    }
+
 }
