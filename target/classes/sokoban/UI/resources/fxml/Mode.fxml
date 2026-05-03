@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="SCENE" prefHeight="690.0" prefWidth="660.0" stylesheets="@../style/Mode.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sokoban.UI.controller.ModeController">
+    <children>
+        <ImageView fx:id="background" fitHeight="690.0" fitWidth="660.0" pickOnBounds="true" preserveRatio="false">
+            <image>
+                <Image url="@../assets/SelectMode.png" />
+            </image>
+        </ImageView>
+        <VBox alignment="CENTER" spacing="20">
+            <HBox alignment="CENTER" spacing="40">
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="personalizedModeButton" mnemonicParsing="false" onAction="#toPersonalized" onMouseEntered="#mouseEnterFreeMode" onMouseExited="#mouseExitFreeMode" prefHeight="230.0" prefWidth="250.0">
+                    <graphic>
+                        <ImageView fx:id="personalizedModeImage" fitHeight="230.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@../assets/FreeMode.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="storyModeButton" mnemonicParsing="false" onAction="#toStory" onMouseEntered="#mouseOnStoryMode" onMouseExited="#mouseExitStoryMode" prefHeight="230.0" prefWidth="250.0">
+                    <graphic>
+                        <ImageView fx:id="storyImage" fitHeight="230.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="false">
+                            <image>
+                                <Image url="@../assets/StoryMode.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Region HBox.hgrow="ALWAYS" />
+            </HBox>
+            <Button fx:id="backButton" mnemonicParsing="false" onAction="#back" onMouseEntered="#mouseEnterBackButton" onMouseExited="#mouseExitBackButton" prefHeight="50.0" prefWidth="170.0">
+                <graphic>
+                    <ImageView fx:id="backImage" fitHeight="76.0" fitWidth="126.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../assets/BackButton.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+        </VBox>
+    </children>
+</StackPane>

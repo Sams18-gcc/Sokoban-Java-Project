@@ -1,0 +1,81 @@
+BorderPane {
+    -fx-background-color: transparent;
+    -fx-padding: 25;
+}
+
+#BACKbutton {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+#BACKbutton:hover {
+    -fx-background-color: transparent;
+}
+
+#BACKbutton:pressed {
+    -fx-translate-y: 2;
+}
+
+#LabelEffect, #LabelMusic {
+    -fx-font-family: "Impact";
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 6, 0.6, 1, 1);
+}
+
+#EffectVolume, #MusicVolume {
+    -fx-font-family: "Impact";
+    -fx-font-size: 16px;
+    -fx-text-fill: #ff6644;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 6, 0.6, 1, 1);
+}
+
+.slider .track {
+    -fx-background-color: rgba(80,0,0,0.6);
+    -fx-border-color: #550000;
+    -fx-border-width: 1;
+    -fx-background-radius: 2;
+    -fx-border-radius: 2;
+}
+
+.slider .thumb {
+    -fx-background-color:
+        radial-gradient(center 40% 35%, radius 60%, #ff4422, #880000);
+    -fx-background-radius: 50%;
+    -fx-effect: dropshadow(gaussian, rgba(255,50,0,0.6), 8, 0.4, 0, 0);
+}
+
+.slider .thumb:hover {
+    -fx-background-color:
+        radial-gradient(center 40% 35%, radius 60%, #ff6644, #aa1100);
+    -fx-effect: dropshadow(gaussian, rgba(255,80,0,0.8), 12, 0.5, 0, 0);
+}
+
+.slider {
+    -fx-padding: 10 0 10 0;
+}
+
+.slider .track {
+    -fx-background-color: rgba(80,0,0,0.8);
+    -fx-border-color: #8b1a00;
+    -fx-border-width: 1;
+    -fx-pref-height: 15px;
+    -fx-background-radius: 7;
+    -fx-border-radius: 7;
+}
+
+.slider .thumb {
+    -fx-background-color:
+        radial-gradient(center 40% 35%, radius 60%, #ff4422, #880000);
+    -fx-pref-width: 35px;
+    -fx-pref-height: 35px;
+    -fx-background-radius: 50%;
+    -fx-effect: dropshadow(gaussian, rgba(255,50,0,0.8), 10, 0.5, 0, 0);
+}
+
+.slider .thumb:hover {
+    -fx-background-color:
+        radial-gradient(center 40% 35%, radius 60%, #ff6644, #aa1100);
+    -fx-effect: dropshadow(gaussian, rgba(255,80,0,1.0), 15, 0.6, 0, 0);
+}

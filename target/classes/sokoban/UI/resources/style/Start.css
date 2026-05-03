@@ -1,0 +1,30 @@
+#BACKbutton {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+#BACKbutton:pressed {
+    -fx-translate-y: 2;
+}
+
+#SCENE {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 25;
+}
+
+#LEVELS_fenetre {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 30;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar {
+    -fx-opacity: 0;
+}
+

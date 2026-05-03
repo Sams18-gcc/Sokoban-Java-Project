@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
+
+<?import javafx.scene.layout.Region?>
+<StackPane fx:id="ROOT" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="sokoban.UI.controller.StartController"
+           stylesheets="@../style/Start.css">
+    <ImageView fx:id="background" pickOnBounds="true" preserveRatio="false"/>
+    <VBox spacing="10" alignment="TOP_CENTER">
+        <padding>
+            <Insets top="20" left="20" right="20" bottom="20"/>
+        </padding>
+
+        <HBox alignment="CENTER_LEFT">
+            <Button fx:id="BACKbutton" mnemonicParsing="false" onAction="#BackAction"
+                    onMouseEntered="#mouseEnterBack" onMouseExited="#mouseExitBack">
+                <graphic>
+                    <ImageView fx:id="backImage" fitHeight="60.0" fitWidth="170.0"
+                               pickOnBounds="true" preserveRatio="true"/>
+                </graphic>
+            </Button>
+        </HBox>
+        <Region VBox.vgrow="ALWAYS"/>
+        <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true"
+                    style="-fx-background: transparent; -fx-background-color: transparent;">
+            <TilePane fx:id="levelsContainer" hgap="20.0" vgap="20.0"
+                      prefColumns="4" alignment="CENTER"
+                      style="-fx-background-color: rgba(15,0,0,0.7); -fx-background-radius: 20; -fx-border-color: rgba(100,0,0,0.5); -fx-border-width: 2; -fx-border-radius: 20; -fx-padding: 20;">
+                <padding>
+                    <Insets top="20" left="20" right="20" bottom="20"/>
+                </padding>
+            </TilePane>
+        </ScrollPane>
+    </VBox>
+</StackPane>
