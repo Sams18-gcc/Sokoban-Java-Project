@@ -32,21 +32,16 @@ public class SokobanApp extends Application {
         stage.setFullScreenExitHint("");
         stage.setFullScreen(false);
 
-       /* stage.setOnCloseRequest(e->
+       stage.setOnCloseRequest(e->
         {
             e.consume();
             EXIT(stage);
-        });*/
+        });
     }
 
-    /*public void EXIT(Stage stage) {
-        Alert alerte = new Alert(Alert.AlertType.CONFIRMATION);
-        alerte.setContentText("VOUS VOULEZ QUITTER LE JEU ?");
-        alerte.setHeaderText("SORTIR DE JEU");
-        alerte.setTitle("QUITTER");
-        if (alerte.showAndWait().get() == ButtonType.OK) {
+    public void EXIT(Stage stage) {
 
             stage.close();
-        }
-    }*/
+
+    }
 }

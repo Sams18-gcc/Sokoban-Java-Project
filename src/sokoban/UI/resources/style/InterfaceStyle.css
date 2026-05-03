@@ -49,11 +49,11 @@
     -fx-font-size: 40px;
     -fx-font-weight: bold;
 
-    /* Gradient rouge */
+
     -fx-text-fill: linear-gradient(
             from 0% 0% to 0% 100%,
-            #ff4c4c,  /* rouge clair */
-            #7f0000   /* rouge sombre */
+            #ff4c4c,
+            #7f0000
     );
 
 

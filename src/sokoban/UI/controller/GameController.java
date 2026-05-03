@@ -1,6 +1,8 @@
 package sokoban.UI.controller;
 
 import javafx.animation.PauseTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -89,12 +91,21 @@ public class GameController {
     public void setLevel(Level level) {
         this.level = level;
 
-        Grid     grid      = level.getCurrentWorld().getGrid();
+        Grid grid = level.getCurrentWorld().getGrid();
         Position playerPos = level.getCurrentWorld().getPlayerPosition();
 
-        renderer.snapToPosition(grid, playerPos);
-        renderer.draw(grid, playerPos);
-        renderer.startSmoothMove(grid, playerPos);
+        // Attendre que le canvas ait ses vraies dimensions
+        canva.widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> obs, Number oldVal, Number newVal) {
+                if (newVal.doubleValue() > 0) {
+                    canva.widthProperty().removeListener(this);
+                    renderer.snapToPosition(grid, playerPos);
+                    renderer.draw(grid, playerPos);
+                    renderer.startSmoothMove(grid, playerPos);
+                }
+            }
+        });
 
         canva.requestFocus();
     }
